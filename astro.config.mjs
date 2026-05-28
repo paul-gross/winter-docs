@@ -23,7 +23,11 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'Getting Started',
-					items: [{ label: 'Overview', slug: 'getting-started' }],
+					items: [
+						{ label: 'What is Winter?', slug: 'getting-started' },
+						{ label: 'Quick Start', slug: 'getting-started/quick-start' },
+						{ label: 'Glossary', slug: 'getting-started/glossary' },
+					],
 				},
 				{
 					label: 'Operations',

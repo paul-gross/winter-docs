@@ -6,8 +6,22 @@ hero:
   tagline: A framework for agentic, multi-worktree, multi-repository development workspaces.
   actions:
     - text: Get Started
-      link: /winter-docs/getting-started/
+      link: /winter-docs/getting-started/quick-start/
       icon: right-arrow
+    - text: What is Winter?
+      link: /winter-docs/getting-started/
+      icon: open-book
+      variant: minimal
 ---
 
-This site is being built out. Documentation content lands in subsequent passes; for now each section below is a placeholder.
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Winter turns a directory of related git repositories into one workspace where many features — and many AI agents — can be developed in parallel, each in its own isolated set of worktrees, ports, and services.
+
+<CardGrid>
+	<LinkCard title="Getting Started" href="/winter-docs/getting-started/" description="What winter is, a quick-start walkthrough, and the glossary." />
+	<LinkCard title="Operations" href="/winter-docs/operations/" description="Feature environments, polyrepo git, and running services." />
+	<LinkCard title="CLI Reference" href="/winter-docs/cli-reference/" description="Every winter subcommand and the config.toml schema." />
+	<LinkCard title="Extensions" href="/winter-docs/extensions/" description="Adopter guides for the maintained winter extensions." />
+	<LinkCard title="Conventions & Patterns" href="/winter-docs/conventions/" description="Code conventions, markdown style, and agentic development patterns." />
+</CardGrid>
