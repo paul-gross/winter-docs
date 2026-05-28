@@ -58,7 +58,12 @@ export default defineConfig({
 				},
 				{
 					label: 'Conventions',
-					items: [{ label: 'Overview', slug: 'conventions' }],
+					items: [
+						{ label: 'Overview', slug: 'conventions' },
+						{ label: 'Python Conventions', slug: 'conventions/python' },
+						{ label: 'Agent-Facing Markdown', slug: 'conventions/markdown-style' },
+						{ label: 'Agentic Development Patterns', slug: 'conventions/agentic-patterns' },
+					],
 				},
 			],
 		}),
