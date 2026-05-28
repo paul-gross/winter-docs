@@ -40,7 +40,10 @@ export default defineConfig({
 				},
 				{
 					label: 'CLI Reference',
-					items: [{ label: 'Overview', slug: 'cli-reference' }],
+					items: [
+						{ label: 'Commands', slug: 'cli-reference' },
+						{ label: 'config.toml Reference', slug: 'cli-reference/config' },
+					],
 				},
 				{
 					label: 'Extensions',

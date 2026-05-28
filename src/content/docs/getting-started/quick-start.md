@@ -47,7 +47,7 @@ name = "app-api"
 url = "git@github.com:your-org/app-api.git"
 ```
 
-Per-user settings (your git identity) go in the gitignored overlay `.winter/config.local.toml`. See the [CLI Reference](/winter-docs/cli-reference/) for every config key.
+Per-user settings (your git identity) go in the gitignored overlay `.winter/config.local.toml`. See the [config.toml reference](/winter-docs/cli-reference/config/) for every config key.
 
 :::tip
 If you are starting a brand-new workspace, the `/ws-setup` skill walks you through this configuration interactively.
