@@ -47,7 +47,14 @@ export default defineConfig({
 				},
 				{
 					label: 'Extensions',
-					items: [{ label: 'Overview', slug: 'extensions' }],
+					items: [
+						{ label: 'Overview', slug: 'extensions' },
+						{ label: 'winter-harness', slug: 'extensions/winter-harness' },
+						{ label: 'winter-workflow', slug: 'extensions/winter-workflow' },
+						{ label: 'winter-product', slug: 'extensions/winter-product' },
+						{ label: 'winter-service-tmux', slug: 'extensions/winter-service-tmux' },
+						{ label: 'winter-github', slug: 'extensions/winter-github' },
+					],
 				},
 				{
 					label: 'Conventions',
