@@ -31,7 +31,12 @@ export default defineConfig({
 				},
 				{
 					label: 'Operations',
-					items: [{ label: 'Overview', slug: 'operations' }],
+					items: [
+						{ label: 'Overview', slug: 'operations' },
+						{ label: 'Feature Environments & Worktrees', slug: 'operations/feature-environments' },
+						{ label: 'Polyrepo Git Operations', slug: 'operations/polyrepo-git' },
+						{ label: 'Running Services', slug: 'operations/services' },
+					],
 				},
 				{
 					label: 'CLI Reference',
