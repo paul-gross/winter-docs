@@ -11,6 +11,7 @@ winter-harness ships a convention file for each recurring decision in Python app
 |------------|-----------|--------|
 | Domain modeling | Adding a domain type, or refactoring a function with many parameters. | [`domain-modeling.md`](https://github.com/paul-gross/winter-harness/blob/master/python/domain-modeling.md) |
 | Module layout | Adding a `core/` cross-cutting protocol or a `modules/<feature>/internal/` adapter. | [`module-layout.md`](https://github.com/paul-gross/winter-harness/blob/master/python/module-layout.md) |
+| TUI plugin authoring | Writing a `plugin.py` that contributes dashboard badges, TUI screens, or keybound actions. | [`plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/python/plugin-author.md) |
 
 ## Failure & I/O
 

@@ -42,3 +42,7 @@ doctor = "scripts/doctor.sh"
 See the [config.toml reference](/winter-docs/cli-reference/config/) for the manifest schema and the `adopt_extensions` modes that control how aggressively winter processes a standalone repo's skills and agents.
 
 The guides in this section explain, for each extension: what it contributes, when to adopt it, how to configure it, and its key conventions.
+
+## Plugins: extending the dashboard and CLI
+
+Beyond skills, agents, and hooks, an extension (or a standalone `.winter/plugins/` directory) can ship a **TUI plugin** — a `plugin.py` that contributes status badges, TUI screens, and keybound actions to the running dashboard. See [Authoring a TUI plugin](/winter-docs/tui-plugins/authoring/).
