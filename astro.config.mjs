@@ -49,11 +49,18 @@ export default defineConfig({
 					label: 'Extensions',
 					items: [
 						{ label: 'Overview', slug: 'extensions' },
-						{ label: 'winter-harness', slug: 'extensions/winter-harness' },
-						{ label: 'winter-workflow', slug: 'extensions/winter-workflow' },
 						{ label: 'winter-product', slug: 'extensions/winter-product' },
 						{ label: 'winter-service-tmux', slug: 'extensions/winter-service-tmux' },
 						{ label: 'winter-github', slug: 'extensions/winter-github' },
+					],
+				},
+				{
+					label: 'Examples',
+					items: [
+						{ label: 'Overview', slug: 'examples' },
+						{ label: 'winter-workflow', slug: 'examples/winter-workflow' },
+						{ label: 'winter-harness', slug: 'examples/winter-harness' },
+						{ label: 'winter-workspace', slug: 'examples/winter-workspace' },
 					],
 				},
 				{

@@ -3,7 +3,7 @@ title: Conventions & Patterns
 description: Winter's reusable conventions — code, agent-facing markdown, and the agentic development methodology.
 ---
 
-Beyond the CLI and extensions, winter carries a body of reusable conventions: how code is written, how agent-facing documentation is written, and how agents actually develop software. These come from two extensions — [winter-harness](/winter-docs/extensions/winter-harness/) (the conventions) and [winter-workflow](/winter-docs/extensions/winter-workflow/) (the methodology) — and are rendered here as a navigable reference.
+Beyond the CLI and extensions, winter carries a body of reusable conventions: how code is written, how agent-facing documentation is written, and how agents actually develop software. These come from two of winter's [reference implementations](/winter-docs/examples/) — [winter-harness](/winter-docs/examples/winter-harness/) (the conventions) and [winter-workflow](/winter-docs/examples/winter-workflow/) (the methodology) — and are rendered here as a navigable reference.
 
 - **[Python Conventions](/winter-docs/conventions/python/)** — domain modeling, error handling, dependency injection, the repository pattern, testing, linting, and typechecking.
 - **[Agent-Facing Markdown](/winter-docs/conventions/markdown-style/)** — path notation, naming, and how to write READMEs, extension `index.md` files, and skills.
