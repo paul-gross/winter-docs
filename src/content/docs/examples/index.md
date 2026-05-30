@@ -12,7 +12,7 @@ The line between the two: a **consumable extension** (see [Extensions](/winter-d
 | Example | What it is | Why it's an example |
 |---------|-----------|---------------------|
 | **[winter-workflow](/winter-docs/examples/winter-workflow/)** | The maintainer's agentic workflow — the blizzard team, the thaw loop, and the review skills. | A personal, interchangeable methodology. Turnkey — install it and the `/wf-*` skills work — but winter keeps the workflow swappable, so adopt it or fork your own. |
-| **[winter-harness](/winter-docs/examples/winter-harness/)** | The maintainer's conventions library — code, agent-facing-markdown, and process conventions, each with a reference exemplar. | A personal, opinionated convention set. Usable as-is, and a worked example of *how to encode* conventions — adopt it, or fork the shape and supply your own facts. |
+| **[winter-harness](/winter-docs/examples/winter-harness/)** | Winter's development harness — the code, agent-facing-markdown, and process conventions for building winter and all its extensions, each with a reference exemplar. | The conventions for the winter ecosystem specifically, not yet a general-purpose convention set. Swappable by design: fork it as the starting point for a harness of your own. |
 | **[winter-workspace](/winter-docs/examples/winter-workspace/)** | The meta-workspace winter itself is built in, pre-wired to the maintainer's repos. | A worked example of an assembled winter workspace, not a template to clone — it carries the maintainer's specific repos and choices. |
 
 ## How to use them
