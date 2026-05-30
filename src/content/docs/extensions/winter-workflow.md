@@ -9,7 +9,7 @@ description: The agentic workflow — agent roles and the blizzard, thaw, and re
 
 ### Agent roles
 
-A set of single-responsibility agents, symlinked into the workspace as `wf-<name>`: `architect`, `developer`, `explorer`, `runner`, `test-mediator`, `backend-verifier`, `frontend-verifier`, `code-reviewer`, `harness-reviewer`, and `context-reviewer`. Each can be spawned standalone or composed into a team. The convention is *role purity*: agents do one job; the caller injects coordination.
+A set of single-responsibility agents, symlinked into the workspace as `wf-<name>`: `architect`, `developer`, `explorer`, `runner`, `test-mediator`, `backend-verifier`, `frontend-verifier`, `code-reviewer`, `harness-reviewer`, `context-reviewer`, and `documentation-reviewer`. Each can be spawned standalone or composed into a team. The convention is *role purity*: agents do one job; the caller injects coordination.
 
 ### Loops & skills
 
@@ -19,8 +19,10 @@ A set of single-responsibility agents, symlinked into the workspace as `wf-<name
 | `/wf-thaw` | A focused explorer → developer → verifier loop with a hard iteration cap; bails to a blizzard when the work is bigger than expected. | Small, localized changes to existing code — bug fixes, tweaks, regressions. |
 | `/wf-cold-review` | Fresh-context `code-reviewer` with zero prior history. | An independent read on code correctness/design. |
 | `/wf-harness-review` | Fresh-context `harness-reviewer`. | Checking whether the agentic harness keeps pace with the code. |
+| `/wf-context-review` | Fresh-context `context-reviewer`. | Checking agent-facing markdown against the documented conventions. |
+| `/wf-documentation-review` | Fresh-context `documentation-reviewer`. | Checking external-facing public documentation against the code it documents. |
 | `/wf-harness-score` | Scores the codebase against a 5-stage × 10-dimension maturity matrix; emits an HTML report. | Tracking harness maturity over time. |
-| `/wf-pre-push` | Fans out code, harness, and (conditionally) context reviewers over `origin/master..HEAD`. | Before pushing completed work. |
+| `/wf-pre-push` | Fans out the reviewers the project's surfaces call for — code always, plus harness, context, and documentation reviewers when those surfaces exist — over `origin/master..HEAD`. | Before pushing completed work. |
 | `/wf-commit` | Stages everything and writes a conventional-commit message inferred from the diff. | Committing a worktree. |
 
 ## When to adopt
@@ -41,7 +43,7 @@ After `winter ws init`, the `/wf-*` skills and `wf-*` agents are available. When
 ## Key conventions
 
 - **Match the loop to the task** — blizzard for net-new/large, thaw for narrow/localized.
-- **Review on multiple axes** — code (`/wf-cold-review`), harness (`/wf-harness-review`), and agent-facing markdown (`context-reviewer`) are distinct concerns.
+- **Review on multiple axes** — code (`/wf-cold-review`), harness (`/wf-harness-review`), agent-facing markdown (`context-reviewer`), and external-facing public documentation (`documentation-reviewer`) are distinct concerns.
 - **Review before pushing** — `/wf-pre-push` is advisory and deliberately decoupled from the push itself.
 
 :::note[Canonical source]

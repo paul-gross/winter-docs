@@ -21,15 +21,16 @@ Work is done by single-responsibility agents. Each does one job; the *caller* in
 | Agent | Responsibility |
 |-------|----------------|
 | `architect` | High-level design, interface definitions, dependency analysis, architectural guardrails. |
+| `backend-verifier` | Testing APIs via curl/CLI and validating database state. |
+| `code-reviewer` | Assessing code changes for correctness and project standards. |
+| `context-reviewer` | Reviewing agent-facing markdown against the documented conventions. |
 | `developer` | Implementing features, unit tests, refactoring, bug fixes. |
+| `documentation-reviewer` | Reviewing external-facing public documentation for accuracy and currency. |
 | `explorer` | Investigating undocumented systems, tracing data flows, producing AI-centric docs. |
+| `frontend-verifier` | Driving the UI in a browser to confirm rendering and interactions. |
+| `harness-reviewer` | Reviewing the seam between the application and the agentic harness. |
 | `runner` | Managing service lifecycle and monitoring logs for errors. |
 | `test-mediator` | Coordinating test strategy and dispatching work to verifiers. |
-| `backend-verifier` | Testing APIs via curl/CLI and validating database state. |
-| `frontend-verifier` | Driving the UI in a browser to confirm rendering and interactions. |
-| `code-reviewer` | Assessing code changes for correctness and project standards. |
-| `harness-reviewer` | Reviewing the seam between the application and the agentic harness. |
-| `context-reviewer` | Reviewing agent-facing markdown against the documented conventions. |
 
 ## The loops
 
@@ -45,10 +46,12 @@ For small, localized changes to existing code — a bug fix, a tweak, a regressi
 
 Review happens along distinct axes, each a fresh-context, one-shot subagent:
 
-- **`/wf-cold-review`** — code correctness and design (`code-reviewer`).
-- **`/wf-harness-review`** — whether the harness keeps pace with the code (`harness-reviewer`).
+- **`code-reviewer`** — code correctness and design.
+- **`harness-reviewer`** — whether the harness keeps pace with the code.
 - **`context-reviewer`** — agent-facing markdown against conventions.
-- **`/wf-pre-push`** — fans out all three over the un-pushed range (`origin/master..HEAD`) and synthesises one advisory summary. Run it before pushing; it is deliberately decoupled from the push itself.
+- **`documentation-reviewer`** — external-facing public documentation against the code it describes.
+
+`code-reviewer` and `harness-reviewer` are also exposed standalone as `/wf-cold-review` and `/wf-harness-review`. **`/wf-pre-push`** fans out the applicable reviewers over the un-pushed range (`origin/master..HEAD`) and synthesises one advisory summary — which reviewers run depends on what the project has: a project with no docs site gets no documentation review, one with no agentic harness gets no harness review. Run it before pushing; it is deliberately decoupled from the push itself.
 
 `/wf-harness-score` complements these by scoring the whole codebase against a 5-stage × 10-dimension maturity matrix.
 
