@@ -1,12 +1,12 @@
 ---
 title: Polyrepo Git Operations
-description: Run git across every repo at once — sync, pull, push, merge, and connect/disconnect — and know when to use each.
+description: Run git across every repo at once — fetch, pull, push, merge, and connect/disconnect — and know when to use each.
 ---
 
 Winter's `ws` subcommands apply a git operation across every repository in an environment in one shot, reading the workspace config to handle pinned repos and running in parallel. They accept segment-aware glob patterns over `<env>/<repo>`, so you can target one environment, one repo, or many at once.
 
 ```bash
-winter ws sync alpha            # whole environment
+winter ws fetch alpha           # whole environment
 winter ws push alpha/app-web    # one repo
 winter ws pull '*/app-api'      # the app-api worktree in every environment
 ```
@@ -15,22 +15,21 @@ winter ws pull '*/app-api'      # the app-api worktree in every environment
 
 | Command | What it does | When to use |
 |---------|--------------|-------------|
-| `winter ws sync <env>` | Fetch, then ff-merge `origin/<main>` into every worktree (falls back to a merge commit), then fast-forward the source checkouts. | Pull the latest main into an environment before or during work. |
 | `winter ws pull <env>` | Fetch, then ff-only integrate each worktree's **tracked upstream** (feature branch for non-pinned, main for pinned). | Bring down remote commits on your feature branch. |
 | `winter ws merge <ref> <env>` | Merge an arbitrary ref (another env, a branch, `origin/...`) into matched worktrees. No fetch. | Fold one environment into another, or merge a specific branch. |
 | `winter ws push <env>` | Push worktrees with commits ahead of upstream. Non-pinned → the feature branch; pinned excluded by default. | Ship completed work. |
 | `winter ws connect <env> <branch>` | Set each non-pinned worktree's upstream to `origin/<branch>`. | Point an environment at a remote feature branch (see below). |
 | `winter ws disconnect <env>` | Unset upstream tracking on each non-pinned worktree. | Free an environment to be reused for a different feature. |
-| `winter ws fetch <env>` | Refresh remote-tracking refs, no working-tree changes. | Before an offline `merge` or `checkout`. |
+| `winter ws fetch <env>` | Refresh remote-tracking refs and fast-forward each source checkout's local main. No feature-worktree changes. | Bring `origin/<main>` into the source checkouts; before an offline `merge` or `checkout`. |
 | `winter ws checkout <env> <branch>` | All-or-nothing reset of every worktree to `origin/<branch>`. | Adopt an existing remote feature branch. |
 
-### sync vs. pull vs. merge
+### fetch vs. pull vs. merge
 
 These three overlap, so the distinction matters:
 
-- **`sync`** always targets `origin/<main>` and will fall back to a merge commit — use it to keep an environment current with main.
+- **`fetch`** refreshes remote-tracking refs and fast-forwards the source checkouts' main — no feature-worktree changes. Run it before an offline `merge` or `checkout`, or to bring the latest `origin/<main>` into the source checkouts new envs branch from.
 - **`pull`** targets each worktree's *tracked upstream* and is ff-only by default — use it to integrate your own feature-branch commits.
-- **`merge`** takes an *explicit* source ref and does not fetch — use it for env-to-env folds or a named branch.
+- **`merge`** takes an *explicit* source ref and does not fetch — use it for env-to-env folds or to fold `origin/<main>` into a worktree (`winter ws fetch` first, then `winter ws merge origin/<main> <env>`).
 
 ## Branch model
 

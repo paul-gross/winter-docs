@@ -6,7 +6,7 @@ description: The day-to-day operating model for winter — feature environments,
 This section is the task-oriented guide to operating a winter workspace day to day. It covers the three things you do constantly: managing feature environments, running git across many repos at once, and starting and stopping services.
 
 - **[Feature Environments & Worktrees](/winter-docs/operations/feature-environments/)** — create, list, and destroy environments; how Greek-letter port indexing keeps them from colliding.
-- **[Polyrepo Git Operations](/winter-docs/operations/polyrepo-git/)** — `sync`, `pull`, `push`, `merge`, and `connect`/`disconnect` across every repo, with guidance on when to use each.
+- **[Polyrepo Git Operations](/winter-docs/operations/polyrepo-git/)** — `fetch`, `pull`, `push`, `merge`, and `connect`/`disconnect` across every repo, with guidance on when to use each.
 - **[Running Services](/winter-docs/operations/services/)** — the `workflow.sh` setup and the `up` / `down` / `status` scripts the service-orchestration extension provides.
 
 ## CLI first, raw git when you need it

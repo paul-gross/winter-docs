@@ -17,7 +17,7 @@ Winter is built in three layers. You can adopt just the CLI and add the rest as 
 
 ### 1. The CLI (`winter`)
 
-The `winter` command manages the workspace. It clones your repositories, creates per-feature *worktrees* across all of them on a shared branch, assigns each environment a non-colliding block of ports, and provides cross-repo git operations (`sync`, `pull`, `push`, `merge`, `connect`). It reconciles the workspace against a single declarative config file, so setup is idempotent and repeatable.
+The `winter` command manages the workspace. It clones your repositories, creates per-feature *worktrees* across all of them on a shared branch, assigns each environment a non-colliding block of ports, and provides cross-repo git operations (`fetch`, `pull`, `push`, `merge`, `connect`). It reconciles the workspace against a single declarative config file, so setup is idempotent and repeatable.
 
 → [CLI Reference](/winter-docs/cli-reference/)
 

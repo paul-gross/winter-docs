@@ -57,17 +57,9 @@ winter ws diff alpha [--staged | --branch] [--repo REPO]
 winter ws diff alpha --branch
 ```
 
-### `ws sync`
-
-Fetch, ff-merge `origin/<main>` into each worktree (falling back to a merge commit), then fast-forward the source checkouts.
-
-```bash
-winter ws sync alpha
-```
-
 ### `ws fetch`
 
-Refresh remote-tracking refs; no working-tree changes.
+Refresh remote-tracking refs and fast-forward each matched source checkout's local main. No feature-worktree changes.
 
 ```bash
 winter ws fetch [PATTERNS...] [--standalone | --all]
