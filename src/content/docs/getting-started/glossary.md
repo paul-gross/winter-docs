@@ -35,7 +35,7 @@ A repository cloned at the workspace root (or a configured path) rather than int
 
 ## Extension
 
-An opt-in capability a workspace installs, shipped as a standalone repository with a `winter-ext.toml` manifest. An extension contributes skills, agents, lifecycle hooks (`on_env_init` / `on_env_destroy`), and `winter doctor` probes. Examples: service orchestration, issue tooling, the product backlog, conventions, and the agentic workflow.
+An opt-in capability a workspace installs, shipped as a standalone repository with a `winter-ext.toml` manifest. An extension contributes skills, agents, lifecycle hooks (`on_env_init` / `on_env_destroy`), `winter doctor` probes, and `winter lint` checks. Examples: service orchestration, issue tooling, the product backlog, conventions, and the agentic workflow.
 
 ## Path notation
 

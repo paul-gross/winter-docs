@@ -3,7 +3,7 @@ title: Extensions
 description: Opt-in capabilities a winter workspace installs — product backlog, service orchestration, and issue tooling.
 ---
 
-Extensions are how a winter workspace gains capabilities beyond the core CLI. Each is a standalone repository the workspace clones and installs; once installed, it contributes **skills**, **agents**, lifecycle **hooks** (`on_env_init` / `on_env_destroy`), and **`winter doctor` probes**.
+Extensions are how a winter workspace gains capabilities beyond the core CLI. Each is a standalone repository the workspace clones and installs; once installed, it contributes **skills**, **agents**, lifecycle **hooks** (`on_env_init` / `on_env_destroy`), **`winter doctor` probes**, and **`winter lint` checks**.
 
 ## The maintained extensions
 
@@ -30,15 +30,16 @@ path = ".winter/ext/service-tmux"   # optional; defaults to the repo name
 
 On install, winter reads the extension's `winter-ext.toml` manifest and symlinks its skills and agents into the workspace's `.claude/` directory under a short **prefix** (e.g. `wp-todo`, `wst-…`). The prefix keeps extensions from colliding, and lets the same workspace install several at once.
 
-An extension manifest can also declare lifecycle hooks and a `doctor` probe:
+An extension manifest can also declare lifecycle hooks, a `doctor` probe, and a `lint` check:
 
 ```toml
 name = "winter-service-tmux"
 prefix = "wst"
+doctor = "scripts/doctor.sh"   # NDJSON health probe for `winter doctor`
+lint   = "scripts/lint.sh"     # NDJSON convention checks for `winter lint`
 [hooks]
 on_env_init    = "./hooks/init.sh"
 on_env_destroy = "./hooks/destroy.sh"
-doctor = "scripts/doctor.sh"
 ```
 
 See the [config.toml reference](/winter-docs/cli-reference/config/) for the manifest schema and the `adopt_extensions` modes that control how aggressively winter processes a standalone repo's skills and agents.

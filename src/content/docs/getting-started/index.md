@@ -23,7 +23,7 @@ The `winter` command manages the workspace. It clones your repositories, creates
 
 ### 2. Extensions
 
-Extensions are opt-in capabilities a workspace installs as standalone repositories. Each one contributes skills, agents, lifecycle hooks, and health probes to the workspace. The maintained set covers tmux **service orchestration**, AI-native **issue tooling**, a **product backlog**, reusable **code and markdown conventions**, and the **agentic workflow** itself.
+Extensions are opt-in capabilities a workspace installs as standalone repositories. Each one contributes skills, agents, lifecycle hooks, health probes, and convention checks to the workspace. The maintained set covers tmux **service orchestration**, AI-native **issue tooling**, a **product backlog**, reusable **code and markdown conventions**, and the **agentic workflow** itself.
 
 → [Extensions](/winter-docs/extensions/)
 

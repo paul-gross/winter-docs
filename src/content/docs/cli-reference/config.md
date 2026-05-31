@@ -16,6 +16,7 @@ Winter reads two files and merges them: the committed workspace config and a git
 | `session_prefix` | string | — | tmux session prefix used by the service-orchestration extension. |
 | `adopt_extensions` | string | `"winter"` | How aggressively standalone repos contribute skills/agents: `winter`, `all`, or `none` (see below). |
 | `doctor` | string (path) | — | Optional workspace-level `winter doctor` probe script, relative to the workspace root, must be executable. |
+| `lint` | string (path) | — | Optional workspace-level `winter lint` check script, relative to the workspace root, must be executable. |
 | `git_excludes` | string[] | `[]` | Entries appended to every repo's `.git/info/exclude` on `winter ws init`. |
 
 ### `adopt_extensions` modes

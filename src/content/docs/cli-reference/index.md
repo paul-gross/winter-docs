@@ -192,6 +192,18 @@ winter doctor [--json]
 winter doctor
 ```
 
+## `winter lint`
+
+Run winter-ecosystem *convention* checks — path notation, agent frontmatter, module boundaries — as opposed to `winter doctor`, which checks workspace health. `winter lint` is a dispatcher: it runs lint scripts contributed by installed extensions (and an optional workspace-level one) over the selected scope and aggregates `pass` / `warn` / `fail` findings with `file:line`. It owns dispatch only; the checks live in the extensions. Exit `0` unless something fails (warnings allowed).
+
+```bash
+winter lint            # the whole workspace (same as --all)
+winter lint <repo>     # one repo by name
+winter lint <env>      # every worktree in a feature env
+winter lint --changed  # only the dirty / un-pushed files in the current repo
+winter lint --json     # NDJSON event stream
+```
+
 ## `winter dashboard`
 
 Interactive TUI showing workspace status, environments, and per-repo tracking. Press `L` for the captured-error log; `c` to clear it.
