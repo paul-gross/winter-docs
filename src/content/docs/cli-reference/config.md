@@ -70,6 +70,29 @@ url = "git@github.com:paul-gross/winter-service-tmux.git"
 path = ".winter/ext/service-tmux"
 ```
 
+## `[keybindings]`
+
+Remaps the `winter dashboard` keys. Every built-in (and plugin) dashboard action has a stable *action id*; an id with no entry keeps its default.
+
+| Key | Type | Default | Meaning |
+|-----|------|---------|---------|
+| `leader` | string | `"\\"` | Key spec that `<leader>` expands to. |
+| `timeoutlen` | integer | `1000` | Milliseconds to wait for the next key of a chord sequence (Neovim's `timeoutlen`). |
+
+Action-id → key-spec entries live in the `[keybindings.bindings]` sub-table, with quoted ids so a dotted id stays a flat key. Specs are Neovim-inspired — single keys, modifier chords (`<C-s>`), `<leader>` expansion, and multi-key sequences (`gd`, `<leader>S`):
+
+```toml
+[keybindings]
+timeoutlen = 400
+
+[keybindings.bindings]
+"workspace.refresh" = "<C-r>"
+"worktree.open_detail" = "o"
+"plugin.codediff" = "<leader>d"
+```
+
+The full action-id list and key-spec grammar are in the canonical reference below.
+
 ## Local overlay (`.winter/config.local.toml`)
 
 Same schema as the shared config; keys override key by key. Most commonly it carries your git identity, which winter applies to every repo it manages during `winter ws init`:

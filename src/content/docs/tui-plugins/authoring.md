@@ -55,7 +55,7 @@ Every field of `PluginRegistration` is optional — populate only what you ship:
 | `worktree_repo_decorators` | badges on a repo's row in the dashboard |
 | `environment_decorators` | badges on a feature-environment header |
 | `tui_screens` | full dashboard screens |
-| `tui_actions` | keybound actions, each scoped to the workspace, an environment, or a worktree |
+| `tui_actions` | keybound actions, each scoped to the workspace, an environment, or a worktree. A `TuiAction.key` is the **default** binding — users can remap it from `[keybindings.bindings]` in `config.toml` via the id `plugin.<name>` |
 | `metadata` | free-form data about the plugin |
 | `commands` | `click.Command` objects — **reserved**: the loader collects these, but they are not yet attached to the `winter` CLI, so plugin-supplied subcommands do not run today |
 

@@ -206,7 +206,7 @@ winter lint --json     # NDJSON event stream
 
 ## `winter dashboard`
 
-Interactive TUI showing workspace status, environments, and per-repo tracking. Press `L` for the captured-error log; `c` to clear it.
+Interactive TUI showing workspace status, environments, and per-repo tracking. Press `L` for the captured-error log; `c` to clear it. Every key is remappable — see the [`[keybindings]`](/winter-docs/cli-reference/config/#keybindings) config section.
 
 ```bash
 winter dashboard
