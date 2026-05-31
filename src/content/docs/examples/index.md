@@ -20,5 +20,5 @@ The line between the two: a **consumable extension** (see [Extensions](/winter-d
 Use them as-is, or fork them:
 
 - Install **winter-workflow** and its `/wf-*` skills work immediately; adapt its agent roles and review loops to your team, or replace it wholesale — the workspace is the stable integration surface and the workflow is a swappable component.
-- Reference **winter-harness**'s conventions directly, or fork it as a template for a conventions repo of your own: keep the meta-layer shape (READMEs, extension `index.md` rules, the markdown principles) and fill in the code and domain invariants your projects actually need.
+- Reference **winter-harness**'s conventions directly, or fork it as a template for a conventions repo of your own: keep the Canon (universal authoring principles) and the winter-ecosystem markdown shape (READMEs, extension `index.md` rules), and fill in the code and domain invariants your projects actually need.
 - Stand up your own workspace the way **winter-workspace** is assembled, declaring your own `[[project_repository]]` and `[[standalone_repository]]` entries in `.winter/config.toml`.

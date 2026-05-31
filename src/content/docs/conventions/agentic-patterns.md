@@ -7,12 +7,7 @@ Winter is built on the premise that **agents do the heavy lifting**: they write 
 
 ## The hybrid harness/engineer mindset
 
-An agent working in winter is both a software engineer (building the application) and a harness engineer (improving the environment that makes agentic work possible). When a doc is stale, you fix it where you find it; when a tool has a gap, you extend it. The four levers winter trusts most for agent productivity are:
-
-- **Observability** — systems an agent can see into.
-- **Testability** — systems an agent can verify.
-- **Discoverability** — systems an agent can navigate.
-- **Pluggability** — systems an agent can swap parts of.
+An agent working in winter is both a software engineer (building the application) and a harness engineer (improving the environment that makes agentic work possible). When a doc is stale, you fix it where you find it; when a tool has a gap, you extend it. The levers it leans on hardest for agent productivity are the Canon's four — **observability**, **testability**, **discoverability**, and **pluggability** — defined in [`canon/four-levers.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/four-levers.md).
 
 ## Role-pure agents
 

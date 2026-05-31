@@ -3,11 +3,11 @@ title: Agent-Facing Markdown
 description: How to write the markdown agents read — path notation, naming, and guides for READMEs, extension index.md files, and skills.
 ---
 
-Most winter documentation is *agent-facing*: it is loaded into an agent's context and acts as runtime instruction, not just reference reading. That changes how it should be written — clarity, a single source of truth, and no duplication matter more than prose polish. winter-harness's meta layer ([`harness/`](https://github.com/paul-gross/winter-harness/tree/master/harness)) is the convention set for writing it.
+Most winter documentation is *agent-facing*: it is loaded into an agent's context and acts as runtime instruction, not just reference reading. That changes how it should be written — clarity, a single source of truth, and no duplication matter more than prose polish. The conventions for writing it live in winter-harness across two layers: the universal [Canon](https://github.com/paul-gross/winter-harness/tree/master/canon) — principles true of any harness — and the winter-ecosystem [`harness/`](https://github.com/paul-gross/winter-harness/tree/master/harness) markdown guides that build on it.
 
 ## Principles
 
-The [`harness/principles.md`](https://github.com/paul-gross/winter-harness/blob/master/harness/principles.md) file states the core rules: write for the agent that will act on the text, keep each fact in exactly one place, link rather than restate, and prefer tables and short imperative statements over narrative.
+The [`canon/principles.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/principles.md) file states the core rules: write for the agent that will act on the text, keep each fact in exactly one place, link rather than restate, and prefer tables and short imperative statements over narrative. These are Canon — universal to any harness.
 
 ## Path & reference notation
 
@@ -15,7 +15,7 @@ Winter uses a `<context>:<path>` prefix so a reference is unambiguous about whic
 
 ## Naming
 
-Agents, skills, and commands follow consistent naming so a prefix maps predictably to an extension (`wf-blizzard`, `wg-issue`, `wst-…`). The naming conventions are part of the harness meta layer.
+Agents, skills, and commands follow consistent naming so a prefix maps predictably to an extension (`wf-blizzard`, `wg-issue`, `wst-…`). These naming conventions are part of the winter-ecosystem markdown layer (`harness/`).
 
 ## Writing guides
 
@@ -32,5 +32,5 @@ A key distinction these guides draw: an extension's `index.md` is the runtime su
 Agent-facing markdown has its own reviewer. After authoring or changing an agent, skill, command, `CLAUDE.md`, or `ai/` doc, the [`context-reviewer`](/winter-docs/conventions/agentic-patterns/) agent checks it against these conventions for clarity, single-source-of-truth, and non-duplication.
 
 :::note[Canonical source]
-[`winter-harness/harness/`](https://github.com/paul-gross/winter-harness/tree/master/harness) — start at [`index.md`](https://github.com/paul-gross/winter-harness/blob/master/harness/index.md).
+[`winter-harness/canon/`](https://github.com/paul-gross/winter-harness/tree/master/canon) (universal principles) and [`winter-harness/harness/`](https://github.com/paul-gross/winter-harness/tree/master/harness) (winter-ecosystem markdown guides) — start at each directory's `index.md`.
 :::

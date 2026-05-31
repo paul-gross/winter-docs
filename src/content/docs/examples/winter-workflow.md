@@ -43,7 +43,7 @@ Single-responsibility agents, symlinked into the workspace as `wf-<name>`. Each 
 
 ## What to take from it
 
-Study winter-workflow when you want agents to do the heavy lifting — write code, run the app, verify their own changes, and review their own work — under a repeatable structure. Take the role-purity convention (agents do one job; the caller injects coordination), the blizzard/thaw split that matches ceremony to task size, and the reviewer pattern where each reviewer *reads the harness* for the facts it enforces rather than embedding them (see [`facts-vs-methodology.md`](https://github.com/paul-gross/winter-harness/blob/master/harness/facts-vs-methodology.md)). Then adapt the roles and loops to your team, or replace the whole workflow with your own.
+Study winter-workflow when you want agents to do the heavy lifting — write code, run the app, verify their own changes, and review their own work — under a repeatable structure. Take the role-purity convention (agents do one job; the caller injects coordination), the blizzard/thaw split that matches ceremony to task size, and the reviewer pattern where each reviewer *reads the harness* for the facts it enforces rather than embedding them (see [`facts-vs-methodology.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/facts-vs-methodology.md)). Then adapt the roles and loops to your team, or replace the whole workflow with your own.
 
 ## How it's wired in
 

@@ -9,15 +9,16 @@ It's grouped under [Examples](/winter-docs/examples/) because winter keeps the h
 
 ## What it contributes
 
-winter-harness *is* its conventions — unusually, its content lives at the top of the repo (not under `ai/`), because the conventions are its public surface, addressed via the `winter-harness:` path notation. It is organised in three layers:
+winter-harness *is* its conventions — unusually, its content lives at the top of the repo (not under `ai/`), because the conventions are its public surface, addressed via the `winter-harness:` path notation. It is organised in four layers:
 
-- **Meta** (`harness/`) — conventions for writing the agent-facing markdown of the ecosystem: READMEs, extension `index.md` files, path references, and agent / skill / command naming.
+- **Canon** (`canon/`) — the universal, enforceable substrate true of any harness: cross-cutting authoring principles, the facts/methodology split, the harness-change eval, and the four levers. Self-contained — it depends on nothing else.
+- **Markdown** (`harness/`) — winter-ecosystem conventions for writing the agent-facing markdown of the ecosystem: READMEs, extension `index.md` files, path references, and agent / skill / command naming. Rests on the Canon.
 - **Code** (`python/`, `exemplars/`) — conventions for application code (domain modeling, error handling, dependency injection, the repository pattern, protocol conformance, subprocess use, logging, module layout, linting, typechecking, testing), each with a reference exemplar showing the expected shape.
 - **Process** (`workflows/`) — the day-to-day delivery workflow: the worktree model, branch naming, push target, the rebase rule, and pre-push checks.
 
 ## What to take from it
 
-Its conventions target winter and its extensions today, so what transfers to other projects is the *shape*, not the facts. If you fork it, keep the meta-layer (READMEs, extension `index.md` rules, the markdown principles) and the convention-per-file structure, and supply the code and domain facts your own repos need — especially for Python projects and any workspace where agents author the markdown other agents read. It pairs with [winter-workflow](/winter-docs/examples/winter-workflow/) by design — the harness holds the *facts* (what's true), a workflow's reviewers hold the *methodology* (how they review), and the reviewers read the harness rather than carry a copy (see [`facts-vs-methodology.md`](https://github.com/paul-gross/winter-harness/blob/master/harness/facts-vs-methodology.md)).
+Its conventions target winter and its extensions today, so what transfers to other projects is the *shape*, not the facts. If you fork it, keep the Canon (the universal authoring principles and the facts/methodology split) and the winter-ecosystem markdown structure (READMEs, extension `index.md` rules, convention-per-file), and supply the code and domain facts your own repos need — especially for Python projects and any workspace where agents author the markdown other agents read. It pairs with [winter-workflow](/winter-docs/examples/winter-workflow/) by design — the harness holds the *facts* (what's true), a workflow's reviewers hold the *methodology* (how they review), and the reviewers read the harness rather than carry a copy (see [`canon/facts-vs-methodology.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/facts-vs-methodology.md)).
 
 ## How it's wired in
 
