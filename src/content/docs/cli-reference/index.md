@@ -11,6 +11,14 @@ Most commands accept `--json` for machine-readable output. For the configuration
 To run an in-development copy of the CLI from a feature worktree without reinstalling, prefix any command with `--winter=PATH` (must be the first argument), e.g. `winter --winter=./alpha/winter ws status alpha`.
 :::
 
+## Root flags
+
+`winter --version` prints the installed CLI version (read from package metadata) and exits; `winter --help` lists every command and root flag.
+
+```bash
+winter --version
+```
+
 ## `winter ws` — workspace & environments
 
 ### `ws init`
