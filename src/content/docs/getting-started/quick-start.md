@@ -98,6 +98,10 @@ Commit per repo with plain git inside each worktree, then push the whole environ
 winter ws push alpha
 ```
 
+:::note
+Pinned repos (those tracking `origin/<main>` directly) are **excluded from `push` by default**. If `winter ws push` reports `pinned repo(s) with commits skipped`, re-run with `--include-pinned`. See [Pinned repos](/winter-docs/operations/polyrepo-git/#pinned-repos).
+:::
+
 ## Next steps
 
 - **[Operations](/winter-docs/operations/)** — the full model for environments, polyrepo git, and services.

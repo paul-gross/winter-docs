@@ -52,6 +52,14 @@ winter ws push --include-pinned    # non-pinned + pinned
 winter ws push --only-pinned       # just the pinned set
 ```
 
+In a workspace where **every** repo is pinned, a bare `winter ws push <env>` therefore pushes nothing by default and reports a skip line:
+
+```
+! alpha: 1 pinned repo(s) with commits skipped — use --include-pinned or --only-pinned
+```
+
+That is not "nothing to push" — the commits exist; the default scope excluded them. Re-run with one of the flags above, or push the repo directly with plain `git push`.
+
 ## Committing
 
 Winter does not wrap per-repo git. Stage and commit with plain `git` inside each worktree, then use `winter ws push` to ship the environment. Follow each repo's own commit conventions.
