@@ -25,10 +25,13 @@ The `up` / `down` / `status` scripts are symlinked into every environment direct
 
 ```bash
 cd alpha
-./up        # start the environment's services in tmux session mp-alpha
-./status    # show what's running
-./down      # stop everything and reap child processes cleanly
+./up             # start the environment's services in tmux session mp-alpha
+./status         # show this environment's services
+./status --all   # cross-environment view of every running session
+./down           # stop everything and reap child processes cleanly
 ```
+
+Each script is scoped to the environment it's run from: `alpha/status` reports only the `mp-alpha` session, the same way `./up` and `./down` default to their own environment. There is no worktree-name argument to `./status` — pass `--all` when you want to see every running environment at once.
 
 ## Reading service output
 
