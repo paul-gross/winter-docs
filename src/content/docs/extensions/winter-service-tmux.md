@@ -26,20 +26,20 @@ url = "git@github.com:paul-gross/winter-service-tmux.git"
 path = ".winter/ext/service-tmux"
 ```
 
-The extension needs a project-specific **`workflow.sh`** that declares which services to run and the tmux pane layout, plus a companion **`workflow.md`** that maps service names to `<window>.<pane>` targets. Generate both by following the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough; `/ws-setup` prompts for this when the extension is installed. Until `workflow.sh` exists, `./up` errors out.
+The extension needs a project-specific **`setup-tmux.sh`** that declares which services to run and the tmux pane layout, plus a companion **`setup-tmux.md`** that maps service names to `<window>.<pane>` targets. Generate both by following the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough; `/ws-setup` prompts for this when the extension is installed. Until `setup-tmux.sh` exists, `./up` errors out. A gitignored **`setup-tmux.local.sh`** can overlay machine-specific overrides on top; the legacy names `workflow.sh` / `workflow.md` still work as fallbacks.
 
 ## Troubleshooting
 
-- **`./up` errors immediately** — `workflow.sh` is missing or unreadable. Run the workflow-setup walkthrough.
-- **`workflow.md` is missing** — re-run the setup walkthrough's final step; don't reverse-engineer pane indices from `workflow.sh`.
-- **A service didn't start** — read its pane with `tmux capture-pane -pt <prefix>-<env>:<window>.<pane>` (targets are in `workflow.md`).
+- **`./up` errors immediately** — `setup-tmux.sh` is missing or unreadable. Run the workflow-setup walkthrough.
+- **`setup-tmux.md` is missing** — re-run the setup walkthrough's final step; don't reverse-engineer pane indices from `setup-tmux.sh`.
+- **A service didn't start** — read its pane with `tmux capture-pane -pt <prefix>-<env>:<window>.<pane>` (targets are in `setup-tmux.md`).
 - **Stale processes after a crash** — use `./down` to reap the session cleanly rather than killing processes by hand.
 
 ## Key conventions
 
 - **Never start services as background processes** (`nohup`, `&`) — always go through `./up`.
 - **Never kill services directly** (`kill`, `pkill`, `tmux kill-session`) — always use `./down`.
-- **Read output with `tmux capture-pane`**, using the targets in `workflow.md`.
+- **Read output with `tmux capture-pane`**, using the targets in `setup-tmux.md`.
 
 :::note[Canonical source]
 [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md).

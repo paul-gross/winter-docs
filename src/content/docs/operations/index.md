@@ -7,7 +7,7 @@ This section is the task-oriented guide to operating a winter workspace day to d
 
 - **[Feature Environments & Worktrees](/winter-docs/operations/feature-environments/)** — create, list, and destroy environments; how Greek-letter port indexing keeps them from colliding.
 - **[Polyrepo Git Operations](/winter-docs/operations/polyrepo-git/)** — `fetch`, `pull`, `push`, `merge`, and `connect`/`disconnect` across every repo, with guidance on when to use each.
-- **[Running Services](/winter-docs/operations/services/)** — the `workflow.sh` setup and the `up` / `down` / `status` scripts the service-orchestration extension provides.
+- **[Running Services](/winter-docs/operations/services/)** — the `setup-tmux.sh` setup and the `up` / `down` / `status` scripts the service-orchestration extension provides.
 
 ## CLI first, raw git when you need it
 
