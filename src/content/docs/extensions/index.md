@@ -12,7 +12,7 @@ These are *consumable* extensions — generic capabilities a workspace installs 
 | Extension | Adds |
 |-----------|------|
 | **[winter-product](/winter-docs/extensions/winter-product/)** | A product backlog model with refinement agents and skills. |
-| **[winter-service-tmux](/winter-docs/extensions/winter-service-tmux/)** | tmux-based service orchestration (`up` / `down` / `status`). |
+| **[winter-service-tmux](/winter-docs/extensions/winter-service-tmux/)** | tmux-based service orchestration (`up` / `down` / `status` / `restart`). |
 | **[winter-github](/winter-docs/extensions/winter-github/)** | AI-native GitHub issue tooling via the `gh` CLI. |
 
 The maintainer's conventions ([winter-harness](/winter-docs/examples/winter-harness/)) and agentic workflow ([winter-workflow](/winter-docs/examples/winter-workflow/)) install and run just like these, but they are the maintainer's own opinionated, swappable implementations — adopt them as-is or fork your own. They're grouped under [Examples](/winter-docs/examples/).

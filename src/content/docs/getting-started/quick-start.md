@@ -79,13 +79,14 @@ Never edit the source checkouts under `projects/` directly — they stay on the 
 
 ## 5. Run a service
 
-With the [service-orchestration extension](/winter-docs/extensions/) installed, each environment gets `up` / `down` / `status` scripts that launch your services in a per-environment tmux session:
+With the [service-orchestration extension](/winter-docs/extensions/) installed, each environment gets `up` / `down` / `status` / `restart` scripts that launch your services in a per-environment tmux session:
 
 ```bash
 cd alpha
-./up        # start the environment's services
-./status    # see what's running
-./down      # stop them cleanly
+./up              # start the environment's services
+./status          # see what's running
+./restart <svc>   # bounce one wedged service, leaving the rest up
+./down            # stop them cleanly
 ```
 
 Because each environment has its own port block, you can run `alpha` and `beta` side by side without collisions.

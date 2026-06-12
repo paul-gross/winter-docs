@@ -1,6 +1,6 @@
 ---
 title: Running Services
-description: Configure setup-tmux.sh and use up / down / status to run an environment's services in a per-environment tmux session.
+description: Configure setup-tmux.sh and use up / down / status / restart to run an environment's services in a per-environment tmux session.
 ---
 
 Service orchestration is provided by the **[winter-service-tmux](/winter-docs/extensions/)** extension. It runs each environment's services (backend, frontend, workers, …) in a dedicated tmux session, so multiple environments can run their own copies of the stack side by side without port conflicts.
@@ -19,19 +19,20 @@ The extension needs a project-specific `setup-tmux.sh` that declares which servi
 
 For machine-specific overrides, add a gitignored `setup-tmux.local.sh` next to it — the scripts source it on top of the committed `setup-tmux.sh`. The legacy filenames `workflow.sh` / `workflow.md` (and `workflow.local.sh`) are still honored as fallbacks.
 
-## Start, check, stop
+## Start, check, restart, stop
 
-The `up` / `down` / `status` scripts are symlinked into every environment directory. Run them from the environment root:
+The `up` / `down` / `status` / `restart` scripts are symlinked into every environment directory. Run them from the environment root:
 
 ```bash
 cd alpha
-./up             # start the environment's services in tmux session mp-alpha
-./status         # show this environment's services
-./status --all   # cross-environment view of every running session
-./down           # stop everything and reap child processes cleanly
+./up                 # start the environment's services in tmux session mp-alpha
+./status             # show this environment's services
+./status --all       # cross-environment view of every running session
+./restart <service>  # reap and re-run one wedged/crashed service, leaving the rest up
+./down               # stop everything and reap child processes cleanly
 ```
 
-Each script is scoped to the environment it's run from: `alpha/status` reports only the `mp-alpha` session, the same way `./up` and `./down` default to their own environment. There is no worktree-name argument to `./status` — pass `--all` when you want to see every running environment at once.
+Each script is scoped to the environment it's run from: `alpha/status` reports only the `mp-alpha` session, the same way `./up` and `./down` default to their own environment. There is no worktree-name argument to `./status` — pass `--all` when you want to see every running environment at once. `./restart` takes a **service name** (not an env), reaping just that service's pane and re-running its declared command while the other panes keep running — the sanctioned way to recover one service without a full `./down && ./up`.
 
 ## Reading service output
 
@@ -47,6 +48,7 @@ These conventions keep environments clean and reapable:
 
 - **Never start services as background processes** — no `nohup`, no `&`. Always go through `./up` so they land in the tmux session.
 - **Never kill services directly** — no `kill`, `pkill`, or `tmux kill-session`. Always use `./down` so child processes are reaped.
+- **Recover one wedged service with `./restart <service>`** — not `kill`/`pkill`, and not a full `./down && ./up`. It reaps just that pane and re-runs the service, leaving the rest of the session up.
 - **Read pane output with `tmux capture-pane`**, using the targets in `setup-tmux.md`.
 
 :::note[Canonical source]

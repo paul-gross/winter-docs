@@ -50,7 +50,7 @@ my-workspace/                  ← workspace root (winter config + agent context
 │   ├── app-web/   (alpha)     ← worktree of projects/app-web
 │   ├── app-api/   (alpha)
 │   ├── shared/    (alpha)
-│   └── up / down / status     service controls for this env
+│   └── up / down / status / restart   service controls for this env
 └── beta/                      feature environment   (ports 4200+)
     ├── app-web/   (beta)
     ├── app-api/   (beta)

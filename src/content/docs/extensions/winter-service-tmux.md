@@ -7,7 +7,8 @@ description: tmux-based service orchestration — run each environment's service
 
 ## What it contributes
 
-- **`up` / `down` / `status`** scripts, symlinked into every environment directory.
+- **`up` / `down` / `status` / `restart`** scripts, symlinked into every environment directory.
+- **Single-service restart** — `./restart <service>` reaps one wedged or crashed service's pane and re-runs its declared command, leaving the rest of the session running (no manual `kill`/`pkill`, no full teardown).
 - A **per-environment tmux session** named `<session_prefix>-<env>` (e.g. `mp-alpha`).
 - An `on_env_init` hook that wires the session up when an environment is created.
 
@@ -33,12 +34,13 @@ The extension needs a project-specific **`setup-tmux.sh`** that declares which s
 - **`./up` errors immediately** — `setup-tmux.sh` is missing or unreadable. Run the workflow-setup walkthrough.
 - **`setup-tmux.md` is missing** — re-run the setup walkthrough's final step; don't reverse-engineer pane indices from `setup-tmux.sh`.
 - **A service didn't start** — read its pane with `tmux capture-pane -pt <prefix>-<env>:<window>.<pane>` (targets are in `setup-tmux.md`).
+- **One service wedged or crashed** — `./restart <service>` reaps just that pane and re-runs it, leaving the rest of the session up — no need to `./down` the whole stack.
 - **Stale processes after a crash** — use `./down` to reap the session cleanly rather than killing processes by hand.
 
 ## Key conventions
 
 - **Never start services as background processes** (`nohup`, `&`) — always go through `./up`.
-- **Never kill services directly** (`kill`, `pkill`, `tmux kill-session`) — always use `./down`.
+- **Never kill services directly** (`kill`, `pkill`, `tmux kill-session`) — always use `./down`, or `./restart <service>` to bounce a single service.
 - **Read output with `tmux capture-pane`**, using the targets in `setup-tmux.md`.
 
 :::note[Canonical source]
