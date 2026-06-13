@@ -8,7 +8,7 @@ The `winter` command manages the workspace across all repositories. Install it f
 Most commands accept `--json` for machine-readable output. For the configuration file these commands read, see the **[config.toml Reference](/winter-docs/cli-reference/config/)**.
 
 :::tip
-To run an in-development copy of the CLI from a feature worktree without reinstalling, prefix any command with `--winter=PATH` (must be the first argument), e.g. `winter --winter=./alpha/winter ws status alpha`.
+To run an in-development copy of the CLI from a feature worktree without reinstalling, prefix any command with `--winter=PATH` (must be the first argument), e.g. `winter --winter=./alpha/winter ws status`.
 :::
 
 ## Root flags
@@ -47,10 +47,23 @@ winter ws list
 
 ### `ws status`
 
-Git status across all repos in an environment.
+Show git status across matched worktrees, source checkouts, and workspace-level state (orphans, drift). No network by default — reports last-fetched state.
 
 ```bash
-winter ws status alpha
+winter ws status [PATTERNS...] [--json] [--fetch]
+```
+
+- `winter ws status` — whole workspace.
+- `winter ws status alpha` — every worktree in `alpha` (equivalent to `alpha/*`).
+- `winter ws status alpha/winter` — one specific worktree.
+- `winter ws status '*/winter'` — that repo across every environment.
+
+`--fetch` refreshes remote-tracking refs first (network). `--json` emits a stable, versioned snapshot (`schema_version: 1`) covering environments, source checkouts, and workspace-level drift — suitable for scripting.
+
+**Exit codes:** `0` clean; `1` dirty or drifted; `2` command error (e.g. a pattern that matches nothing). When PATTERNS are given, exit code reflects only the matched worktrees; global drift is shown as context but does not affect it.
+
+```bash
+winter ws status
 ```
 
 ### `ws diff`

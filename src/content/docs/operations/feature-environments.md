@@ -24,7 +24,7 @@ The command is idempotent — re-run it any time to reconcile an environment aft
 
 ```bash
 winter ws list             # all environments and their feature-branch / status
-winter ws status alpha     # git status across every repo in alpha
+winter ws status alpha     # git status across every worktree in alpha (== 'alpha/*')
 winter ws diff alpha       # unified diff across every repo in alpha
 ```
 
