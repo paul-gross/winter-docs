@@ -127,7 +127,7 @@ orchestrate_services = "workflow/service"
 
 With both keys in place, `winter service <action> <env>` resolves the orchestrator and runs its entrypoint. When either is missing — no `service_orchestrator` in config.toml, a name matching no installed extension, or an extension without an `orchestrate_services` key in winter-ext.toml — the command fails and names the specific gap. Only one orchestrator is supported; there is no per-env selection.
 
-The full implementer-facing contract (uniform argv rule, `WINTER_*` env vars per action, NDJSON wire format for `logs`, idempotent backstop filters, and exit codes) lives in the canonical reference — see [`ai/winter-cli/usage.md#orchestrator-contract`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage.md#orchestrator-contract).
+The full implementer-facing contract (uniform argv rule, `WINTER_*` env vars per action, NDJSON wire format for `logs`, idempotent backstop filters, and exit codes) lives in the canonical reference — see [`ai/winter-cli/usage/service.md#orchestrator-contract`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
 
 ## Extension manifests
 

@@ -13,4 +13,4 @@ This section is the task-oriented guide to operating a winter workspace day to d
 
 Use the `winter` CLI for anything that spans repositories — it reads the workspace config, handles pinned repos, runs in parallel, and is idempotent. Drop to raw `git` for single-repo work: staging, committing, resolving conflicts, interactive rebase.
 
-The pages here describe the user-facing model. The exhaustive, agent-facing procedures live in winter's own `ai/` references, linked from each page — most notably [`ai/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/ai/worktree-ops.md) and [`ai/winter-cli/usage.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage.md).
+The pages here describe the user-facing model. The exhaustive, agent-facing procedures live in winter's own `ai/` references, linked from each page — most notably [`ai/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/ai/worktree-ops.md) and [`ai/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/index.md).
