@@ -145,6 +145,54 @@ Key fields in `winter-ext.toml`:
 | `orchestrate_services` | Executable entrypoint path for `winter service` dispatch (see [Service orchestration](#service-orchestration)). |
 | `requires` | Other module names this one depends on; consumed by `winter graph`. |
 
+### Extension hooks
+
+Lifecycle hooks are declared in a `[hooks]` table inside `winter-ext.toml`:
+
+```toml
+[hooks]
+on_env_init            = "./hooks/init.sh"
+on_env_destroy         = "./hooks/destroy.sh"
+on_workspace_reconcile = "./hooks/workspace-reconcile.sh"
+```
+
+All hook paths are relative to the extension directory. Winter resolves them against the extension root.
+
+#### `on_env_init` and `on_env_destroy`
+
+`on_env_init` fires after `winter ws init <env>` creates every per-repo worktree and seeds `.winter.env`. `on_env_destroy` fires before `winter ws destroy <env>` removes any worktree. Use them to provision and release per-environment state — tmux sessions, databases, watchers.
+
+The hook script runs with **cwd at the env root** (`<workspace>/<env>/`) and receives:
+
+| Var | Meaning |
+|-----|---------|
+| `WINTER_WORKSPACE_DIR` | Absolute path to the workspace root. |
+| `WINTER_EXT_DIR` | Absolute path to this extension's clone. |
+| `WINTER_EXT_PREFIX` | The resolved symlink prefix for this extension. |
+| `WINTER_ENV` | The env name (`alpha`, `beta`, …). |
+| `WINTER_ENV_INDEX` | The port-offset index (1–24 for Greek letters, hashed 26–281 otherwise). |
+| `WINTER_PORT_BASE` | `4000 + 100 × WINTER_ENV_INDEX`. |
+
+#### `on_workspace_reconcile`
+
+`on_workspace_reconcile` fires **once per workspace-level reconcile**: `winter ws init` (no target) and `winter ws init --all`.
+
+Firing order: after standalone/extension repos are reconciled (so the extension exists on disk); for `--all`, before the per-env loop begins.
+
+The hook script runs with **cwd at the workspace root** and receives only the workspace trio:
+
+| Var | Meaning |
+|-----|---------|
+| `WINTER_WORKSPACE_DIR` | Absolute path to the workspace root. |
+| `WINTER_EXT_DIR` | Absolute path to this extension's clone. |
+| `WINTER_EXT_PREFIX` | The resolved symlink prefix for this extension. |
+
+`WINTER_ENV`, `WINTER_ENV_INDEX`, and `WINTER_PORT_BASE` are deliberately absent — this hook is not scoped to any feature environment.
+
+Use `on_workspace_reconcile` for one-time workspace-level setup that should re-run whenever the workspace is re-reconciled: writing workspace-level config or reference files, registering the extension with an external tool, or regenerating derived artifacts the whole workspace shares. A concrete example: winter-service-tmux regenerates its `setup-tmux.md` service-to-pane map here, so it always stays in sync with `setup-tmux.sh` without a manual walkthrough step.
+
+Failure semantics follow the same per-extension boolean aggregation as the env hooks.
+
 :::note[Canonical source]
 Full configuration reference for agents: [`ai/winter-cli/setup.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/setup.md).
 :::

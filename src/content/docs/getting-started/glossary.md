@@ -35,7 +35,7 @@ A repository cloned at the workspace root (or a configured path) rather than int
 
 ## Extension
 
-An opt-in capability a workspace installs, shipped as a standalone repository with a `winter-ext.toml` manifest. An extension contributes skills, agents, lifecycle hooks (`on_env_init` / `on_env_destroy`), `winter doctor` probes, and `winter lint` checks. Examples: service orchestration, issue tooling, the product backlog, conventions, and the agentic workflow.
+An opt-in capability a workspace installs, shipped as a standalone repository with a `winter-ext.toml` manifest. An extension contributes skills, agents, lifecycle hooks (`on_env_init` / `on_env_destroy` / `on_workspace_reconcile`), `winter doctor` probes, and `winter lint` checks. Examples: service orchestration, issue tooling, the product backlog, conventions, and the agentic workflow.
 
 ## Path notation
 
@@ -48,6 +48,8 @@ A `<context>:<path>` prefix winter's docs and agents use to make clear which rep
 ## Reconcile
 
 The idempotent operation `winter ws init` performs: bring the filesystem into alignment with `.winter/config.toml`. It clones missing repos, refreshes git identity and excludes, runs each repo's setup `cmd`, and processes extensions. Safe to run at any time.
+
+When invoked without a target (`winter ws init`) or with `--all`, reconcile also fires each extension's `on_workspace_reconcile` hook once, after repos are cloned/updated and before any per-env loop.
 
 ## See also
 

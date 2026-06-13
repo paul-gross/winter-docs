@@ -3,7 +3,7 @@ title: Extensions
 description: Opt-in capabilities a winter workspace installs — product backlog, service orchestration, and issue tooling.
 ---
 
-Extensions are how a winter workspace gains capabilities beyond the core CLI. Each is a standalone repository the workspace clones and installs; once installed, it contributes **skills**, **agents**, lifecycle **hooks** (`on_env_init` / `on_env_destroy`), **`winter doctor` probes**, and **`winter lint` checks**.
+Extensions are how a winter workspace gains capabilities beyond the core CLI. Each is a standalone repository the workspace clones and installs; once installed, it contributes **skills**, **agents**, lifecycle **hooks** (`on_env_init` / `on_env_destroy` / `on_workspace_reconcile`), **`winter doctor` probes**, and **`winter lint` checks**.
 
 ## The maintained extensions
 
@@ -38,11 +38,17 @@ prefix = "wst"
 doctor = "scripts/doctor.sh"   # NDJSON health probe for `winter doctor`
 lint   = "scripts/lint.sh"     # NDJSON convention checks for `winter lint`
 [hooks]
-on_env_init    = "./hooks/init.sh"
-on_env_destroy = "./hooks/destroy.sh"
+on_env_init            = "./hooks/init.sh"
+on_env_destroy         = "./hooks/destroy.sh"
+on_workspace_reconcile = "./hooks/workspace-reconcile.sh"
 ```
 
-See the [config.toml reference](/winter-docs/cli-reference/config/) for the manifest schema and the `adopt_extensions` modes that control how aggressively winter processes a standalone repo's skills and agents.
+There are two kinds of hook:
+
+- **Per-env hooks** (`on_env_init` / `on_env_destroy`) fire once per feature environment — on every `winter ws init <env>` and `winter ws destroy <env>`. Use them to provision and release environment-specific state (tmux sessions, databases, file watchers).
+- **Workspace hook** (`on_workspace_reconcile`) fires once per workspace-level reconcile (`winter ws init` with no target, or `winter ws init --all`). Use it for workspace-level artifacts that should be regenerated whenever the workspace is reconciled — config files, reference maps, or external registrations that belong to the whole workspace rather than to any single environment.
+
+See the [config.toml reference](/winter-docs/cli-reference/config/#extension-hooks) for the full hook contract — env vars, cwd, firing order, and failure semantics — and the `adopt_extensions` modes that control how aggressively winter processes a standalone repo's skills and agents.
 
 The guides in this section explain, for each extension: what it contributes, when to adopt it, how to configure it, and its key conventions.
 

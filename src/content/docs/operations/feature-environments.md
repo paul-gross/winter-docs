@@ -13,12 +13,16 @@ Each repository lives in two places:
 ## Create
 
 ```bash
-winter ws init alpha
+winter ws init alpha          # create or reconcile one environment
+winter ws init                # workspace-level reconcile (no target)
+winter ws init --all          # reconcile every existing environment
 ```
 
-For each project repo this runs `git worktree add -b alpha <main-branch>`, copies your git identity in, writes git-exclude entries, runs the repo's setup `cmd`, seeds `alpha/.winter.env` with `WINTER_ENV` / `WINTER_ENV_INDEX` / `WINTER_PORT_BASE`, and fires every installed extension's `on_env_init` hook. Pinned repos get their worktree wired to track `origin/<main-branch>` instead of the environment branch.
+`winter ws init alpha` runs `git worktree add -b alpha <main-branch>` for each project repo, copies your git identity in, writes git-exclude entries, runs the repo's setup `cmd`, seeds `alpha/.winter.env` with `WINTER_ENV` / `WINTER_ENV_INDEX` / `WINTER_PORT_BASE`, and fires every installed extension's `on_env_init` hook. Pinned repos get their worktree wired to track `origin/<main-branch>` instead of the environment branch.
 
 The command is idempotent — re-run it any time to reconcile an environment after a config change.
+
+When invoked without a target (`winter ws init`) or with `--all`, winter also fires each extension's `on_workspace_reconcile` hook once — before any per-env loop. This is the hook that regenerates workspace-level artifacts (like the service-to-pane reference map that winter-service-tmux produces) rather than per-environment state.
 
 ## List & inspect
 

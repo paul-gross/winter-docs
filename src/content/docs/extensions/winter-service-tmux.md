@@ -11,6 +11,7 @@ description: tmux-based service orchestration — run each environment's service
 - **Single-service restart** — `./restart <service>` reaps one wedged or crashed service's pane and re-runs its declared command, leaving the rest of the session running (no manual `kill`/`pkill`, no full teardown).
 - A **per-environment tmux session** named `<session_prefix>-<env>` (e.g. `mp-alpha`).
 - An `on_env_init` hook that wires the session up when an environment is created.
+- An `on_workspace_reconcile` hook that regenerates `setup-tmux.md` — the agent-facing service-to-pane map — automatically on every workspace reconcile.
 
 For the full operating model — starting and stopping services, reading pane output, and the conventions — see the [Running Services](/winter-docs/operations/services/) operations guide.
 
@@ -27,12 +28,14 @@ url = "git@github.com:paul-gross/winter-service-tmux.git"
 path = ".winter/ext/service-tmux"
 ```
 
-The extension needs a project-specific **`setup-tmux.sh`** that declares which services to run and the tmux pane layout, plus a companion **`setup-tmux.md`** that maps service names to `<window>.<pane>` targets. Generate both by following the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough; `/ws-setup` prompts for this when the extension is installed. Until `setup-tmux.sh` exists, `./up` errors out. A gitignored **`setup-tmux.local.sh`** can overlay machine-specific overrides on top; the legacy names `workflow.sh` / `workflow.md` still work as fallbacks.
+The extension needs a project-specific **`setup-tmux.sh`** that declares which services to run and the tmux pane layout. Follow the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough (or run `/ws-setup`) to author it. Until `setup-tmux.sh` exists, `./up` errors out.
+
+Once `setup-tmux.sh` is committed, the companion **`setup-tmux.md`** — which maps service names to `<window>.<pane>` targets for agents and operators — is regenerated automatically by the extension's `on_workspace_reconcile` hook every time you run `winter ws init` (workspace-level reconcile). You never need to regenerate it manually or keep it in sync by hand; it always reflects the committed `setup-tmux.sh`. A gitignored **`setup-tmux.local.sh`** can overlay machine-specific overrides on top of the committed file; the legacy names `workflow.sh` / `workflow.md` still work as fallbacks.
 
 ## Troubleshooting
 
 - **`./up` errors immediately** — `setup-tmux.sh` is missing or unreadable. Run the workflow-setup walkthrough.
-- **`setup-tmux.md` is missing** — re-run the setup walkthrough's final step; don't reverse-engineer pane indices from `setup-tmux.sh`.
+- **`setup-tmux.md` is missing** — run `winter ws init` (workspace-level reconcile) to trigger the `on_workspace_reconcile` hook that regenerates it; don't reverse-engineer pane indices from `setup-tmux.sh`.
 - **A service didn't start** — read its pane with `tmux capture-pane -pt <prefix>-<env>:<window>.<pane>` (targets are in `setup-tmux.md`).
 - **One service wedged or crashed** — `./restart <service>` reaps just that pane and re-runs it, leaving the rest of the session up — no need to `./down` the whole stack.
 - **Stale processes after a crash** — use `./down` to reap the session cleanly rather than killing processes by hand.
