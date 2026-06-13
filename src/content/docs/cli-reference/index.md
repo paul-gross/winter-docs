@@ -1,6 +1,6 @@
 ---
 title: CLI Reference
-description: Every winter subcommand — workspace, repo, doctor, and dashboard — with usage and an example.
+description: Every winter subcommand — with usage and an example.
 ---
 
 The `winter` command manages the workspace across all repositories. Install it from the workspace root with `./tools/winter-cli/install.sh`; the wrapper auto-discovers the workspace by searching upward for `.winter/config.toml`.
@@ -232,6 +232,28 @@ Interactive TUI showing workspace status, environments, and per-repo tracking. P
 ```bash
 winter dashboard
 ```
+
+## `winter service`
+
+Control an environment's services through a stable interface that dispatches to whichever orchestrator extension the workspace registers. Consumers always depend on `winter service …`, never on the implementation, so the backend (tmux today, containers or a daemon tomorrow) can be swapped without re-teaching agents, docs, or habits.
+
+```bash
+winter service up alpha                # start the environment's services
+winter service down alpha              # stop them
+winter service status alpha            # report service status
+winter service restart alpha backend   # bounce one service by name
+winter service logs alpha              # stream all services' logs (last 200 lines)
+winter service logs alpha api          # logs for the `api` service only
+winter service logs alpha -f           # stream live until Ctrl-C (exit 130)
+winter service logs alpha -n 50        # last 50 lines
+winter service logs alpha --since=5m   # logs from the past 5 minutes
+winter service logs alpha --since=2026-06-13T10:00:00Z  # since an absolute timestamp
+winter service logs alpha -t           # prefix each line with its RFC3339 timestamp
+```
+
+`logs` accepts `[SERVICE...] [-f/--follow] [-n/--tail N] [--since DURATION|TIMESTAMP] [--until DURATION|TIMESTAMP] [-t/--timestamps]`. When multiple services are in scope, each output line is prefixed with the service name; a single explicit service produces unprefixed output. Lines are written as portable plain text so `winter service logs alpha | grep ERROR` works regardless of orchestrator.
+
+To register an orchestrator, set `service_orchestrator` in `.winter/config.toml` (naming the extension) and `orchestrate_services` in the extension's `winter-ext.toml` (the entrypoint path) — see the [config reference](/winter-docs/cli-reference/config/#service-orchestration) for the schema and the [orchestrator contract](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage.md#orchestrator-contract) for the full implementer-facing spec (argv rule, `WINTER_*` env vars, NDJSON wire format).
 
 :::note[Canonical source]
 Agent-facing references: [`ai/winter-cli/usage.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage.md) (commands), [`ai/winter-cli/setup.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/setup.md) (install + config), [`ai/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/index.md).

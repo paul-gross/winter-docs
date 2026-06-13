@@ -51,6 +51,14 @@ These conventions keep environments clean and reapable:
 - **Recover one wedged service with `./restart <service>`** — not `kill`/`pkill`, and not a full `./down && ./up`. It reaps just that pane and re-runs the service, leaving the rest of the session up.
 - **Read pane output with `tmux capture-pane`**, using the targets in `setup-tmux.md`.
 
+## Relationship to `winter service`
+
+`winter service` is a **core winter command group** — `winter service up alpha`, `winter service down alpha`, `winter service status alpha`, `winter service restart alpha <service>`, and `winter service logs alpha [OPTIONS]` — that owns a stable interface and dispatches each call to whichever orchestrator the workspace registers. The design point is interchangeability: consumers depend on `winter service …`, not on any particular implementation.
+
+**The `winter-service-tmux` extension does not yet conform to the `winter service` orchestrator contract.** The `./up` / `./down` / `./status` / `./restart` scripts described above are the current way to control services in a tmux-backed workspace, and they continue to be the correct approach today. Conforming the tmux extension to the `winter service` interface is a separate, not-yet-done follow-up; once that work lands, the same operations will be reachable via `winter service up alpha` etc., without changing the underlying tmux implementation.
+
+For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/#winter-service). For the registration config keys (`service_orchestrator` in `.winter/config.toml` naming the extension, and `orchestrate_services` in that extension's `winter-ext.toml` as the entrypoint path), see the [config reference](/winter-docs/cli-reference/config/#service-orchestration). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`ai/winter-cli/usage.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage.md#orchestrator-contract).
+
 :::note[Canonical source]
 Conventions and setup live in the extension: [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md) and [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md). Adopter guide: [winter-service-tmux extension](/winter-docs/extensions/).
 :::
