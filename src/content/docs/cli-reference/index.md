@@ -128,10 +128,11 @@ winter ws push alpha
 
 ### `ws connect` / `ws disconnect`
 
-Point a non-pinned environment at a remote feature branch, or clear that tracking.
+Point non-pinned worktrees at a remote feature branch, or clear that tracking. For `connect`, the trailing argument is the branch; everything before it is a segment-aware `<env>/<repo>` glob, so a bare `<env>` connects the whole env while an `<env>/<repo>` pattern targets specific worktrees — letting repos in one env carry independent branch names. `disconnect` is whole-env only (`<env>`).
 
 ```bash
-winter ws connect alpha feature/new-checkout
+winter ws connect alpha feature/new-checkout      # every non-pinned worktree in alpha
+winter ws connect alpha/api feature/auth          # just alpha's api worktree
 winter ws disconnect alpha
 ```
 

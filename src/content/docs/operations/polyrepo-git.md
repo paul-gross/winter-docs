@@ -18,7 +18,7 @@ winter ws pull '*/app-api'      # the app-api worktree in every environment
 | `winter ws pull <env>` | Fetch, then ff-only integrate each worktree's **tracked upstream** (feature branch for non-pinned, main for pinned). | Bring down remote commits on your feature branch. |
 | `winter ws merge <ref> <env>` | Merge an arbitrary ref (another env, a branch, `origin/...`) into matched worktrees. No fetch. | Fold one environment into another, or merge a specific branch. |
 | `winter ws push <env>` | Push worktrees with commits ahead of upstream. Non-pinned → each worktree's own tracked feature branch (resolved per worktree); pinned excluded by default. | Ship completed work. |
-| `winter ws connect <env> <branch>` | Set each non-pinned worktree's upstream to `origin/<branch>`. | Point an environment at a remote feature branch (see below). |
+| `winter ws connect <pattern>... <branch>` | Set the upstream of each non-pinned worktree matching `<pattern>` to `origin/<branch>`. A bare `<env>` connects the whole env; an `<env>/<repo>` glob targets specific worktrees. | Point an environment — or one repo within it — at a remote feature branch (see below). |
 | `winter ws disconnect <env>` | Unset upstream tracking on each non-pinned worktree. | Free an environment to be reused for a different feature. |
 | `winter ws fetch <env>` | Refresh remote-tracking refs and fast-forward each source checkout's local main. No feature-worktree changes. | Bring `origin/<main>` into the source checkouts; before an offline `merge` or `checkout`. |
 | `winter ws checkout <env> <branch>` | All-or-nothing reset of every worktree to `origin/<branch>`. | Adopt an existing remote feature branch. |
@@ -41,7 +41,14 @@ winter ws connect alpha feature/new-checkout
 winter ws push alpha
 ```
 
-`winter ws connect` points every non-pinned repo in an environment at the same remote feature-branch name, so that's the usual shape. `push` doesn't rely on it, though: it resolves each worktree's target from that worktree's own tracking config, so a worktree you re-point individually still pushes to its own branch, and a non-pinned worktree with no upstream is reported per-repo as `no upstream — run winter ws connect first` (order-independent) rather than borrowing a sibling's branch.
+Most environments give every non-pinned repo the **same** remote feature-branch name — the bare-env `connect` above does exactly that. When one build cross-cuts independent pieces of work, you can instead give each repo its own branch by connecting worktrees individually:
+
+```bash
+winter ws connect alpha/api feature/auth      # alpha's api worktree → origin/feature/auth
+winter ws connect alpha/web feature/billing   # alpha's web worktree → origin/feature/billing
+```
+
+`status`, `pull`, and `push` each resolve each worktree's target from its own tracking config, so per-repo branches sync independently — a worktree you re-point individually still pushes to its own branch, and a non-pinned worktree with no upstream is reported per-repo as `no upstream — run winter ws connect first` rather than borrowing a sibling's branch.
 
 ## Pinned repos
 
