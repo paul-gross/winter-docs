@@ -42,7 +42,7 @@ winter-harness ships a convention file for each recurring decision in Python app
 Reference implementations that show the conventions applied:
 
 - [`exemplars/python/repo_pattern.py`](https://github.com/paul-gross/winter-harness/blob/master/exemplars/python/repo_pattern.py) — the repository pattern: an `I`-prefixed Protocol seam, an `internal/` adapter, and factory-injected errors.
-- [`exemplars/python/cli-architecture.md`](https://github.com/paul-gross/winter-harness/blob/master/exemplars/python/cli-architecture.md) — a guided tour of how the conventions come together in the winter CLI; read it before adding a new `winter ws` subcommand.
+- [`architecture/winter-cli.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/winter-cli.md) — a guided tour of how the conventions come together in the winter CLI; read it before adding a new `winter ws` subcommand.
 
 :::note[Canonical source]
 [`winter-harness/python/`](https://github.com/paul-gross/winter-harness/tree/master/python). The harness is meant to be corrected in place — if a convention is wrong or stale, fix it where you find it.
