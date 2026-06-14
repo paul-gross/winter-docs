@@ -17,7 +17,7 @@ winter ws pull '*/app-api'      # the app-api worktree in every environment
 |---------|--------------|-------------|
 | `winter ws pull <env>` | Fetch, then ff-only integrate each worktree's **tracked upstream** (feature branch for non-pinned, main for pinned). | Bring down remote commits on your feature branch. |
 | `winter ws merge <ref> <env>` | Merge an arbitrary ref (another env, a branch, `origin/...`) into matched worktrees. No fetch. | Fold one environment into another, or merge a specific branch. |
-| `winter ws push <env>` | Push worktrees with commits ahead of upstream. Non-pinned → the feature branch; pinned excluded by default. | Ship completed work. |
+| `winter ws push <env>` | Push worktrees with commits ahead of upstream. Non-pinned → each worktree's own tracked feature branch (resolved per worktree); pinned excluded by default. | Ship completed work. |
 | `winter ws connect <env> <branch>` | Set each non-pinned worktree's upstream to `origin/<branch>`. | Point an environment at a remote feature branch (see below). |
 | `winter ws disconnect <env>` | Unset upstream tracking on each non-pinned worktree. | Free an environment to be reused for a different feature. |
 | `winter ws fetch <env>` | Refresh remote-tracking refs and fast-forward each source checkout's local main. No feature-worktree changes. | Bring `origin/<main>` into the source checkouts; before an offline `merge` or `checkout`. |
@@ -41,7 +41,7 @@ winter ws connect alpha feature/new-checkout
 winter ws push alpha
 ```
 
-All non-pinned repos in an environment must share the same remote feature-branch name.
+`winter ws connect` points every non-pinned repo in an environment at the same remote feature-branch name, so that's the usual shape. `push` doesn't rely on it, though: it resolves each worktree's target from that worktree's own tracking config, so a worktree you re-point individually still pushes to its own branch, and a non-pinned worktree with no upstream is reported per-repo as `no upstream — run winter ws connect first` (order-independent) rather than borrowing a sibling's branch.
 
 ## Pinned repos
 

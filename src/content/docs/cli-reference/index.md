@@ -116,7 +116,7 @@ winter ws merge master alpha
 
 ### `ws push`
 
-Push worktrees with commits ahead of upstream. Pinned worktrees excluded by default.
+Push worktrees with commits ahead of upstream. Each non-pinned worktree pushes to the branch its own tracking config names (resolved per worktree); a non-pinned worktree with no upstream is reported `no upstream`. Pinned worktrees excluded by default.
 
 ```bash
 winter ws push [PATTERNS...] [--include-pinned | --only-pinned] [--standalone | --all]
