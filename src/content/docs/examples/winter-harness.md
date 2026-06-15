@@ -31,7 +31,7 @@ url = "git@github.com:paul-gross/winter-harness.git"
 path = ".winter/ext/harness"
 ```
 
-It contributes no skills or agents of its own — it is a convention library. Reference its files by path notation in agent context, e.g. `winter-harness:/python/error-handling.md`. For your own workspace, fork it and point the `url` at your copy.
+It contributes no skills or agents of its own — it is a convention library. Reference its files by path notation in agent context, e.g. `winter-harness:/architecture/error-handling.md`. For your own workspace, fork it and point the `url` at your copy.
 
 ## Key conventions
 

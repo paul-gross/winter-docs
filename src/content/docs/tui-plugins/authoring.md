@@ -106,6 +106,6 @@ There are two decorator flavors, each firing once per refresh:
 
 New plugins can annotate `create_plugin() -> IWinterPlugin` to typecheck against the contract. The Protocols and `PluginRegistration` are exported from `winter_cli.plugins.types`, and the canonical, always-current reference — including the full set of pinned public names — is the harness convention:
 
-- **Plugin author contract**: [`winter-harness/python/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/python/plugin-author.md)
+- **Plugin author contract**: [`winter-harness/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
 - **Worked example source**: [`winter-service-tmux/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)
 - **Contract definitions**: [`winter_cli/plugins/types.py`](https://github.com/paul-gross/winter/blob/master/tools/winter-cli/src/winter_cli/plugins/types.py)

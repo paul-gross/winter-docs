@@ -11,7 +11,7 @@ The [`canon/principles.md`](https://github.com/paul-gross/winter-harness/blob/ma
 
 ## Path & reference notation
 
-Winter uses a `<context>:<path>` prefix so a reference is unambiguous about which repo or branch a file lives in — `workspace:/CLAUDE.md`, `alpha:/app-web/...`, `winter-harness:/python/error-handling.md`. The conventions for these references live in [`harness/winter-references.md`](https://github.com/paul-gross/winter-harness/blob/master/harness/winter-references.md). (See also the [glossary entry](/winter-docs/getting-started/glossary/#path-notation).)
+Winter uses a `<context>:<path>` prefix so a reference is unambiguous about which repo or branch a file lives in — `workspace:/CLAUDE.md`, `alpha:/app-web/...`, `winter-harness:/architecture/error-handling.md`. The conventions for these references live in [`harness/winter-references.md`](https://github.com/paul-gross/winter-harness/blob/master/harness/winter-references.md). (See also the [glossary entry](/winter-docs/getting-started/glossary/#path-notation).)
 
 ## Naming
 

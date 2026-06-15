@@ -43,7 +43,7 @@ A `<context>:<path>` prefix winter's docs and agents use to make clear which rep
 
 - `workspace:` — the workspace root (the workspace repo's branch).
 - `<env>:` — a feature environment (e.g. `alpha:` resolves to a per-repo worktree inside `alpha/`).
-- `<extension-name>:` — a file inside an installed extension (e.g. `winter-harness:/python/error-handling.md`).
+- `<extension-name>:` — a file inside an installed extension (e.g. `winter-harness:/architecture/error-handling.md`).
 
 ## Reconcile
 
