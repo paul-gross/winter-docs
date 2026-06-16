@@ -28,6 +28,23 @@ Winter reads two files and merges them: the committed workspace config and a git
 | `all` | Process any standalone repo with a `skills/`, `agents/`, `.claude/skills/`, or `.claude/agents/` directory, manifest or not. Frontmatter validation downgrades from refuse to warn. |
 | `none` | Skip extension processing entirely. Standalone repos are still cloned; no symlinks are created. |
 
+## Port allocation {#port-allocation}
+
+Four keys control how ports are assigned to feature environments. All are optional; the defaults keep workspaces on clean 1000-port boundaries (4000–4979 with the defaults).
+
+| Key | Type | Default | Meaning |
+|-----|------|---------|---------|
+| `base_port` | integer | `4000` | Start of this workspace's port band. Set a distinct value to separate co-located workspaces (e.g. `5000`, `6000`). |
+| `ports_per_env` | integer | `20` | Ports allocated per feature environment. Per-env port base = `base_port + index × ports_per_env`. |
+| `env_aliases` | string[] | first 10 Greek letters (`alpha`…`kappa`) | Fixed-index env names. Each alias gets a stable, predictable index (1..N in list order). All other env names hash into the remaining band. |
+| `envs_per_workspace` | integer | `48` | Maximum feature-env index (1..N). Must be `≥ len(env_aliases) + 2`; config load errors otherwise. Derives the hash band size. |
+
+**Validation invariant:** `envs_per_workspace ≥ len(env_aliases) + 2`. `winter doctor` checks this and warns on any violation.
+
+**Index 0 is reserved** and is never assigned to any environment. It is earmarked for a future single-slot "local" environment — a pre-seeded shared dataset/area. The slot immediately after the aliases (`N+1`, default index 11) is also reserved as a buffer between the fixed alias band and the hash band; this is why the invariant requires `+2` not `+1`. With defaults, the total occupied band is `(48 + 1) × 20 = 980` ports (the band spans indices 0–48 inclusive, so 4000–4979).
+
+**Index assignment** is persisted in `.winter/state.toml` (machine-local, gitignored — not a config file). `winter ws init` allocates and records the index; `winter ws destroy` removes the entry. The read path loads the recorded value; for pre-registry environments (created before this feature), it falls back to recomputing from the name.
+
 ## `[[project_repository]]`
 
 Repos cloned into `projects/` and worktreed into Greek-letter environment directories. Entries appear in CLI/TUI output in declared order, so list high-priority repos first.
@@ -170,8 +187,8 @@ The hook script runs with **cwd at the env root** (`<workspace>/<env>/`) and rec
 | `WINTER_EXT_DIR` | Absolute path to this extension's clone. |
 | `WINTER_EXT_PREFIX` | The resolved symlink prefix for this extension. |
 | `WINTER_ENV` | The env name (`alpha`, `beta`, …). |
-| `WINTER_ENV_INDEX` | The port-offset index (1–24 for Greek letters, hashed 26–281 otherwise). |
-| `WINTER_PORT_BASE` | `4000 + 100 × WINTER_ENV_INDEX`. |
+| `WINTER_ENV_INDEX` | The persisted port-offset index for this env (alias envs get fixed slots 1..N; ad-hoc names hash into the remainder band). |
+| `WINTER_PORT_BASE` | `base_port + ports_per_env × WINTER_ENV_INDEX` (defaults: `4000 + 20 × index`). |
 
 #### `on_workspace_reconcile`
 

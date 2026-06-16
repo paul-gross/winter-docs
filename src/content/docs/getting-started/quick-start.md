@@ -71,7 +71,7 @@ Feature environments are named after Greek letters. Create `alpha`:
 winter ws init alpha
 ```
 
-This adds a worktree of every project repo under `alpha/`, all on a branch named `alpha`, and seeds the environment with a private block of ports (alpha → 4100, beta → 4200, …). Your code now lives at `alpha/app-web/`, `alpha/app-api/`, and so on.
+This adds a worktree of every project repo under `alpha/`, all on a branch named `alpha`, and seeds the environment with a private block of ports. With default config, alpha (index 1) gets port base 4020, beta (2) gets 4040, and so on — each env's services derive their ports from `WINTER_PORT_BASE` in `.winter.env`. Your code now lives at `alpha/app-web/`, `alpha/app-api/`, and so on.
 
 :::caution
 Never edit the source checkouts under `projects/` directly — they stay on the main branch. All work happens in a feature environment's worktrees.

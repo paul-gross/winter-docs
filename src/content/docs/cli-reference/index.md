@@ -158,7 +158,7 @@ winter ws destroy alpha --dry-run
 
 ### `ws index`
 
-Print the port-offset index for an environment name (Greek = 1–24, otherwise hashed 26–281).
+Print the port-offset index for an environment name. Returns the **persisted** index from `.winter/state.toml` when the env exists, or the **suggested** (hash) slot for a hypothetical name (with a note that it may shift on create due to collision-probing).
 
 ```bash
 winter ws index my-feature

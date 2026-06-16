@@ -1,6 +1,6 @@
 ---
 title: Feature Environments & Worktrees
-description: Create, list, and destroy feature environments, and understand Greek-letter port indexing.
+description: Create, list, and destroy feature environments, and understand how the config-driven port scheme assigns each env a private port block.
 ---
 
 A **feature environment** is a coordinated set of git worktrees — one for every project repository — that share a branch name and a private block of ports. It's where a unit of work actually happens. Multiple environments coexist and run side by side without interfering, which is what makes parallel work (by people or agents) safe. See the [glossary](/winter-docs/getting-started/glossary/) for the underlying terms.
@@ -32,22 +32,42 @@ winter ws status alpha     # git status across every worktree in alpha (== 'alph
 winter ws diff alpha       # unified diff across every repo in alpha
 ```
 
-## Greek-letter port indexing
+## Port indexing
 
-Environments are conventionally named after Greek letters because each letter carries a fixed index, 1–24, and the index sets the environment's port offset:
+Every environment is assigned a unique integer index, and `winter ws init` derives its port base from that index:
 
 ```
-port base = 4000 + 100 × index
-alpha → 4100   beta → 4200   gamma → 4300   …
+port base = base_port + index × ports_per_env
 ```
 
-`winter ws init` writes `WINTER_PORT_BASE` into the environment's `.winter.env`; your services derive their ports from it, so two environments never collide. Non-Greek names (arbitrary feature names) get a deterministic hashed index in the range 26–281. To see the index a name resolves to:
+With the defaults (`base_port = 4000`, `ports_per_env = 20`), alpha (index 1) → 4020, beta (2) → 4040, gamma (3) → 4060, and so on. `WINTER_PORT_BASE` is written into the environment's `.winter.env`; services derive their ports from it, so two environments never share a port.
+
+The port layout is config-driven — all four knobs live in `.winter/config.toml` (see the [config reference](/winter-docs/cli-reference/config/#port-allocation)):
+
+| Key | Default | Meaning |
+|-----|---------|---------|
+| `base_port` | `4000` | Start of this workspace's port band. Different values separate co-located workspaces (e.g. 4000 / 5000 / 6000). |
+| `ports_per_env` | `20` | Ports allocated per environment. |
+| `env_aliases` | first 10 Greek letters | Fixed-index env names (1..N). Aliases get stable, predictable slots. |
+| `envs_per_workspace` | `48` | Maximum env index (1..N); must be ≥ `len(env_aliases) + 2`. Derives the hash band. |
+
+**Index assignment** is persisted in `.winter/state.toml` (machine-local, gitignored):
+
+- Configured aliases (`alpha`…`kappa` by default) always receive their fixed slot (1..N).
+- All other names — additional Greek letters or arbitrary strings — get a SHA-1-derived slot in the hash band, with linear-probe collision resolution. The assigned index is stable once written.
+- `winter ws destroy` removes the registry entry; the slot becomes available again.
+
+To see the index for a name:
 
 ```bash
 winter ws index my-feature
 ```
 
-The full alphabet, in order: alpha, beta, gamma, delta, epsilon, zeta, eta, theta, iota, kappa, lambda, mu, nu, xi, omicron, pi, rho, sigma, tau, upsilon, phi, chi, psi, omega.
+For an existing env this returns the **persisted** index. For a hypothetical name it returns the **suggested** slot (which may shift on create if another env already occupies it).
+
+`winter doctor` validates the config invariant and warns on registry drift — stale entries, unregistered env dirs, out-of-range indices, duplicate assignments.
+
+Conventional environment names: alpha, beta, gamma, delta, epsilon, zeta, eta, theta, iota, kappa, lambda, mu, nu, xi, omicron, pi, rho, sigma, tau, upsilon, phi, chi, psi, omega.
 
 ## Destroy
 

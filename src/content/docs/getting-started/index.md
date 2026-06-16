@@ -46,12 +46,12 @@ my-workspace/                  ← workspace root (winter config + agent context
 │   ├── app-web/   (main)
 │   ├── app-api/   (main)
 │   └── shared/    (main)
-├── alpha/                     feature environment   (ports 4100+)
+├── alpha/                     feature environment   (port base 4020 by default)
 │   ├── app-web/   (alpha)     ← worktree of projects/app-web
 │   ├── app-api/   (alpha)
 │   ├── shared/    (alpha)
 │   └── up / down / status / restart   service controls for this env
-└── beta/                      feature environment   (ports 4200+)
+└── beta/                      feature environment   (port base 4040 by default)
     ├── app-web/   (beta)
     ├── app-api/   (beta)
     └── shared/    (beta)

@@ -21,9 +21,11 @@ The copy of a project repository under `projects/<repo>/`. It stays on the repo'
 
 A coordinated set of worktrees — one for every project repository — that all share a single branch name and a private block of ports. A feature environment (e.g. `alpha/`) is where a unit of work actually happens; multiple environments can exist and run simultaneously without interfering. Often shortened to "env."
 
-## Greek-letter index
+## Env index
 
-Feature environments are conventionally named after Greek letters (`alpha`, `beta`, `gamma`, … through `omega`), and each letter carries a fixed index from 1 to 24. The index sets the environment's port offset: ports start at **4000** and each index adds **+100**, so `alpha` (1) → 4100, `beta` (2) → 4200, and so on. This guarantees two environments never collide on a port. Non-Greek environment names get a deterministic hashed index in the range 26–281.
+Every feature environment is assigned a unique integer index persisted in `.winter/state.toml`. The index sets the environment's port base: `base_port + index × ports_per_env`. With the defaults (`base_port = 4000`, `ports_per_env = 20`), `alpha` (index 1) → port base 4020, `beta` (2) → 4040, and so on. No two environments share a port block.
+
+Environments are conventionally named after Greek letters. The first ten (`alpha`…`kappa`) are configured as `env_aliases` and receive fixed indices 1–10. All other names — remaining Greek letters or arbitrary strings — hash into a higher index band; collisions are resolved by linear-probing upward. The four allocation knobs (`base_port`, `ports_per_env`, `env_aliases`, `envs_per_workspace`) live in `.winter/config.toml`.
 
 ## Pinned repo
 
