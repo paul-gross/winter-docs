@@ -53,7 +53,9 @@ These conventions keep environments clean and reapable:
 
 ## Relationship to `winter service`
 
-`winter service` is a **core winter command group** — `winter service up alpha`, `winter service down alpha`, `winter service status alpha`, `winter service restart alpha <service>`, and `winter service logs alpha [OPTIONS]` — that owns a stable interface and dispatches each call to whichever orchestrator the workspace registers. The design point is interchangeability: consumers depend on `winter service …`, not on any particular implementation.
+`winter service` is a **core winter command group** — `winter service up alpha`, `winter service down alpha`, `winter service status`, `winter service restart <PATTERN...>`, and `winter service logs <PATTERN...> [OPTIONS]` — that owns a stable interface and dispatches each call to whichever orchestrator the workspace registers. The design point is interchangeability: consumers depend on `winter service …`, not on any particular implementation.
+
+`status`, `restart`, and `logs` use **segment-aware glob PATTERNS** over `<env>/<service>` — the same vocabulary `winter ws` uses for `<env>/<repo>`. A bare `<env>` expands to `<env>/*`; `'*/backend'` selects the `backend` service across every env (cross-environment selection is supported). `up` and `down` always operate on the whole environment. For `restart` and `logs`, at least one pattern is required; for `status`, omitting patterns selects every service in every env. See the [CLI Reference](/winter-docs/cli-reference/#winter-service) for the full flag and example listing.
 
 **The `winter-service-tmux` extension does not yet conform to the `winter service` orchestrator contract.** The `./up` / `./down` / `./status` / `./restart` scripts described above are the current way to control services in a tmux-backed workspace, and they continue to be the correct approach today. Conforming the tmux extension to the `winter service` interface is a separate, not-yet-done follow-up; once that work lands, the same operations will be reachable via `winter service up alpha` etc., without changing the underlying tmux implementation.
 
