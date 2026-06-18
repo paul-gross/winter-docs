@@ -3,7 +3,7 @@ title: CLI Reference
 description: Every winter subcommand — with usage and an example.
 ---
 
-The `winter` command manages the workspace across all repositories. Install it from the workspace root with `./tools/winter-cli/install.sh`; the wrapper auto-discovers the workspace by searching upward for `.winter/config.toml`.
+The `winter` command manages the workspace across all repositories. Install it from the workspace root with `./tools/winter-cli/install.sh`; the wrapper auto-discovers the workspace by searching upward for `.winter/config.toml` + `tools/winter-cli/`.
 
 Most commands accept `--json` for machine-readable output. For the configuration file these commands read, see the **[config.toml Reference](/winter-docs/cli-reference/config/)**.
 
@@ -172,6 +172,22 @@ Remove disk state for repos no longer in the config (orphan clones, broken `.cla
 winter ws prune [--dry-run | --force]
 ```
 
+### `ws worktrees`
+
+List every existing feature-environment worktree and standalone repo as a flat table or JSON array. Each entry carries a `kind` of `worktree`, `standalone`, or `workspace`; the implicit workspace repo is the single `workspace` entry. Entries whose directory does not exist on disk are omitted. Intended for editor integrations (e.g. a Neovim fuzzy-finder `cd` picker).
+
+```bash
+winter ws worktrees [--status] [--json]
+```
+
+- `winter ws worktrees` — human-readable table.
+- `winter ws worktrees --json` — JSON array for machine consumption.
+- `winter ws worktrees --json --status` — JSON with per-repo git status (ahead/behind/dirty). Slower — does a git call per repo.
+
+```bash
+winter ws worktrees --json
+```
+
 ## `winter repo` — repositories
 
 ### `repo list`
@@ -264,6 +280,26 @@ winter service logs alpha -t                          # prefix each line with it
 `logs` accepts `PATTERN... [-f/--follow] [-n/--tail N] [--since DURATION|TIMESTAMP] [--until DURATION|TIMESTAMP] [-t/--timestamps]` (at least one PATTERN required). Each output line is prefixed with `<env>/<svc> | ` whenever more than one service may be in scope — see the [orchestrator contract](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract) for the precise rule. Lines are written as portable plain text so `winter service logs alpha | grep ERROR` works regardless of orchestrator.
 
 To register an orchestrator, set `service_orchestrator` in `.winter/config.toml` (naming the extension) and `orchestrate_services` in the extension's `winter-ext.toml` (the entrypoint path) — see the [config reference](/winter-docs/cli-reference/config/#service-orchestration) for the schema and the [orchestrator contract](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract) for the full implementer-facing spec (argv rule, `WINTER_*` env vars, NDJSON wire format).
+
+## `winter graph`
+
+Print the module dependency graph declared in each installed extension's `winter-ext.toml` `requires` field. Every installed module that ships a `winter-ext.toml` becomes a node; its `requires` list becomes its edges. A read-only data command with a stable JSON contract; lint checks consume it via `$WINTER_CLI graph --json` to reason about dependencies without re-parsing manifests.
+
+```bash
+winter graph            # human-readable `module → deps` listing
+winter graph --json     # {module: [requires...]} adjacency map
+```
+
+## `winter capabilities`
+
+Read-only introspection of the capability registry. Lists every known slot, which extension is bound to it, how the binding was determined (explicit, implicit, ambiguous, or invalid), and whether each candidate's entrypoint file resolves on disk. Always exits `0` — misconfiguration is reported here; `winter doctor` is what fails on it.
+
+```bash
+winter capabilities           # human-readable per-slot binding listing
+winter capabilities --json    # JSON array, one object per known slot
+```
+
+See [config.toml Reference → Capability registry](/winter-docs/cli-reference/config/#capability-registry) for the config keys and resolution rules.
 
 :::note[Canonical source]
 Agent-facing references: [`ai/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/index.md) (command hub, routing to per-topic `usage/` files), [`ai/winter-cli/setup.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/setup.md) (install + config).

@@ -13,11 +13,12 @@ Winter reads two files and merges them: the committed workspace config and a git
 | Key | Type | Default | Meaning |
 |-----|------|---------|---------|
 | `main_branch` | string | `"main"` | Workspace-default main branch. Each `[[project_repository]]` may override it. |
-| `session_prefix` | string | — | tmux session prefix used by the service-orchestration extension. |
+| `session_prefix` | string | `"winter"` | tmux session prefix used by the service-orchestration extension. |
 | `adopt_extensions` | string | `"winter"` | How aggressively standalone repos contribute skills/agents: `winter`, `all`, or `none` (see below). |
 | `doctor` | string (path) | — | Optional workspace-level `winter doctor` probe script, relative to the workspace root, must be executable. |
 | `lint` | string (path) | — | Optional workspace-level `winter lint` check script, relative to the workspace root, must be executable. |
-| `service_orchestrator` | string | — | Extension name that handles `winter service` dispatch. Must match a `[[standalone_repository]]` that ships a `winter-ext.toml` with an `orchestrate_services` key (see [Service orchestration](#service-orchestration)). |
+| `[capabilities]` | table | `{}` | Maps capability slot names to provider extension names (e.g. `service = "winter-service-tmux"`). The supported mechanism for registering service orchestrators and future capability slots — see [Capability registry](#capability-registry). |
+| `service_orchestrator` | string | — | **Deprecated.** Back-compat alias for `capabilities.service`. Folded into `capabilities["service"]` at config load when `capabilities.service` is not already set. Use `[capabilities]` for new workspaces. |
 | `git_excludes` | string[] | `[]` | Entries appended to every repo's `.git/info/exclude` on `winter ws init`. |
 
 ### `adopt_extensions` modes
@@ -127,22 +128,41 @@ You can also declare additional `[[project_repository]]` / `[[standalone_reposit
 
 The `workspace` repo is discovered implicitly — it is not declared in either file. Winter detects it from the filesystem as the repo the CLI is invoked from.
 
-## Service orchestration
+## Capability registry {#capability-registry}
 
-`winter service` owns a stable `up`/`down`/`status`/`restart`/`logs` interface and dispatches each call to a single orchestrator extension the workspace registers. Two distinctly-named keys connect the interface to an implementation:
-
-- **`service_orchestrator`** (top-level in `.winter/config.toml` or the local overlay) — the name of an installed extension. Must match a `[[standalone_repository]]` entry that ships a `winter-ext.toml`.
-- **`orchestrate_services`** (in that extension's `winter-ext.toml`) — an executable entrypoint path, relative to the extension's repo root.
+Winter routes capabilities (service orchestration and future slots) through a uniform registry. The workspace config's `[capabilities]` table is the supported mechanism for binding capability slots to provider extensions:
 
 ```toml
 # .winter/config.toml
-service_orchestrator = "winter-service-tmux"
-
-# .winter/ext/service-tmux/winter-ext.toml  (inside the extension repo)
-orchestrate_services = "workflow/service"
+[capabilities]
+service = "winter-service-tmux"   # bind the `service` slot to this installed extension
 ```
 
-With both keys in place, `winter service <action> <env>` resolves the orchestrator and runs its entrypoint. When either is missing — no `service_orchestrator` in config.toml, a name matching no installed extension, or an extension without an `orchestrate_services` key in winter-ext.toml — the command fails and names the specific gap. Only one orchestrator is supported; there is no per-env selection.
+Each key in `[capabilities]` is a slot name; the value is the name of an installed `[[standalone_repository]]` that ships a `winter-ext.toml` declaring `[provides].<slot>`. The table merges through the local overlay key-by-key.
+
+The only in-scope slot today is `service`. When exactly one installed extension declares `provides.service`, the binding is implicit — no explicit `[capabilities]` entry is required. When two or more providers are installed, an explicit `capabilities.service` entry resolves the ambiguity; `winter doctor` warns when the binding is ambiguous.
+
+`winter capabilities` introspects the registry (read-only, always exits `0`). See the [CLI reference → `winter capabilities`](/winter-docs/cli-reference/#winter-capabilities) entry for the command surface.
+
+### Deprecated: `service_orchestrator`
+
+The legacy root key `service_orchestrator = "<extension-name>"` is still accepted as a back-compat alias. At config load, when `capabilities.service` is not already set, the value of `service_orchestrator` is folded into `capabilities["service"]` automatically, so existing configs continue to work without modification. Use `[capabilities]` for new workspaces.
+
+## Service orchestration
+
+`winter service` owns a stable `up`/`down`/`status`/`restart`/`logs` interface and dispatches each call to the extension bound to the `service` capability slot. To register an orchestrator, set `capabilities.service` in the `[capabilities]` table in `.winter/config.toml`, and `provides.service` in the extension's `winter-ext.toml`:
+
+```toml
+# .winter/config.toml
+[capabilities]
+service = "winter-service-tmux"
+
+# .winter/ext/service-tmux/winter-ext.toml  (inside the extension repo)
+[provides]
+service = "workflow/service"
+```
+
+With both in place, `winter service <action> <env>` resolves the orchestrator and runs its entrypoint. When the binding is ambiguous (two providers, no explicit config entry), the command errors naming all candidates and the `capabilities.service` config key.
 
 The full implementer-facing contract (uniform argv rule, `WINTER_*` env vars per action, NDJSON wire format for `logs`, idempotent backstop filters, and exit codes) lives in the canonical reference — see [`ai/winter-cli/usage/service.md#orchestrator-contract`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
 
@@ -159,7 +179,8 @@ Key fields in `winter-ext.toml`:
 | `skills_dir` / `agents_dir` | Explicit paths; override default discovery. |
 | `doctor` | Executable emitting NDJSON probe events for `winter doctor`. |
 | `lint` | Executable(s) emitting NDJSON findings for `winter lint` (string or list). |
-| `orchestrate_services` | Executable entrypoint path for `winter service` dispatch (see [Service orchestration](#service-orchestration)). |
+| `[provides]` | Maps capability slot names to entrypoint paths (e.g. `service = "workflow/service"`). An extension declares here what it provides; the workspace binds it via `[capabilities]` (see [Capability registry](#capability-registry)). |
+| `orchestrate_services` | **Deprecated.** Back-compat alias for `provides.service`. |
 | `requires` | Other module names this one depends on; consumed by `winter graph`. |
 
 ### Extension hooks
@@ -206,7 +227,7 @@ The hook script runs with **cwd at the workspace root** and receives only the wo
 
 `WINTER_ENV`, `WINTER_ENV_INDEX`, and `WINTER_PORT_BASE` are deliberately absent — this hook is not scoped to any feature environment.
 
-Use `on_workspace_reconcile` for one-time workspace-level setup that should re-run whenever the workspace is re-reconciled: writing workspace-level config or reference files, registering the extension with an external tool, or regenerating derived artifacts the whole workspace shares. A concrete example: winter-service-tmux regenerates its `setup-tmux.md` service-to-pane map here, so it always stays in sync with `setup-tmux.sh` without a manual walkthrough step.
+Use `on_workspace_reconcile` for one-time workspace-level setup that should re-run whenever the workspace is re-reconciled: writing workspace-level config or reference files, registering the extension with an external tool, or regenerating derived artifacts the whole workspace shares.
 
 Failure semantics follow the same per-extension boolean aggregation as the env hooks.
 
