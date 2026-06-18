@@ -1,66 +1,85 @@
 ---
 title: Running Services
-description: Configure setup-tmux.sh and use up / down / status / restart to run an environment's services in a per-environment tmux session.
+description: Configure setup-tmux.toml and use winter service up/down/status/restart/logs to run an environment's services in a per-environment tmux session.
 ---
 
-Service orchestration is provided by the **[winter-service-tmux](/winter-docs/extensions/)** extension. It runs each environment's services (backend, frontend, workers, …) in a dedicated tmux session, so multiple environments can run their own copies of the stack side by side without port conflicts.
+Service orchestration is provided by the **[winter-service-tmux](/winter-docs/extensions/winter-service-tmux/)** extension. It runs each environment's services (backend, frontend, workers, …) in a dedicated tmux session, so multiple environments can run their own copies of the stack side by side without port conflicts. The extension implements the full `winter service` contract, so all service control goes through `winter service <action> <env>`.
 
-## One-time setup: `setup-tmux.sh`
+## One-time setup: `setup-tmux.toml`
 
-The extension needs a project-specific `setup-tmux.sh` that declares which services to run and how the tmux panes are laid out. Until it exists, `./up` errors out. Generate it (and its agent-facing companion `setup-tmux.md`) by following the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough; the `/ws-setup` flow prompts for this when the extension is installed.
+The extension needs a project-specific **`setup-tmux.toml`** manifest that declares which services to run and how the tmux panes are laid out. Without it, `./up` errors out. Author it (and its companion `layout-hook.sh`) by following the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough; the `/ws-setup` flow prompts for this when the extension is installed.
 
-`setup-tmux.sh` defines:
+`setup-tmux.toml` is a declarative TOML manifest. It defines:
 
-- the **session prefix** (e.g. `mp`), used to name sessions `<prefix>-<env>` — `mp-alpha`, `mp-beta`, …;
-- the **services** and their tmux `<window>.<pane>` layout;
-- the commands each service runs, which read `WINTER_PORT_BASE` so each environment binds its own ports.
+- the **`session_prefix`** (e.g. `mp`), used to name sessions `<prefix>-<env>` — `mp-alpha`, `mp-beta`, …;
+- one **`[[service]]` entry per tmux pane**, each with a unique `name`, a `target` (`<window>.<pane>`), and a `command`;
+- an optional **`log`** field per service (`"file"` by default, or `"pane"`) controlling how output is captured;
+- the **`layout_hook`** path pointing to `layout-hook.sh`, which creates the tmux windows and panes.
 
-`setup-tmux.md` is the human/agent reference that maps each service name to its `<window>.<pane>` target — start there rather than reverse-engineering pane indices from `setup-tmux.sh`.
+For machine-specific overrides, add a gitignored **`setup-tmux.local.toml`** next to the committed manifest. The reader merges it on top using the same overlay semantics: scalars replace, `[[service]]` and `[[status.url]]` entries merge keyed by `name`/`label`.
 
-For machine-specific overrides, add a gitignored `setup-tmux.local.sh` next to it — the scripts source it on top of the committed `setup-tmux.sh`. The legacy filenames `workflow.sh` / `workflow.md` (and `workflow.local.sh`) are still honored as fallbacks.
+See [`workflow/setup-tmux.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/setup-tmux.toml.example) and [`workflow/setup-tmux.local.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/setup-tmux.local.toml.example) for the full annotated schema.
 
 ## Start, check, restart, stop
 
-The `up` / `down` / `status` / `restart` scripts are symlinked into every environment directory. Run them from the environment root:
+Use `winter service` — the stable interface that dispatches to the registered orchestrator:
 
 ```bash
-cd alpha
-./up                 # start the environment's services in tmux session mp-alpha
-./status             # show this environment's services
-./status --all       # cross-environment view of every running session
-./restart <service>  # reap and re-run one wedged/crashed service, leaving the rest up
-./down               # stop everything and reap child processes cleanly
+winter service up alpha                # start the environment's services in tmux session mp-alpha
+winter service status alpha            # show this environment's services
+winter service restart alpha <service> # reap and re-run one wedged/crashed service, leaving the rest up
+winter service down alpha              # stop everything and reap child processes cleanly
 ```
 
-Each script is scoped to the environment it's run from: `alpha/status` reports only the `mp-alpha` session, the same way `./up` and `./down` default to their own environment. There is no worktree-name argument to `./status` — pass `--all` when you want to see every running environment at once. `./restart` takes a **service name** (not an env), reaping just that service's pane and re-running its declared command while the other panes keep running — the sanctioned way to recover one service without a full `./down && ./up`.
+The underlying `./up` / `./down` / `./status` / `./restart` scripts are also symlinked into every environment directory and can be run directly from the environment root — but prefer `winter service` so consumers are decoupled from the orchestrator implementation.
+
+`./status` (and `winter service status alpha`) is scoped to the environment it's run from: it reports only that environment's session. Pass `--all` to `./status` for a cross-environment view of every running session. `./restart` (and `winter service restart`) takes a **service name** (not an env), reaping just that pane and re-running its declared command while the other panes keep running — the sanctioned way to recover one service without a full `./down && ./up`.
 
 ## Reading service output
 
-Services run inside tmux, so read their logs with `tmux capture-pane` against the service's pane target (listed in `setup-tmux.md`):
+Use `winter service logs` — file-mode services write to `<env>/.winter/logs/<service>.log` (timestamped, size-rotated, persistent across restarts and `./down`):
 
 ```bash
-tmux capture-pane -pt mp-alpha:<window>.<pane>
+winter service logs alpha              # all services, full backlog
+winter service logs alpha backend      # one service
+winter service logs alpha -f           # follow (live tail, Ctrl-C to exit)
+winter service logs alpha -n 50        # last 50 lines
+winter service logs alpha --since=5m   # from the past 5 minutes
+winter service logs alpha --since=2026-06-13T10:00:00Z   # since an absolute timestamp
+winter service logs alpha -t           # prefix each line with its RFC3339 timestamp
+```
+
+Not all services write to a log file. The `log` field in each `[[service]]` entry controls capture mode:
+
+- **`"file"` (default)** — stdout/stderr piped through a capture writer to `<env>/.winter/logs/<svc>.log`. Timestamped, survives `down`, readable with `winter service logs`.
+- **`"pane"`** — launched bare (TTY preserved); output is read on demand via `tmux capture-pane` (no file persistence, no timestamps, requires a running session). Use for interactive panes (`shell`) or services where TTY fidelity matters more than persistence.
+- **`"memory"`** — accepted and validated; not yet implemented (`logs` emits nothing for memory-mode services).
+
+For `log="pane"` services, read the pane buffer directly:
+
+```bash
+tmux capture-pane -pt <prefix>-<env>:<window>.<pane>
 ```
 
 ## Rules
 
 These conventions keep environments clean and reapable:
 
-- **Never start services as background processes** — no `nohup`, no `&`. Always go through `./up` so they land in the tmux session.
-- **Never kill services directly** — no `kill`, `pkill`, or `tmux kill-session`. Always use `./down` so child processes are reaped.
-- **Recover one wedged service with `./restart <service>`** — not `kill`/`pkill`, and not a full `./down && ./up`. It reaps just that pane and re-runs the service, leaving the rest of the session up.
-- **Read pane output with `tmux capture-pane`**, using the targets in `setup-tmux.md`.
+- **Never start services as background processes** — no `nohup`, no `&`. Always go through `winter service up` (or `./up`) so they land in the tmux session.
+- **Never kill services directly** — no `kill`, `pkill`, or `tmux kill-session`. Always use `winter service down` (or `./down`) so child processes are reaped.
+- **Recover one wedged service with `winter service restart alpha <service>`** — not `kill`/`pkill`, and not a full down+up. It reaps just that pane and re-runs the service, leaving the rest of the session up.
+- **Read output with `winter service logs`** for file-mode services. For `log="pane"` services, use `tmux capture-pane` directly.
 
-## Relationship to `winter service`
+## `winter service` interface
 
 `winter service` is a **core winter command group** — `winter service up alpha`, `winter service down alpha`, `winter service status`, `winter service restart <PATTERN...>`, and `winter service logs <PATTERN...> [OPTIONS]` — that owns a stable interface and dispatches each call to whichever orchestrator the workspace registers. The design point is interchangeability: consumers depend on `winter service …`, not on any particular implementation.
 
 `status`, `restart`, and `logs` use **segment-aware glob PATTERNS** over `<env>/<service>` — the same vocabulary `winter ws` uses for `<env>/<repo>`. A bare `<env>` expands to `<env>/*`; `'*/backend'` selects the `backend` service across every env (cross-environment selection is supported). `up` and `down` always operate on the whole environment. For `restart` and `logs`, at least one pattern is required; for `status`, omitting patterns selects every service in every env. See the [CLI Reference](/winter-docs/cli-reference/#winter-service) for the full flag and example listing.
 
-**The `winter-service-tmux` extension does not yet conform to the `winter service` orchestrator contract.** The `./up` / `./down` / `./status` / `./restart` scripts described above are the current way to control services in a tmux-backed workspace, and they continue to be the correct approach today. Conforming the tmux extension to the `winter service` interface is a separate, not-yet-done follow-up; once that work lands, the same operations will be reachable via `winter service up alpha` etc., without changing the underlying tmux implementation.
+**The `winter-service-tmux` extension fully conforms to the `winter service` orchestrator contract.** Register it by setting `service_orchestrator = "winter-service-tmux"` in `.winter/config.toml`; the extension's `winter-ext.toml` declares `orchestrate_services = "workflow/orchestrate"` as the entrypoint.
 
-For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/#winter-service). For the registration config keys (`service_orchestrator` in `.winter/config.toml` naming the extension, and `orchestrate_services` in that extension's `winter-ext.toml` as the entrypoint path), see the [config reference](/winter-docs/cli-reference/config/#service-orchestration). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`ai/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
+For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/#winter-service). For the registration config keys (`service_orchestrator` in `.winter/config.toml` and `orchestrate_services` in the extension's `winter-ext.toml`), see the [config reference](/winter-docs/cli-reference/config/#service-orchestration). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`ai/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
 
 :::note[Canonical source]
-Conventions and setup live in the extension: [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md) and [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md). Adopter guide: [winter-service-tmux extension](/winter-docs/extensions/).
+Conventions and setup live in the extension: [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md) and [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md). Adopter guide: [winter-service-tmux extension](/winter-docs/extensions/winter-service-tmux/).
 :::
