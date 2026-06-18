@@ -76,9 +76,21 @@ These conventions keep environments clean and reapable:
 
 `status`, `restart`, and `logs` use **segment-aware glob PATTERNS** over `<env>/<service>` — the same vocabulary `winter ws` uses for `<env>/<repo>`. A bare `<env>` expands to `<env>/*`; `'*/backend'` selects the `backend` service across every env (cross-environment selection is supported). `up` and `down` always operate on the whole environment. For `restart` and `logs`, at least one pattern is required; for `status`, omitting patterns selects every service in every env. See the [CLI Reference](/winter-docs/cli-reference/#winter-service) for the full flag and example listing.
 
-**The `winter-service-tmux` extension fully conforms to the `winter service` orchestrator contract.** Register it by setting `service_orchestrator = "winter-service-tmux"` in `.winter/config.toml`; the extension's `winter-ext.toml` declares `orchestrate_services = "workflow/orchestrate"` as the entrypoint.
+**The `winter-service-tmux` extension fully conforms to the `winter service` orchestrator contract.** Register it by adding a `[capabilities]` table to `.winter/config.toml` and a `[provides]` table to the extension's `winter-ext.toml`:
 
-For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/#winter-service). For the registration config keys (`service_orchestrator` in `.winter/config.toml` and `orchestrate_services` in the extension's `winter-ext.toml`), see the [config reference](/winter-docs/cli-reference/config/#service-orchestration). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`ai/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
+```toml
+# .winter/config.toml
+[capabilities]
+service = "winter-service-tmux"
+
+# .winter/ext/service-tmux/winter-ext.toml
+[provides]
+service = "workflow/orchestrate"
+```
+
+The legacy root key `service_orchestrator = "winter-service-tmux"` (workspace config) and `orchestrate_services = "workflow/orchestrate"` (extension manifest) are deprecated back-compat aliases — existing configs continue to work without modification, but new workspaces should use `[capabilities]`/`[provides]`.
+
+For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/#winter-service). For the registration config keys and capability registry, see the [config reference](/winter-docs/cli-reference/config/#capability-registry). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`ai/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
 
 :::note[Canonical source]
 Conventions and setup live in the extension: [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md) and [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md). Adopter guide: [winter-service-tmux extension](/winter-docs/extensions/winter-service-tmux/).

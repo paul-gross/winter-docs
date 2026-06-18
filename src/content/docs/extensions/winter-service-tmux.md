@@ -24,17 +24,28 @@ Adopt this extension when your project has long-running services you start durin
 
 ## How to configure
 
-Register the extension in `.winter/config.toml`. `service_orchestrator` is a **root-level key** — place it before any `[[table]]` headers:
+Register the extension in `.winter/config.toml` using the `[capabilities]` table, and declare `[provides]` in the extension's `winter-ext.toml`:
 
 ```toml
-# top-level key — must appear before any [[table]] headers
-service_orchestrator = "winter-service-tmux"
+# .winter/config.toml
+[capabilities]
+service = "winter-service-tmux"
 
 [[standalone_repository]]
 name = "winter-service-tmux"
 url = "git@github.com:paul-gross/winter-service-tmux.git"
 path = ".winter/ext/service-tmux"
+
+# .winter/ext/service-tmux/winter-ext.toml  (inside the extension repo)
+[provides]
+service = "workflow/orchestrate"
 ```
+
+See the [config reference → Capability registry](/winter-docs/cli-reference/config/#capability-registry) for the full resolution rules.
+
+:::note[Deprecated aliases]
+The legacy `service_orchestrator = "winter-service-tmux"` root key (workspace config) and `orchestrate_services = "workflow/orchestrate"` (extension manifest) are back-compat aliases that continue to work for existing configs. New workspaces should use `[capabilities]`/`[provides]` instead.
+:::
 
 The extension needs a project-specific **`workspace:/ai/project/setup-tmux.toml`** manifest and its companion **`workspace:/ai/project/layout-hook.sh`**. Follow the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough (or run `/ws-setup`) to author them. Until `setup-tmux.toml` exists, `./up` errors out.
 

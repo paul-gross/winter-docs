@@ -159,7 +159,7 @@ service = "winter-service-tmux"
 
 # .winter/ext/service-tmux/winter-ext.toml  (inside the extension repo)
 [provides]
-service = "workflow/service"
+service = "workflow/orchestrate"
 ```
 
 With both in place, `winter service <action> <env>` resolves the orchestrator and runs its entrypoint. When the binding is ambiguous (two providers, no explicit config entry), the command errors naming all candidates and the `capabilities.service` config key.
@@ -179,7 +179,7 @@ Key fields in `winter-ext.toml`:
 | `skills_dir` / `agents_dir` | Explicit paths; override default discovery. |
 | `doctor` | Executable emitting NDJSON probe events for `winter doctor`. |
 | `lint` | Executable(s) emitting NDJSON findings for `winter lint` (string or list). |
-| `[provides]` | Maps capability slot names to entrypoint paths (e.g. `service = "workflow/service"`). An extension declares here what it provides; the workspace binds it via `[capabilities]` (see [Capability registry](#capability-registry)). |
+| `[provides]` | Maps capability slot names to entrypoint paths (e.g. `service = "workflow/orchestrate"`). An extension declares here what it provides; the workspace binds it via `[capabilities]` (see [Capability registry](#capability-registry)). |
 | `orchestrate_services` | **Deprecated.** Back-compat alias for `provides.service`. |
 | `requires` | Other module names this one depends on; consumed by `winter graph`. |
 
