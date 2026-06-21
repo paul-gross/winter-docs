@@ -1,0 +1,8 @@
+# winter-docs is the public documentation site for the winter ecosystem. It is a
+# project repo, not an installed extension (it ships no skills or agents to
+# symlink) — this manifest exists only to declare module identity and the
+# extensions the docs reference. Documentation legitimately depends on what it
+# documents, so these are real `requires`; nothing in winter depends back on the
+# docs. The extractability lint validates docs→extension references against this.
+name = "winter-docs"
+requires = ["winter-harness", "winter-product"]
