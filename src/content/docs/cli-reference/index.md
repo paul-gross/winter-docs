@@ -292,7 +292,7 @@ Run winter-ecosystem *convention* checks — path notation, agent frontmatter, m
 
 ```bash
 winter lint            # the feature env you're in (every env, if outside one)
-winter lint <repo>     # one project repo by name
+winter lint <repo>     # one project repo (its source checkout)
 winter lint <env>      # every project worktree in a feature env
 winter lint --all      # every env's project worktrees
 winter lint --changed  # only the dirty / un-pushed files in the current repo
