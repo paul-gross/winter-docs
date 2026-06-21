@@ -66,6 +66,7 @@ export default defineConfig({
 				{
 					label: 'TUI Plugins',
 					items: [
+						{ label: 'Overview', slug: 'tui-plugins' },
 						{ label: 'Authoring', slug: 'tui-plugins/authoring' },
 					],
 				},
