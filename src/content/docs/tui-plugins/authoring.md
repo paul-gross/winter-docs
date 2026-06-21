@@ -14,8 +14,10 @@ A plugin is a single `plugin.py` exposing a module-level `create_plugin()` facto
 ```python
 import dataclasses
 
+from winter_plugin_api import IWinterPlugin, PluginRegistration
 
-def create_plugin():
+
+def create_plugin() -> IWinterPlugin:
     return MyPlugin()
 
 
@@ -23,8 +25,7 @@ def create_plugin():
 class MyPlugin:
     name: str = "my-plugin"
 
-    def register(self, config):
-        from winter_cli.plugins.types import PluginRegistration
+    def register(self, config: object) -> PluginRegistration:
         return PluginRegistration(
             environment_decorators=[my_badge],
         )
@@ -32,9 +33,15 @@ class MyPlugin:
 
 `register(config)` receives the parsed contents of a `config.toml` sitting next to `plugin.py` (an empty dict if there is none). Do all of your wiring here and return the registration — it is called once, when the plugin is discovered.
 
-:::tip[Why the import is inside `register`]
-Importing `winter_cli` lazily inside the method keeps `plugin.py` importable on its own — e.g. when a type checker or test loads the file without the CLI on `sys.path`. The worked example below does the same.
-:::
+The whole contract is imported from the **`winter-plugin-api`** package — a narrow, semver-versioned, typed surface with no dependency on winter-cli. Add it as a **dev dependency** pinned to a tag so your own typechecker resolves the imports; winter supplies the contract at runtime when it loads your `plugin.py`:
+
+```toml
+# pyproject.toml
+[dependency-groups]
+dev = [
+    "winter-plugin-api @ git+https://github.com/paul-gross/winter-plugin-api@v0.1.0",
+]
+```
 
 ## Where plugins live
 
@@ -65,12 +72,17 @@ The `commands` field exists on the contract, but the CLI does not currently regi
 
 ## Worked example: a status badge
 
-Decorators are the most common contribution. A decorator is a callable `(status, path) -> None` that **mutates** the status object's `extensions` dict in place; whatever you store there is appended to the rendered cell, joined by spaces. Keep the key short and unique to your plugin.
+Decorators are the most common contribution. A decorator is a callable `(status, path) -> None` that **mutates** the status object's `extensions` dict in place; whatever you store there is appended to the rendered cell, joined by spaces. Keep the key short and unique to your plugin. The `status` argument is a narrow read-only **view** (`IEnvironmentStatusView` / `IWorktreeRepoStatusView`), not a concrete winter-cli model — you read its properties and write its `extensions`.
 
-`winter-service-tmux` ships exactly this — an environment decorator that stamps a one-character badge showing whether the env's tmux session is running:
+Here is an environment decorator that stamps a one-character badge showing whether the env's tmux session is running — modeled on the one `winter-service-tmux` ships (that one is an in-tree extension, so it imports winter-cli directly; an external plugin imports `winter_plugin_api` as shown here):
 
 ```python
-def create_plugin():
+from pathlib import Path
+
+from winter_plugin_api import IEnvironmentStatusView, IWinterPlugin, PluginRegistration
+
+
+def create_plugin() -> IWinterPlugin:
     return TmuxStatusPlugin()
 
 
@@ -78,12 +90,11 @@ def create_plugin():
 class TmuxStatusPlugin:
     name: str = "winter-service-tmux"
 
-    def register(self, config):
-        from winter_cli.plugins.types import PluginRegistration
+    def register(self, config: object) -> PluginRegistration:
         return PluginRegistration(environment_decorators=[tmux_session_badge])
 
 
-def tmux_session_badge(env_status, env_path) -> None:
+def tmux_session_badge(env_status: IEnvironmentStatusView, env_path: Path) -> None:
     session = f"{env_status.environment.workspace.session_prefix}-{env_status.environment.name}"
     try:
         result = subprocess.run(
@@ -104,8 +115,8 @@ There are two decorator flavors, each firing once per refresh:
 
 ## Typing the contract
 
-New plugins can annotate `create_plugin() -> IWinterPlugin` to typecheck against the contract. The Protocols and `PluginRegistration` are exported from `winter_cli.plugins.types`, and the canonical, always-current reference — including the full set of pinned public names — is the harness convention:
+Annotate `create_plugin() -> IWinterPlugin` to typecheck against the contract. Every name — the Protocols, `PluginRegistration`, `TuiAction`, `ActionScope`, the view types, and the action contexts — is imported from the `winter_plugin_api` package, which is **semver-versioned**: a major bump means a breaking change, a minor bump a backward-compatible addition. Pin the lowest version exposing the names you use. winter-cli keeps its own runtime copy of the seam, and the package is a hand-curated copy of it — the two are kept in sync by hand.
 
+- **Contract package**: [`winter-plugin-api`](https://github.com/paul-gross/winter-plugin-api) — the versioned source of truth (the `views` and `seam` modules)
 - **Plugin author contract**: [`winter-harness/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
 - **Worked example source**: [`winter-service-tmux/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)
-- **Contract definitions**: [`winter_cli/plugins/types.py`](https://github.com/paul-gross/winter/blob/master/tools/winter-cli/src/winter_cli/plugins/types.py)
