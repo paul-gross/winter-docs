@@ -92,7 +92,7 @@ winter ws fetch --all
 
 ### `ws pull`
 
-Fetch, then integrate each worktree's tracked upstream. Ff-only by default.
+Fetch, fast-forward each project's source-checkout main (best-effort), then integrate each worktree's tracked upstream. Ff-only by default.
 
 ```bash
 winter ws pull [PATTERNS...] [--ff-only | --merge | --rebase] [--autostash] [--standalone | --all]

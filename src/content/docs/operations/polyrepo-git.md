@@ -15,7 +15,7 @@ winter ws pull '*/app-api'      # the app-api worktree in every environment
 
 | Command | What it does | When to use |
 |---------|--------------|-------------|
-| `winter ws pull <env>` | Fetch, then ff-only integrate each worktree's **tracked upstream** (feature branch for non-pinned, main for pinned). | Bring down remote commits on your feature branch. |
+| `winter ws pull <env>` | Fetch, fast-forward each project's source-checkout main (best-effort), then ff-only integrate each worktree's **tracked upstream** (feature branch for non-pinned, main for pinned). | Bring down remote commits on your feature branch. |
 | `winter ws merge <ref> <env>` | Merge an arbitrary ref (another env, a branch, `origin/...`) into matched worktrees. No fetch. | Fold one environment into another, or merge a specific branch. |
 | `winter ws push <env>` | Push worktrees with commits ahead of upstream. Non-pinned → each worktree's own tracked feature branch (resolved per worktree); pinned excluded by default. | Ship completed work. |
 | `winter ws connect <pattern>... <branch>` | Set the upstream of each non-pinned worktree matching `<pattern>` to `origin/<branch>`. A bare `<env>` connects the whole env; an `<env>/<repo>` glob targets specific worktrees. | Point an environment — or one repo within it — at a remote feature branch (see below). |
@@ -27,8 +27,8 @@ winter ws pull '*/app-api'      # the app-api worktree in every environment
 
 These three overlap, so the distinction matters:
 
-- **`fetch`** refreshes remote-tracking refs and fast-forwards the source checkouts' main — no feature-worktree changes. Run it before an offline `merge` or `checkout`, or to bring the latest `origin/<main>` into the source checkouts new envs branch from.
-- **`pull`** targets each worktree's *tracked upstream* and is ff-only by default — use it to integrate your own feature-branch commits.
+- **`fetch`** refreshes remote-tracking refs and fast-forwards the source checkouts' main — no feature-worktree changes. Run it before an offline `merge` or `checkout`, or to bring the latest `origin/<main>` into the source checkouts new envs branch from without touching any worktree.
+- **`pull`** targets each worktree's *tracked upstream* and is ff-only by default — use it to integrate your own feature-branch commits. As its first step it also fast-forwards each project's source-checkout main (best-effort, like `fetch`), so a diverged source checkout logs a warning but never fails the pull. The difference from `fetch`: `pull` also moves your worktrees; `fetch` only touches the source checkouts.
 - **`merge`** takes an *explicit* source ref and does not fetch — use it for env-to-env folds or to fold `origin/<main>` into a worktree (`winter ws fetch` first, then `winter ws merge origin/<main> <env>`).
 
 ## Branch model
