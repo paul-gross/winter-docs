@@ -71,7 +71,7 @@ url = "git@github.com:org/shared-tools.git"
 pinned = true
 ```
 
-## `[[standalone_repository]]`
+## `[[standalone_repository]]` {#standalone_repository}
 
 Repos cloned at the workspace root (or a configured `path`), with no worktree and no feature branching. Used for winter extensions and auxiliary repos.
 
@@ -80,13 +80,22 @@ Repos cloned at the workspace root (or a configured `path`), with no worktree an
 | `url` | string | — (required) | Clone URL. |
 | `name` | string | derived from `url` | Repo name; default clone directory. |
 | `path` | string | `name` | Clone location, relative to the workspace root. |
+| `main_branch` | string | top-level `main_branch` | Per-repo override of the main branch used for integration tracking. |
+| `ref` | string | — | Pin the repo to a branch, tag, or commit. Absent → tracks default branch. A branch ref is a moving pin (advances on `ws update`); a tag or commit SHA is a frozen pin. |
 | `prefix` | string | from `winter-ext.toml`/name | Symlink-prefix override for an extension's skills/agents. |
+
+**Ref pinning and `.winter/config.lock`:** When `ref` is set, `winter ws init` resolves the ref to a commit SHA and records the result in `.winter/config.lock`, which is committed to the workspace repo so the pin is reproducible across machines. `winter ws pull` also advances branch (moving) pins and rewrites the lock; `winter ws update [repo]` is the command for tag and commit (frozen) pins — the only way to re-resolve a frozen pin on demand. Commit the updated lock file to make the resolved SHA visible as a reviewable diff.
 
 ```toml
 [[standalone_repository]]
 name = "winter-service-tmux"
 url = "git@github.com:paul-gross/winter-service-tmux.git"
 path = ".winter/ext/service-tmux"
+
+[[standalone_repository]]
+name = "my-lib"
+url = "git@github.com:org/my-lib.git"
+ref = "v2.1.0"          # frozen at this tag's commit; update with `winter ws update my-lib`
 ```
 
 ## `[keybindings]`

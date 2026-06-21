@@ -25,15 +25,15 @@ See [`workflow/setup-tmux.toml.example`](https://github.com/paul-gross/winter-se
 Use `winter service` — the stable interface that dispatches to the registered orchestrator:
 
 ```bash
-winter service up alpha                # start the environment's services in tmux session mp-alpha
-winter service status alpha            # show this environment's services
-winter service restart alpha <service> # reap and re-run one wedged/crashed service, leaving the rest up
-winter service down alpha              # stop everything and reap child processes cleanly
+winter service up alpha                  # start the environment's services in tmux session mp-alpha
+winter service status alpha              # show this environment's services
+winter service restart alpha/<service>   # reap and re-run one wedged/crashed service, leaving the rest up
+winter service down alpha                # stop everything and reap child processes cleanly
 ```
 
 The underlying `./up` / `./down` / `./status` / `./restart` scripts are also symlinked into every environment directory and can be run directly from the environment root — but prefer `winter service` so consumers are decoupled from the orchestrator implementation.
 
-`./status` (and `winter service status alpha`) is scoped to the environment it's run from: it reports only that environment's session. Pass `--all` to `./status` for a cross-environment view of every running session. `./restart` (and `winter service restart`) takes a **service name** (not an env), reaping just that pane and re-running its declared command while the other panes keep running — the sanctioned way to recover one service without a full `./down && ./up`.
+`./status` (and `winter service status alpha`) is scoped to the environment it's run from: it reports only that environment's session. Pass `--all` to `./status` for a cross-environment view of every running session. `winter service restart` takes segment-aware `<env>/<service>` PATTERNS (at least one required), reaping just that pane and re-running its declared command while the other panes keep running — the sanctioned way to recover one service without a full `./down && ./up`. Note: the env-root `./restart` door is env-scoped and accepts bare service names only (not the `<env>/<service>` form).
 
 ## Reading service output
 
@@ -41,7 +41,7 @@ Use `winter service logs` — file-mode services write to `<env>/.winter/logs/<s
 
 ```bash
 winter service logs alpha              # all services, full backlog
-winter service logs alpha backend      # one service
+winter service logs alpha/backend      # one service
 winter service logs alpha -f           # follow (live tail, Ctrl-C to exit)
 winter service logs alpha -n 50        # last 50 lines
 winter service logs alpha --since=5m   # from the past 5 minutes
@@ -67,7 +67,7 @@ These conventions keep environments clean and reapable:
 
 - **Never start services as background processes** — no `nohup`, no `&`. Always go through `winter service up` (or `./up`) so they land in the tmux session.
 - **Never kill services directly** — no `kill`, `pkill`, or `tmux kill-session`. Always use `winter service down` (or `./down`) so child processes are reaped.
-- **Recover one wedged service with `winter service restart alpha <service>`** — not `kill`/`pkill`, and not a full down+up. It reaps just that pane and re-runs the service, leaving the rest of the session up.
+- **Recover one wedged service with `winter service restart alpha/<service>`** — not `kill`/`pkill`, and not a full down+up. It reaps just that pane and re-runs the service, leaving the rest of the session up.
 - **Read output with `winter service logs`** for file-mode services. For `log="pane"` services, use `tmux capture-pane` directly.
 
 ## `winter service` interface
@@ -89,6 +89,43 @@ service = "workflow/orchestrate"
 ```
 
 The legacy root key `service_orchestrator = "winter-service-tmux"` (workspace config) and `orchestrate_services = "workflow/orchestrate"` (extension manifest) are deprecated back-compat aliases — existing configs continue to work without modification, but new workspaces should use `[capabilities]`/`[provides]`.
+
+## Multi-provider orchestration
+
+When two or more extensions both declare `provides.service`, winter runs them in a **multi-provider** mode: `winter service up <env>` fans out to every provider and aborts on the first failure; `winter service down <env>` fans out best-effort (continues past failures so all providers get a chance to clean up). `status` merges each provider's output into a single document; `restart` and `logs` route each matched service to its owning provider (`logs` in follow mode requires all matched services to belong to a single provider).
+
+A single provider is dispatched directly — no fan-out overhead. With multiple providers installed and **no explicit binding**, winter implicitly binds all of them (sorted by name) and fans out — no configuration change is needed. An explicit `capabilities.service` list restricts or reorders providers when you want control over which are used:
+
+```toml
+# .winter/config.toml  (explicit multi-provider example)
+[capabilities]
+service = ["winter-service-tmux", "my-second-orchestrator"]
+```
+
+Run `winter capabilities` to inspect the current binding — for a single provider `--json` emits a scalar `bound`; for multiple it emits an array (scalar-for-single preserves back-compat with existing machine clients).
+
+## Workspace-scoped services
+
+Some services — a shared database, a message broker, a container registry — should run once for the whole workspace rather than once per feature env. Declare them with `scope = "workspace"` in `setup-tmux.toml`:
+
+```toml
+[[service]]
+name    = "db"
+target  = "0.0"
+command = "postgres -D /usr/local/var/postgres"
+scope   = "workspace"
+```
+
+Drive them with the reserved `workspace` target:
+
+```bash
+winter service up workspace          # start all workspace-scoped services
+winter service down workspace        # stop the workspace session
+winter service status workspace      # list workspace service states
+winter service restart workspace/db  # restart one workspace service
+```
+
+`winter service up <env>` ensures the workspace session is running before it starts the per-env session — workspace singletons are guaranteed to be up when any env spins up. `down <env>` intentionally leaves the workspace session running; only `down workspace` tears it down. The `workspace` token is an exact reserved name — glob patterns like `work*` do NOT match it.
 
 For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/#winter-service). For the registration config keys and capability registry, see the [config reference](/winter-docs/cli-reference/config/#capability-registry). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`ai/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
 
