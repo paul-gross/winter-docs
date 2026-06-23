@@ -28,7 +28,7 @@ url = "git@github.com:paul-gross/winter-service-tmux.git"
 path = ".winter/ext/service-tmux"   # optional; defaults to the repo name
 ```
 
-On install, winter reads the extension's `winter-ext.toml` manifest and symlinks its skills and agents into the workspace's `.claude/` directory under a short **prefix** (e.g. `wp-todo`, `wst-…`). The prefix keeps extensions from colliding, and lets the same workspace install several at once.
+On install, winter reads the extension's `winter-ext.toml` manifest and installs its skills and agents under a short **prefix** (e.g. `wp-todo`, `wst-…`). Skills are projected into each supported code agent's skills directory — a symlink for Claude Code (`.claude/skills`) and Codex (`.codex/skills`), and a real-directory copy for OpenCode (`.opencode/skill`, whose skill globber doesn't traverse symlinks); agents are symlinked into `.claude/agents`. The prefix keeps extensions from colliding, and lets the same workspace install several at once.
 
 An extension manifest can also declare lifecycle hooks, a `doctor` probe, and a `lint` check:
 
