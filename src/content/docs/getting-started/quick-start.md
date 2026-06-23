@@ -77,7 +77,17 @@ This adds a worktree of every project repo under `alpha/`, all on a branch named
 Never edit the source checkouts under `projects/` directly — they stay on the main branch. All work happens in a feature environment's worktrees.
 :::
 
-## 5. Run a service
+## 5. Provision the environment
+
+`winter ws init` is structural — it makes the worktrees but does not install dependencies or create databases. Bring the environment to a working state with:
+
+```bash
+winter provision alpha
+```
+
+This runs the readiness lifecycle — `dependency` → `resource` → `data` — using `[[provision.*]]` handlers declared in your config and extensions: install dependencies, create resources (databases, queues, buckets), and load seed data. It's idempotent, so re-run it any time after pulling new migrations or adding a dependency. See [Provisioning Environments](/winter-docs/operations/provisioning/) for the full model.
+
+## 6. Run a service
 
 With the [service-orchestration extension](/winter-docs/extensions/) installed, each environment gets `up` / `down` / `status` / `restart` scripts that launch your services in a per-environment tmux session:
 
@@ -91,7 +101,7 @@ cd alpha
 
 Because each environment has its own port block, you can run `alpha` and `beta` side by side without collisions.
 
-## 6. Ship your work
+## 7. Ship your work
 
 Commit per repo with plain git inside each worktree, then push the whole environment to its tracked upstreams:
 

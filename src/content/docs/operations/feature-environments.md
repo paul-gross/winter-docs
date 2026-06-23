@@ -22,6 +22,8 @@ winter ws init --all          # reconcile every existing environment
 
 The command is idempotent — re-run it any time to reconcile an environment after a config change.
 
+`winter ws init` is **structural** — it makes the worktrees but does not install dependencies, create databases, or load seed data. Run [`winter provision alpha`](/winter-docs/operations/provisioning/) afterward to bring the environment to a working state.
+
 When invoked without a target (`winter ws init`) or with `--all`, winter also fires each extension's `on_workspace_reconcile` hook once — before any per-env loop. This is the hook that regenerates workspace-level artifacts (like the service-to-pane reference map that winter-service-tmux produces) rather than per-environment state.
 
 ## List & inspect

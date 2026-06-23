@@ -340,6 +340,27 @@ winter service logs alpha -t                          # prefix each line with it
 
 To register an orchestrator, set `capabilities.service` in the `[capabilities]` table in `.winter/config.toml` and `provides.service` in the extension's `winter-ext.toml` — see the [config reference](/winter-docs/cli-reference/config/#capability-registry) for the schema and the [orchestrator contract](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract) for the full implementer-facing spec (argv rule, `WINTER_*` env vars, NDJSON wire format). The legacy `service_orchestrator` (workspace config) and `orchestrate_services` (extension manifest) keys are deprecated back-compat aliases — existing configs continue to work, but new workspaces should use `[capabilities]`/`[provides]`.
 
+## `winter provision`
+
+Bring a feature environment to a working state after `winter ws init`: install dependencies, create resources (databases, queues, buckets), and load seed data. Re-runnable and idempotent. Reads `[[provision.*]]` handlers from `.winter/config.toml` and each installed extension's `winter-ext.toml` — see the [config reference → Provision manifests](/winter-docs/cli-reference/config/#provision-manifests).
+
+```bash
+winter provision alpha                          # full chain: dependency → resource → data
+winter provision alpha dependency               # one sub-target only
+winter provision alpha resource --reset         # destroy + recreate resources
+winter provision alpha resource --destroy       # destroy resources only
+winter provision alpha resource --seed          # create resources, then load data
+winter provision alpha data --reset             # wipe + reload data
+winter provision alpha --no-service-check       # skip the required_services check
+winter provision alpha --json                   # NDJSON event stream
+```
+
+The bare form runs all three sub-targets (`dependency` → `resource` → `data`) in order; a handler failure aborts the rest. Action flags (`--reset`, `--destroy`, `--seed`) always require an explicit sub-target; `--seed` is valid only on `resource`, and `--reset`/`--destroy` cannot be combined. When a `resource`/`data` handler declares `required_services`, winter starts any that are not running before executing it (unless `--no-service-check`). See [Provisioning Environments](/winter-docs/operations/provisioning/) for the model and [`ai/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/provision.md) for the full contract.
+
+```bash
+winter provision alpha
+```
+
 ## `winter graph`
 
 Print the module dependency graph declared in each installed extension's `winter-ext.toml` `requires` field. Every installed module that ships a `winter-ext.toml` becomes a node; its `requires` list becomes its edges. A read-only data command with a stable JSON contract; lint checks consume it via `$WINTER_CLI graph --json` to reason about dependencies without re-parsing manifests.

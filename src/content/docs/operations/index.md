@@ -3,9 +3,10 @@ title: Operations
 description: The day-to-day operating model for winter — feature environments, polyrepo git, and running services.
 ---
 
-This section is the task-oriented guide to operating a winter workspace day to day. It covers the three things you do constantly: managing feature environments, running git across many repos at once, and starting and stopping services.
+This section is the task-oriented guide to operating a winter workspace day to day. It covers what you do constantly: managing feature environments, provisioning them, running git across many repos at once, and starting and stopping services.
 
 - **[Feature Environments & Worktrees](/winter-docs/operations/feature-environments/)** — create, list, and destroy environments; how the config-driven port scheme keeps them from colliding.
+- **[Provisioning Environments](/winter-docs/operations/provisioning/)** — bring an environment to a working state with `winter provision`: the re-runnable dependency → resource → data lifecycle.
 - **[Polyrepo Git Operations](/winter-docs/operations/polyrepo-git/)** — `fetch`, `pull`, `push`, `merge`, and `connect`/`disconnect` across every repo, with guidance on when to use each.
 - **[Running Services](/winter-docs/operations/services/)** — the `setup-tmux.sh` setup and the `up` / `down` / `status` / `restart` scripts the service-orchestration extension provides.
 
