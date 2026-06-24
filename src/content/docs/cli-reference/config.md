@@ -177,7 +177,7 @@ The full implementer-facing contract (uniform argv rule, `WINTER_*` env vars per
 
 ## Provision manifests {#provision-manifests}
 
-`winter provision` reads `[[provision.*]]` handler tables that declare the readiness scripts for an environment. The same shape is accepted in two places: the workspace config (`.winter/config.toml`) and each installed extension's `winter-ext.toml`. For the command and the readiness model, see [Provisioning Environments](/winter-docs/operations/provisioning/).
+`winter provision` reads `[[provision.*]]` handler tables that declare the inline shell commands for provisioning an environment. The same shape is accepted in two places: the workspace config (`.winter/config.toml`) and each installed extension's `winter-ext.toml`. For the command and the readiness model, see [Provisioning Environments](/winter-docs/operations/provisioning/).
 
 There are three sub-target tables — `dependency`, `resource`, and `data`. Each is an array of handlers:
 
@@ -185,18 +185,18 @@ There are three sub-target tables — `dependency`, `resource`, and `data`. Each
 # .winter/config.toml
 [[provision.dependency]]
 scope = "feature-worktree"
-apply = "scripts/install-deps.sh"
+apply = "uv sync && mise trust"
 
 [[provision.resource]]
 scope             = "workspace"
-apply             = "scripts/create-db.sh"
-destroy           = "scripts/drop-db.sh"
+apply             = ["createdb myapp", "psql myapp -f schema.sql"]
+destroy           = "dropdb --if-exists myapp"
 required_services = ["workspace/postgres"]
 
 [[provision.data]]
 scope             = "feature-environment"
-apply             = "scripts/seed.sh"
-reset             = "scripts/reseed.sh"
+apply             = "$WINTER_WORKSPACE_DIR/.winter/config/provision/seed.sh"
+reset             = "$WINTER_WORKSPACE_DIR/.winter/config/provision/reseed.sh"
 required_services = ["workspace/postgres"]
 ```
 
@@ -205,12 +205,12 @@ Extensions declare the same tables in their own `winter-ext.toml`; within a sub-
 | Field | Required | Meaning |
 |-------|----------|---------|
 | `scope` | yes | Where the handler runs: `workspace` (workspace root, once), `feature-environment` (env root, once per env), or `feature-worktree` (each repo worktree, once per project worktree). |
-| `apply` | yes | Script run by the bare (apply) action. Relative to the declaring directory — workspace root or extension root. |
-| `destroy` | no | Script run by `--destroy`. If absent, `--destroy` warns and no-ops. |
-| `reset` | no | Script run by `--reset`. If absent, winter composes destroy + apply when both exist, else degrades to re-apply. |
+| `apply` | yes | Inline shell command (non-empty string) or list of inline shell commands (non-empty array of non-empty strings), run via `sh -c`. Array elements run in order; execution stops at the first non-zero exit. There is no path resolution — to invoke a script, name it as a command located via an env var (e.g. `"$WINTER_WORKSPACE_DIR/.winter/config/provision/install.sh"`). |
+| `destroy` | no | Inline shell command (string) or list (array) run by `--destroy`. If absent, `--destroy` warns and no-ops. |
+| `reset` | no | Inline shell command (string) or list (array) run by `--reset`. If absent, winter composes destroy + apply when both exist, else degrades to re-apply. |
 | `required_services` | no | Services that must be running before the handler executes. Valid only on `resource` and `data` (rejected on `dependency`). Each token is `workspace/<service>` or `<current-env>/<service>`; a foreign-env reference is rejected. |
 
-Unknown sub-target tables (e.g. `[[provision.custom]]`) and unknown per-entry keys are rejected. `feature-environment` and `feature-worktree` handlers receive the `WINTER_ENV` / `WINTER_ENV_INDEX` / `WINTER_PORT_BASE` trio; `workspace` handlers receive `WINTER_WORKSPACE_DIR` only.
+Unknown sub-target tables (e.g. `[[provision.custom]]`) and unknown per-entry keys are rejected. All handlers receive `WINTER_WORKSPACE_DIR` plus the extension-identity vars (`WINTER_EXT_DIR`, `WINTER_EXT_PREFIX`, `WINTER_EXT_CONFIG_DIR`); `feature-environment` and `feature-worktree` handlers additionally receive the `WINTER_ENV` / `WINTER_ENV_INDEX` / `WINTER_PORT_BASE` trio.
 
 `winter doctor` validates every declared handler. The exhaustive reference — action vocabulary, NDJSON event schema, and the full env-var contract — is [`ai/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/provision.md).
 

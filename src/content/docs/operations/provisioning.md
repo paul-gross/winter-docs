@@ -77,7 +77,27 @@ Provision runs `[[provision.*]]` handlers declared in two places, using the same
 - the **workspace config**, `.winter/config.toml`, and
 - each installed extension's **`winter-ext.toml`**.
 
-Each handler names the script for its `apply` action and, optionally, `destroy`/`reset` scripts and a `scope`. For the full schema — every field, the worktree resolution rules, and the environment variables handlers receive — see the **[config.toml reference → Provision manifests](/winter-docs/cli-reference/config/#provision-manifests)**.
+Each handler declares `apply` (required) and, optionally, `destroy`/`reset` and a `scope`. `apply`, `destroy`, and `reset` each accept an **inline shell command** (string) or a **list of inline shell commands** (array) — there are no script paths. A bare string is sugar for a single-command list.
+
+```toml
+[[provision.dependency]]
+scope = "feature-worktree"
+apply = "uv sync && mise trust"          # single inline command (string)
+
+[[provision.resource]]
+scope             = "workspace"
+apply             = ["createdb myapp", "psql myapp -f schema.sql"]   # array — run in order
+destroy           = "dropdb --if-exists myapp"
+required_services = ["workspace/postgres"]
+
+[[provision.data]]
+scope  = "feature-environment"
+apply  = "$WINTER_WORKSPACE_DIR/.winter/config/provision/seed.sh"
+```
+
+Each command runs via `sh -c`, so shell constructs (`&&`, `||`, pipes, `$VAR`, globs) work naturally. For arrays, commands run in declaration order and execution stops at the first non-zero exit — that exit code is the handler's result. `WINTER_WORKSPACE_DIR` is set for all scopes; `feature-environment` and `feature-worktree` handlers also receive `WINTER_ENV`, `WINTER_ENV_INDEX`, and `WINTER_PORT_BASE`.
+
+For the full schema — every field, scope semantics, worktree resolution rules, and all environment variables — see the **[config.toml reference → Provision manifests](/winter-docs/cli-reference/config/#provision-manifests)**.
 
 ### Scope and ordering
 
@@ -96,7 +116,7 @@ A `resource` or `data` handler can declare the services that must be running bef
 ```toml
 [[provision.resource]]
 scope             = "workspace"
-apply             = "scripts/create-db.sh"
+apply             = ["createdb myapp", "psql myapp -f schema.sql"]
 required_services = ["workspace/postgres"]
 ```
 
@@ -110,13 +130,31 @@ Skip the check with `--no-service-check` when the service is known to be up, or 
 
 ## Scripting and diagnostics
 
-`--json` emits an NDJSON event stream — one JSON object per line — covering run start, each sub-target, each script invocation and its output, per-handler results, and a final status. Use it to drive provisioning from tooling:
+`--json` emits an NDJSON event stream — one JSON object per line — covering run start, each sub-target, each command invocation and its output, per-handler results, and a final status. Use it to drive provisioning from tooling:
 
 ```bash
 winter provision alpha --json
 ```
 
-`winter doctor` includes a `[provision]` probe that validates every declared handler (known `scope`, present `apply`, `required_services` only on `resource`/`data`, no unknown keys) without aborting its other checks.
+With `--dry-run --json`, `plan_handler` events are emitted instead of execution events. Each `plan_handler` event includes a `commands` list (the ordered shell commands that would run) rather than a `script` path.
+
+`winter doctor` includes a `[provision]` probe that validates every declared handler (`scope`, `apply` present and non-empty string or non-empty list of non-empty strings, same for `destroy`/`reset` when present, `required_services` only on `resource`/`data`, no unknown keys) without aborting its other checks.
+
+## Breaking change: inline commands replace script paths
+
+If you have existing provision handlers that point at script paths (e.g. `apply = "scripts/install-deps.sh"`), those values are now treated as inline shell commands passed to `sh -c` — which means they will fail unless the script happens to be on `$PATH`.
+
+**Migrate** by invoking scripts via `$WINTER_WORKSPACE_DIR`:
+
+```toml
+# Before (old — no longer works as intended):
+apply = "scripts/install-deps.sh"
+
+# After (new):
+apply = "$WINTER_WORKSPACE_DIR/.winter/config/provision/install-deps.sh"
+```
+
+Because the value runs via `sh -c "<command>"`, a bare path to a script must be executable (`chmod +x`); alternatively, invoke it through an interpreter (e.g. `sh $WINTER_WORKSPACE_DIR/.winter/config/provision/install-deps.sh`) to avoid that requirement. There is no longer any path resolution relative to the workspace root or extension root.
 
 :::note[Canonical source]
 The exhaustive, agent-facing reference — the full action vocabulary, the NDJSON event schema, per-scope environment variables, and the doctor probe contract — lives in [`ai/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/provision.md).
