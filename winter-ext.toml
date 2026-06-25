@@ -5,4 +5,4 @@
 # documents, so these are real `requires`; nothing in winter depends back on the
 # docs. The extractability lint validates docs→extension references against this.
 name = "winter-docs"
-requires = ["winter-harness", "winter-product"]
+requires = ["winter-harness", "winter-product", "winter-service-tmux"]

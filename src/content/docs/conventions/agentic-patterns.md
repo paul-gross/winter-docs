@@ -62,5 +62,5 @@ Completed work lands directly on `master` — no PR flow, no long-lived feature 
 The canonical delivery procedure is [`workflows/feature-delivery.md`](https://github.com/paul-gross/winter-harness/blob/master/workflows/feature-delivery.md); upstream-tracking for forked framework repos is [`workflows/upstream-tracking.md`](https://github.com/paul-gross/winter-harness/blob/master/workflows/upstream-tracking.md).
 
 :::note[Canonical source]
-[`winter-workflow`](https://github.com/paul-gross/winter-workflow) (roles and loops) and [`winter-harness/workflows/`](https://github.com/paul-gross/winter-harness/tree/master/workflows) (delivery). Adopter guide: [winter-workflow example](/winter-docs/examples/winter-workflow/).
+[`winter-workflow`](https://github.com/paul-gross/winter-workflow) (roles and loops) and [`winter-harness:/workflows/`](https://github.com/paul-gross/winter-harness/tree/master/workflows) (delivery). Adopter guide: [winter-workflow example](/winter-docs/examples/winter-workflow/).
 :::

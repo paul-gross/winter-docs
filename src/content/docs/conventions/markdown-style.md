@@ -32,5 +32,5 @@ A key distinction these guides draw: an extension's `index.md` is the runtime su
 Agent-facing markdown has its own reviewer. After authoring or changing an agent, skill, command, `CLAUDE.md`, or `ai/` doc, the [`context-reviewer`](/winter-docs/conventions/agentic-patterns/) agent checks it against these conventions for clarity, single-source-of-truth, and non-duplication.
 
 :::note[Canonical source]
-[`winter-harness/canon/`](https://github.com/paul-gross/winter-harness/tree/master/canon) (universal principles) and [`winter-harness/harness/`](https://github.com/paul-gross/winter-harness/tree/master/harness) (winter-ecosystem markdown guides) — start at each directory's `index.md`.
+[`winter-harness:/canon/`](https://github.com/paul-gross/winter-harness/tree/master/canon) (universal principles) and [`winter-harness:/harness/`](https://github.com/paul-gross/winter-harness/tree/master/harness) (winter-ecosystem markdown guides) — start at each directory's `index.md`.
 :::

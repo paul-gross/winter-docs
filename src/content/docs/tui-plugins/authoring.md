@@ -118,5 +118,5 @@ There are two decorator flavors, each firing once per refresh:
 Annotate `create_plugin() -> IWinterPlugin` to typecheck against the contract. Every name — the Protocols, `PluginRegistration`, `TuiAction`, `ActionScope`, the view types, and the action contexts — is imported from the `winter_plugin_api` package, which is **semver-versioned**: a major bump means a breaking change, a minor bump a backward-compatible addition. Pin the lowest version exposing the names you use. winter-cli keeps its own runtime copy of the seam, and the package is a hand-curated copy of it — the two are kept in sync by hand.
 
 - **Contract package**: [`winter-plugin-api`](https://github.com/paul-gross/winter-plugin-api) — the versioned source of truth (the `views` and `seam` modules)
-- **Plugin author contract**: [`winter-harness/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
-- **Worked example source**: [`winter-service-tmux/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)
+- **Plugin author contract**: [`winter-harness:/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
+- **Worked example source**: [`winter-service-tmux:/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)
