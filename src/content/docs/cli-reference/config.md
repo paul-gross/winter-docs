@@ -280,5 +280,5 @@ Use `on_workspace_reconcile` for one-time workspace-level setup that should re-r
 Failure semantics follow the same per-extension boolean aggregation as the env hooks.
 
 :::note[Canonical source]
-Full configuration reference for agents: [`ai/winter-cli/setup.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/setup.md).
+Full configuration reference for agents: [`ai/winter-cli/configuration/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/configuration/index.md).
 :::

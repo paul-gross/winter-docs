@@ -382,5 +382,5 @@ winter capabilities --json    # JSON array, one object per known slot
 See [config.toml Reference → Capability registry](/winter-docs/cli-reference/config/#capability-registry) for the config keys and resolution rules.
 
 :::note[Canonical source]
-Agent-facing references: [`ai/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/index.md) (command hub, routing to per-topic `usage/` files), [`ai/winter-cli/setup.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/setup.md) (install + config).
+Agent-facing references: [`ai/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/index.md) (command hub, routing to per-topic `usage/` files), [`ai/winter-cli/setup.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/setup.md) (install) and [`ai/winter-cli/configuration/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/configuration/index.md) (configuration hub).
 :::
