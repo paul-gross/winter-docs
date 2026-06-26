@@ -316,7 +316,7 @@ Control an environment's services through a stable interface that dispatches to 
 ```bash
 winter service up alpha                               # start the environment's services
 winter service down alpha                             # stop them
-winter service status                                 # report all services in all envs
+winter service status                                 # every configured env, stopped ones shown stopped
 winter service status alpha                           # all services in alpha (expands to alpha/*)
 winter service status alpha/api                       # one specific service
 winter service status 'alpha/worker-*'                # services matching a glob within alpha
@@ -334,7 +334,7 @@ winter service logs alpha --since=2026-06-13T10:00:00Z  # since an absolute time
 winter service logs alpha -t                          # prefix each line with its RFC3339 timestamp
 ```
 
-`status`, `restart`, and `logs` use **segment-aware glob PATTERNS** over `<env>/<service>` — the same vocabulary `winter ws` uses for `<env>/<repo>`. Within each segment, `*`, `?`, and `[...]` match as usual; `*` does not cross `/`. A bare `<env>` expands to `<env>/*`. Cross-environment selection is supported: `'*/backend'` selects the `backend` service across every env. `up` and `down` always operate on the whole environment. For `restart` and `logs`, at least one pattern is required. For `status`, omitting all patterns selects every service in every env.
+`status`, `restart`, and `logs` use **segment-aware glob PATTERNS** over `<env>/<service>` — the same vocabulary `winter ws` uses for `<env>/<repo>`. Within each segment, `*`, `?`, and `[...]` match as usual; `*` does not cross `/`. A bare `<env>` expands to `<env>/*`. Cross-environment selection is supported: `'*/backend'` selects the `backend` service across every env. `up` and `down` always operate on the whole environment. For `restart` and `logs`, at least one pattern is required. For `status`, omitting all patterns selects every service in every env — enumeration is registry-driven, so every configured environment appears, with stopped environments shown as stopped rather than omitted.
 
 `logs` accepts `PATTERN... [-f/--follow] [-n/--tail N] [--since DURATION|TIMESTAMP] [--until DURATION|TIMESTAMP] [-t/--timestamps]` (at least one PATTERN required). Each output line is prefixed with `<env>/<svc> | ` whenever more than one service may be in scope — see the [orchestrator contract](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract) for the precise rule. Lines are written as portable plain text so `winter service logs alpha | grep ERROR` works regardless of orchestrator.
 
