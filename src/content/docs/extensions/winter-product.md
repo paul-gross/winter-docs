@@ -44,7 +44,7 @@ Items flow `backlog/ → work/ → archive/`:
 
 ## When to adopt
 
-Adopt winter-product when you want a lightweight, file-based backlog that lives in git alongside the code and is legible to agents — so the same agents that plan work can pick it up and implement it (the `/ws-work` flow reads promoted items directly from `work/`).
+Adopt winter-product when you want a lightweight, file-based backlog that lives in git alongside the code and is legible to agents — so the same agents that plan work can pick it up and implement promoted items directly from `work/`.
 
 ## How to configure
 
