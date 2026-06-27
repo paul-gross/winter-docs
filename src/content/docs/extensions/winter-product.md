@@ -37,7 +37,7 @@ Items flow `backlog/ → work/ → archive/`:
 
 - **`product-specialist`** agent — shapes work items.
 - **`product-engineer`** agent — writes `.tech.md` technical-approach docs.
-- **`plan-reviewer`** agent — cold-reviews a promoted work item (overview, tech approach, phases, or a backlog item) against the planning specs in `winter-product:/ai/` and returns a structured verdict (ready / needs work), must-fix findings with spec citations, and open questions. Spawn after writing or refining a plan, before implementation begins.
+- **`plan-reviewer`** agent — cold-reviews a promoted work item (overview, tech approach, phases, or a backlog item) against the planning specs in `winter-product:/context/` and returns a structured verdict (ready / needs work), must-fix findings with spec citations, and open questions. Spawn after writing or refining a plan, before implementation begins.
 - **`/wp-refine`** — the primary path from backlog to work-ready, including the technical approach.
 - **`/wp-todo`** — the fast path for dropping a new TODO into the backlog.
 - **`/wp-plan-review`** — spawns a fresh-context `plan-reviewer` agent over a named work item or backlog item and relays the verdict and findings. The fresh context is the point: use this skill rather than reviewing in the current session. Argument: `<item-name>` (kebab-case name matching a directory under `work/` or a file under `backlog/`).
@@ -62,5 +62,5 @@ path = ".winter/ext/product"
 - **Archive on merge** — completed items move to the date-prefixed archive when their work lands on main.
 
 :::note[Canonical source]
-[`winter-product`](https://github.com/paul-gross/winter-product) — see its [`index.md`](https://github.com/paul-gross/winter-product/blob/master/index.md) and [`ai/`](https://github.com/paul-gross/winter-product/tree/master/ai) planning conventions.
+[`winter-product`](https://github.com/paul-gross/winter-product) — see its [`index.md`](https://github.com/paul-gross/winter-product/blob/master/index.md) and [`context/`](https://github.com/paul-gross/winter-product/tree/master/context) planning conventions.
 :::

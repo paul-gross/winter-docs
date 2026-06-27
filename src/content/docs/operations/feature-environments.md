@@ -87,5 +87,5 @@ Prefer `winter ws destroy` over `rm -rf alpha/`. Manual removal skips the `on_en
 :::
 
 :::note[Canonical source]
-The exact git sequences behind each step are documented for agents in [`ai/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/ai/worktree-ops.md) and [`ai/workspace-layout.md`](https://github.com/paul-gross/winter/blob/master/ai/workspace-layout.md).
+The exact git sequences behind each step are documented for agents in [`context/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/worktree-ops.md) and [`context/workspace-layout.md`](https://github.com/paul-gross/winter/blob/master/context/workspace-layout.md).
 :::

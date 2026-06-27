@@ -173,7 +173,7 @@ service = "workflow/orchestrate"
 
 With both in place, `winter service <action> <env>` resolves the orchestrator and runs its entrypoint. When the binding is ambiguous (two providers, no explicit config entry), the command errors naming all candidates and the `capabilities.service` config key.
 
-The full implementer-facing contract (uniform argv rule, `WINTER_*` env vars per action, NDJSON wire format for `logs`, idempotent backstop filters, and exit codes) lives in the canonical reference — see [`ai/winter-cli/usage/service.md#orchestrator-contract`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
+The full implementer-facing contract (uniform argv rule, `WINTER_*` env vars per action, NDJSON wire format for `logs`, idempotent backstop filters, and exit codes) lives in the canonical reference — see [`context/winter-cli/usage/service.md#orchestrator-contract`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/service.md#orchestrator-contract).
 
 ## Provision manifests {#provision-manifests}
 
@@ -212,7 +212,7 @@ Extensions declare the same tables in their own `winter-ext.toml`; within a sub-
 
 Unknown sub-target tables (e.g. `[[provision.custom]]`) and unknown per-entry keys are rejected. All handlers receive `WINTER_WORKSPACE_DIR` plus the extension-identity vars (`WINTER_EXT_DIR`, `WINTER_EXT_PREFIX`, `WINTER_EXT_CONFIG_DIR`); `feature-environment` and `feature-worktree` handlers additionally receive the `WINTER_ENV` / `WINTER_ENV_INDEX` / `WINTER_PORT_BASE` trio.
 
-`winter doctor` validates every declared handler. The exhaustive reference — action vocabulary, NDJSON event schema, and the full env-var contract — is [`ai/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/provision.md).
+`winter doctor` validates every declared handler. The exhaustive reference — action vocabulary, NDJSON event schema, and the full env-var contract — is [`context/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/provision.md).
 
 ## Extension manifests
 
@@ -280,5 +280,5 @@ Use `on_workspace_reconcile` for one-time workspace-level setup that should re-r
 Failure semantics follow the same per-extension boolean aggregation as the env hooks.
 
 :::note[Canonical source]
-Full configuration reference for agents: [`ai/winter-cli/configuration/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/configuration/index.md).
+Full configuration reference for agents: [`context/winter-cli/configuration/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/index.md).
 :::

@@ -9,7 +9,7 @@ It's grouped under [Examples](/winter-docs/examples/) because winter keeps the h
 
 ## What it contributes
 
-winter-harness *is* its conventions — unusually, its content lives at the top of the repo (not under `ai/`), because the conventions are its public surface, addressed via the `winter-harness:` path notation. It is organised in four layers:
+winter-harness *is* its conventions — unusually, its content lives at the top of the repo (not under `context/`), because the conventions are its public surface, addressed via the `winter-harness:` path notation. It is organised in four layers:
 
 - **Canon** (`canon/`) — the universal, enforceable substrate true of any harness: cross-cutting authoring principles, the facts/methodology split, the harness-change eval, and the four levers. Self-contained — it depends on nothing else.
 - **Markdown** (`harness/`) — winter-ecosystem conventions for writing the agent-facing markdown of the ecosystem: READMEs, extension `index.md` files, path references, and agent / skill / command naming. Rests on the Canon.

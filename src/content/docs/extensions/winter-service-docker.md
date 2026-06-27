@@ -70,8 +70,8 @@ The extension reads its configuration from a per-extension `config.toml` at `.wi
 
 Port substitution variables (`WSD_PORT_<NAME>`) are derived from winter's port registry and injected into Compose's environment, so each env gets its own host port assignments without you wiring them by hand.
 
-For workspace-singleton services, add a separate `workspace-compose.yaml` under `.winter/config/winter-service-docker/` and declare the services there. See the extension's [`ai/workspace-singletons.md`](https://github.com/paul-gross/winter-service-docker/blob/master/ai/workspace-singletons.md) for the full contract.
+For workspace-singleton services, add a separate `workspace-compose.yaml` under `.winter/config/winter-service-docker/` and declare the services there. See the extension's [`context/workspace-singletons.md`](https://github.com/paul-gross/winter-service-docker/blob/master/context/workspace-singletons.md) for the full contract.
 
 :::note[Canonical source]
-[`winter-service-docker`](https://github.com/paul-gross/winter-service-docker) — see its [`index.md`](https://github.com/paul-gross/winter-service-docker/blob/master/index.md) and the `ai/` directory for per-env isolation, workspace singletons, and the provider wire contract.
+[`winter-service-docker`](https://github.com/paul-gross/winter-service-docker) — see its [`index.md`](https://github.com/paul-gross/winter-service-docker/blob/master/index.md) and the `context/` directory for per-env isolation, workspace singletons, and the provider wire contract.
 :::

@@ -7,11 +7,11 @@ description: The meta-workspace winter is built in — where the framework, its 
 
 ## What it is
 
-A workspace root: the `.winter/config.toml` that declares the project repos and standalone extensions, the committed `CLAUDE.md` that orients an agent to the layout and the env model, the `ai/` docs that capture this workspace's conventions, and the Greek-letter feature environments where work actually happens. Everything that makes winter a *workspace* — rather than a CLI or an extension — is shown here in its assembled form.
+A workspace root: the `.winter/config.toml` that declares the project repos and standalone extensions, the committed `CLAUDE.md` that orients an agent to the layout and the env model, the `context/` docs that capture this workspace's conventions, and the Greek-letter feature environments where work actually happens. Everything that makes winter a *workspace* — rather than a CLI or an extension — is shown here in its assembled form.
 
 ## Why it's an example
 
-The workspace carries the maintainer's specific repos, prefixes, and choices. Cloning it gives you *their* setup, not yours. Its value is as a reference: it shows how the pieces compose — how `config.toml` wires standalones, how `CLAUDE.md` points at the installed extensions' surfaces, how feature environments are named and ported, how project-specific setup is captured in `ai/`. You read it to see the shape, then assemble your own.
+The workspace carries the maintainer's specific repos, prefixes, and choices. Cloning it gives you *their* setup, not yours. Its value is as a reference: it shows how the pieces compose — how `config.toml` wires standalones, how `CLAUDE.md` points at the installed extensions' surfaces, how feature environments are named and ported, how project-specific setup is captured in `context/`. You read it to see the shape, then assemble your own.
 
 ## How to learn from it
 

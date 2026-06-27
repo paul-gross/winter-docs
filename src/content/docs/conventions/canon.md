@@ -32,7 +32,7 @@ Canon is evaluated at the boundary between generic tools and project-owned facts
 - Does this system give agents visibility into state, checkable outputs, findable facts, and extensible hooks? (the four levers)
 
 :::tip[Review it, don't just eyeball it]
-Behavioral evaluation cuts both ways: the surest way to apply Canon is to have an agent act on the context, not to read it yourself. Utilize a **Context Review** agent that focuses specifically on AI-facing context — agents, skills, `CLAUDE.md`, and `ai/` docs — and evaluates it against these Canon principles. See the review loops in [winter-workflow](/winter-docs/examples/winter-workflow/).
+Behavioral evaluation cuts both ways: the surest way to apply Canon is to have an agent act on the context, not to read it yourself. Utilize a **Context Review** agent that focuses specifically on AI-facing context — agents, skills, `CLAUDE.md`, and `context/` docs — and evaluates it against these Canon principles. See the review loops in [winter-workflow](/winter-docs/examples/winter-workflow/).
 :::
 
 :::note[Canonical source]

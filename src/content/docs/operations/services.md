@@ -7,7 +7,7 @@ Service orchestration is provided by the **[winter-service-tmux](/winter-docs/ex
 
 ## One-time setup: `setup-tmux.toml`
 
-The extension needs a project-specific **`setup-tmux.toml`** manifest that declares which services to run and how the tmux panes are laid out. Without it, `./up` errors out. Author it (and its companion `layout-hook.sh`) by following the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough; the `/ws-setup` flow prompts for this when the extension is installed.
+The extension needs a project-specific **`setup-tmux.toml`** manifest that declares which services to run and how the tmux panes are laid out. Without it, `./up` errors out. Author it (and its companion `layout-hook.sh`) by following the extension's [`context/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/context/workflow-setup.md) walkthrough; the `/ws-setup` flow prompts for this when the extension is installed.
 
 `setup-tmux.toml` is a declarative TOML manifest. It defines:
 
@@ -127,8 +127,8 @@ winter service restart workspace/db  # restart one workspace service
 
 `winter service up <env>` ensures the workspace session is running before it starts the per-env session — workspace singletons are guaranteed to be up when any env spins up. `down <env>` intentionally leaves the workspace session running; only `down workspace` tears it down. The `workspace` token is an exact reserved name — glob patterns like `work*` do NOT match it.
 
-For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/environment-runtime/#winter-service). For the registration config keys and capability registry, see the [config reference](/winter-docs/cli-reference/config/#capability-registry). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`ai/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/service.md#orchestrator-contract).
+For the `winter service` command surface and flag reference, see the [CLI Reference](/winter-docs/cli-reference/environment-runtime/#winter-service). For the registration config keys and capability registry, see the [config reference](/winter-docs/cli-reference/config/#capability-registry). For the full implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see [`context/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/service.md#orchestrator-contract).
 
 :::note[Canonical source]
-Conventions and setup live in the extension: [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md) and [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md). Adopter guide: [winter-service-tmux extension](/winter-docs/extensions/winter-service-tmux/).
+Conventions and setup live in the extension: [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md) and [`context/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/context/workflow-setup.md). Adopter guide: [winter-service-tmux extension](/winter-docs/extensions/winter-service-tmux/).
 :::

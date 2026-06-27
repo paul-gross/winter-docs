@@ -72,5 +72,5 @@ That is not "nothing to push" — the commits exist; the default scope excluded 
 Winter does not wrap per-repo git. Stage and commit with plain `git` inside each worktree, then use `winter ws push` to ship the environment. Follow each repo's own commit conventions.
 
 :::note[Canonical source]
-Full command reference: [`ai/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/index.md). Raw git equivalents for every operation: [`ai/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/ai/worktree-ops.md). See also the [CLI Reference](/winter-docs/cli-reference/).
+Full command reference: [`context/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/index.md). Raw git equivalents for every operation: [`context/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/worktree-ops.md). See also the [CLI Reference](/winter-docs/cli-reference/).
 :::

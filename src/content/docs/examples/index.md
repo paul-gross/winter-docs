@@ -29,9 +29,9 @@ The line between the two: a **consumable extension** (see [Extensions](/winter-d
 
 ## winter-workspace
 
-**Concern:** an assembled workspace — how `config.toml`, `CLAUDE.md`, `ai/` docs, and feature environments compose into a working multi-repo development environment.
+**Concern:** an assembled workspace — how `config.toml`, `CLAUDE.md`, `context/` docs, and feature environments compose into a working multi-repo development environment.
 
-**Highlights:** a real `config.toml` declaring project repos and standalone extensions, a committed `CLAUDE.md` that orients agents to the layout and the env model, and the `ai/` docs that capture this workspace's conventions. The whole stack — framework, CLI, extensions, and the documentation site — developed in one place.
+**Highlights:** a real `config.toml` declaring project repos and standalone extensions, a committed `CLAUDE.md` that orients agents to the layout and the env model, and the `context/` docs that capture this workspace's conventions. The whole stack — framework, CLI, extensions, and the documentation site — developed in one place.
 
 **Why opinionated and swappable:** every workspace declares its own repos, prefixes, and choices. winter-workspace carries the maintainer's.
 

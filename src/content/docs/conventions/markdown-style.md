@@ -1,6 +1,6 @@
 ---
 title: Agent-Facing Context
-description: How Winter organizes the runtime context an agent discovers — CLAUDE.md, agents, skills, indexes, ai/ references, routing, tool affordances, and review conventions.
+description: How Winter organizes the runtime context an agent discovers — CLAUDE.md, agents, skills, indexes, context/ references, routing, tool affordances, and review conventions.
 ---
 
 Most winter documentation is *agent-facing*: it is loaded into an agent's context and acts as runtime instruction, not reference reading. The question is not how the text reads to a human but what behavior it produces in a fresh-context agent acting on it.
@@ -14,7 +14,7 @@ An agent's effective context is not a single file. It is a system of discoverabl
 | Artifact | Role |
 |----------|------|
 | `CLAUDE.md` | Workspace entry point — always in context; routes to everything else via `@`-references and key tables |
-| `ai/` directories | Per-repo documentation loaded on demand; the agent reads only what it needs for the task |
+| `context/` directories | Per-repo documentation loaded on demand; the agent reads only what it needs for the task |
 | Extension `index.md` | Auto-loaded runtime surface for a winter extension; describes its commands, agents, and conventions |
 | Agent definitions | Role descriptions with tool grants, model tiers, and task scope |
 | `SKILL.md` files | Declarative skill scripts invoked by slash commands |
@@ -46,7 +46,7 @@ A key distinction these guides draw: an extension's `index.md` is the runtime su
 
 ## Reviewing agent-facing context
 
-Agent-facing context has its own reviewer. After authoring or changing an agent, skill, command, `CLAUDE.md`, or `ai/` doc, the [`context-reviewer`](https://github.com/paul-gross/winter-workflow/blob/master/agents/context-reviewer.md) agent checks it against Canon principles and winter conventions for clarity, single-source-of-truth, and non-duplication.
+Agent-facing context has its own reviewer. After authoring or changing an agent, skill, command, `CLAUDE.md`, or `context/` doc, the [`context-reviewer`](https://github.com/paul-gross/winter-workflow/blob/master/agents/context-reviewer.md) agent checks it against Canon principles and winter conventions for clarity, single-source-of-truth, and non-duplication.
 
 :::note[Canonical source]
 [`winter-harness:/canon/`](https://github.com/paul-gross/winter-harness/tree/master/canon) (universal Canon) and [`winter-harness`](https://github.com/paul-gross/winter-harness) (winter-ecosystem artifact guides) — start at each directory's `index.md`.

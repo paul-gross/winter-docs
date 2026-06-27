@@ -61,5 +61,5 @@ Authenticate the `gh` CLI once (`gh auth login --hostname github.com`); winter-g
 - **All GitHub interaction goes through `gh`** — issues, PRs, releases, and API calls (`gh api`), never the web UI.
 
 :::note[Canonical source]
-[`winter-github`](https://github.com/paul-gross/winter-github) — see its [`index.md`](https://github.com/paul-gross/winter-github/blob/master/index.md) and the issue-format spec under `ai/`.
+[`winter-github`](https://github.com/paul-gross/winter-github) — see its [`index.md`](https://github.com/paul-gross/winter-github/blob/master/index.md) and the issue-format spec under `context/`.
 :::

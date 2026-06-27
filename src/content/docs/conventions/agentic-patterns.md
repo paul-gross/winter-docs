@@ -33,7 +33,7 @@ This is the open/closed principle applied to context rather than to code: the ge
 
 Agents do not receive a monolithic prompt containing every rule. They traverse a discoverable structure: entry point → routing hub → applicable fact.
 
-In practice: a `CLAUDE.md` routes to an `ai/` index, which routes to a specific convention file, which the agent reads when the task matches. Agents that do not touch the database do not read database conventions. Agents that do not push do not read delivery conventions until delivery begins. The structure is the context architecture; the [four Canon levers](/winter-docs/conventions/canon/) — observability, testability, discoverability, and pluggability — determine how well that architecture performs.
+In practice: a `CLAUDE.md` routes to a `context/` index, which routes to a specific convention file, which the agent reads when the task matches. Agents that do not touch the database do not read database conventions. Agents that do not push do not read delivery conventions until delivery begins. The structure is the context architecture; the [four Canon levers](/winter-docs/conventions/canon/) — observability, testability, discoverability, and pluggability — determine how well that architecture performs.
 
 ## Delivery as derived policy
 

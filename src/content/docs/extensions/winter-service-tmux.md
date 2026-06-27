@@ -47,7 +47,7 @@ See the [config reference → Capability registry](/winter-docs/cli-reference/co
 The legacy `service_orchestrator = "winter-service-tmux"` root key (workspace config) and `orchestrate_services = "workflow/orchestrate"` (extension manifest) are back-compat aliases that continue to work for existing configs. New workspaces should use `[capabilities]`/`[provides]` instead.
 :::
 
-The extension needs a project-specific **`workspace:/ai/project/setup-tmux.toml`** manifest and its companion **`workspace:/ai/project/layout-hook.sh`**. Follow the extension's [`ai/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/ai/workflow-setup.md) walkthrough (or run `/ws-setup`) to author them. Until `setup-tmux.toml` exists, `./up` errors out.
+The extension needs a project-specific **`workspace:/context/project/setup-tmux.toml`** manifest and its companion **`workspace:/context/project/layout-hook.sh`**. Follow the extension's [`context/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/context/workflow-setup.md) walkthrough (or run `/ws-setup`) to author them. Until `setup-tmux.toml` exists, `./up` errors out.
 
 `setup-tmux.toml` declares every service by `name`, tmux `target` (`<window>.<pane>`), `command`, and `log` capture mode (`"file"` by default, `"pane"` for interactive panes or TTY-sensitive services). Commit it to source — it's the project's service config. For machine-specific overrides, add a gitignored **`setup-tmux.local.toml`** next to it; the reader merges it on top (scalars replace; `[[service]]` and `[[status.url]]` entries merge keyed by `name`/`label`).
 

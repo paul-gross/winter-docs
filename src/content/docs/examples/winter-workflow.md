@@ -16,7 +16,7 @@ The five build skills map to the shape of the work:
 | **Blizzard** | One large feature, built by a coordinated team — architect, developer, verifier, and reviewer in one session. |
 | **Glacier** | One mid-sized feature, worked as ordered phases — each built and verified before the next. |
 | **Flurry** | A batch of small, independent features, fanned out across environments in parallel — one commit each. |
-| **Delegate** | Ad hoc conversational work across several targets at once, via a standing foreman. See [choosing-a-build-skill](https://github.com/paul-gross/winter-workflow/blob/master/ai/choosing-a-build-skill.md). |
+| **Delegate** | Ad hoc conversational work across several targets at once, via a standing foreman. See [choosing-a-build-skill](https://github.com/paul-gross/winter-workflow/blob/master/context/choosing-a-build-skill.md). |
 | **Thaw** | A narrow fix to existing code — bug, tweak, or regression — on a capped explore → develop → verify loop. |
 
 **Matching the skill to the problem.** These skills solve different kinds of problems. When you have many small items to manage, cut the overhead by running them in parallel across many feature environments with a flurry. When you face one large feature, conquer it with a blizzard — a team of agents that breaks the work down, distributes it to developers, and validates the result. And the tried-and-true single-agent workflow, glacier, is still a wonderful choice when one feature simply wants steady, focused attention.
@@ -31,7 +31,7 @@ The review skills are independently usable components, composable with any build
 |-------|----------------|
 | **Cold review** | Code correctness and design — a fresh-context `code-reviewer` over the change-set. |
 | **Harness review** | Whether the agentic harness (agent context, verifier tooling) keeps pace with application change. |
-| **Context review** | Agent-facing markdown (agents, skills, `CLAUDE.md`, `ai/` docs) against the documented conventions. |
+| **Context review** | Agent-facing markdown (agents, skills, `CLAUDE.md`, `context/` docs) against the documented conventions. |
 | **Documentation review** | External-facing public documentation against the code it documents. |
 | **Pre-push** | Fans out the relevant reviewers over the un-pushed range and synthesizes an advisory summary. Deliberately decoupled from the push itself. |
 

@@ -157,5 +157,5 @@ apply = "$WINTER_WORKSPACE_DIR/.winter/config/provision/install-deps.sh"
 Because the value runs via `sh -c "<command>"`, a bare path to a script must be executable (`chmod +x`); alternatively, invoke it through an interpreter (e.g. `sh $WINTER_WORKSPACE_DIR/.winter/config/provision/install-deps.sh`) to avoid that requirement. There is no longer any path resolution relative to the workspace root or extension root.
 
 :::note[Canonical source]
-The exhaustive, agent-facing reference — the full action vocabulary, the NDJSON event schema, per-scope environment variables, and the doctor probe contract — lives in [`ai/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/ai/winter-cli/usage/provision.md).
+The exhaustive, agent-facing reference — the full action vocabulary, the NDJSON event schema, per-scope environment variables, and the doctor probe contract — lives in [`context/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/provision.md).
 :::
