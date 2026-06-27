@@ -1,9 +1,22 @@
 ---
 title: winter-github
-description: AI-native GitHub issue tooling — draft and file precisely-formatted issues via the gh CLI.
+description: AI-native GitHub issue tooling — draft and file precisely-formatted issues, and close the ideation-to-delivery loop via the gh CLI.
 ---
 
-**[winter-github](https://github.com/paul-gross/winter-github)** lets you raise GitHub issues from a winter workspace in a precise, AI-native format, filed through the [`gh`](https://cli.github.com/) CLI.
+**[winter-github](https://github.com/paul-gross/winter-github)** lets you raise GitHub issues from a winter workspace in a precise, AI-native format, filed through the [`gh`](https://cli.github.com/) CLI. It is the bridge between an idea in conversation and a structured work item an agent can implement directly.
+
+## The ideation-to-delivery loop
+
+winter-github is designed around a complete loop:
+
+1. **Ideation** — a user describes a feature, bug, or improvement in conversation with an agent.
+2. **Structured issue** — the agent runs `/wg-issue`, which drafts an issue in a consistent format, confirms with the user, and files it via `gh issue create`.
+3. **Context preservation** — the issue records why the work exists, the current behavior, the desired behavior, acceptance criteria, out-of-scope constraints, and references. This context survives context-window resets and is readable by any agent.
+4. **Implementation prompt** — a build skill (`glacier`, `flurry`, `thaw`) reads the issue as its specification. The structured format — especially **Acceptance Criteria** and **Out of Scope** — is what the agent implements against.
+5. **Commit and PR** — commits include a `Closes #N` footer (or `owner/repo#N` across repos) so the commit and the issue link bidirectionally, and GitHub closes the issue automatically on merge.
+6. **New findings** — anything discovered during implementation that is out of scope for the current issue becomes a new issue, keeping the backlog growing from real work rather than speculation.
+
+The loop can run entirely agent-driven: the user ideates, the agent captures the issue, the issue drives implementation, and new findings return to the backlog — all without the user leaving the conversation.
 
 ## What it contributes
 
@@ -15,6 +28,15 @@ description: AI-native GitHub issue tooling — draft and file precisely-formatt
   - **Acceptance Criteria** — a checklist
   - **Out of Scope**
   - **References**
+
+## Boundary with winter-product
+
+winter-github and winter-product address different scopes:
+
+- **winter-github** owns **GitHub issue capture and transport** — the format, the filing mechanism, and the commit-closure convention. It does not maintain a local backlog; it files directly to GitHub and uses GitHub's issue tracker as the backlog.
+- **winter-product** adds a **broader product and backlog methodology** — a file-based backlog in git (`backlog/` / `work/` / `archive/`), item lifecycle (backlog → work → archive), and planning agents. It does not require GitHub, and its items are not GitHub issues.
+
+The two can coexist: use winter-product for the local planning cycle (shaping work, writing technical approaches, tracking in-progress items) and winter-github to file the resulting tickets to GitHub so they are visible outside the workspace and closeable from commits.
 
 ## When to adopt
 

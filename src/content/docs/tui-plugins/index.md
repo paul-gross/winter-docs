@@ -10,3 +10,4 @@ This is a different extension point from a [winter extension](/winter-docs/exten
 ## In this section
 
 - **[Authoring a TUI Plugin](/winter-docs/tui-plugins/authoring/)** — how to write a `plugin.py`, where plugins are discovered, what a plugin can contribute (badges, screens, keybound actions), and a worked example using the `winter-service-tmux` status badge.
+- **[TUI Plugin Examples](/winter-docs/tui-plugins/examples/)** — practical plugin shapes beyond the status badge: worktree repo decorators, environment decorators with config, keyboard actions, and multi-decorator compositions.

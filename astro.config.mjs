@@ -59,7 +59,15 @@ export default defineConfig({
 						{ label: 'Overview', slug: 'extensions' },
 						{ label: 'winter-product', slug: 'extensions/winter-product' },
 						{ label: 'winter-service-tmux', slug: 'extensions/winter-service-tmux' },
+						{ label: 'winter-service-docker', slug: 'extensions/winter-service-docker' },
 						{ label: 'winter-github', slug: 'extensions/winter-github' },
+					],
+				},
+				{
+					label: 'Related Projects',
+					items: [
+						{ label: 'Overview', slug: 'related-projects' },
+						{ label: 'winter-nvim', slug: 'related-projects/winter-nvim' },
 					],
 				},
 				{
@@ -76,6 +84,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Overview', slug: 'tui-plugins' },
 						{ label: 'Authoring', slug: 'tui-plugins/authoring' },
+						{ label: 'Examples', slug: 'tui-plugins/examples' },
 					],
 				},
 				{

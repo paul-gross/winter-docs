@@ -5,6 +5,8 @@ description: Opt-in capabilities a winter workspace installs — product backlog
 
 Extensions are how a winter workspace gains capabilities beyond the core CLI. Each is a standalone repository the workspace clones and installs; once installed, it contributes **skills**, **agents**, lifecycle **hooks** (`on_env_init` / `on_env_destroy` / `on_workspace_reconcile`), **`winter doctor` probes**, and **`winter lint` checks**.
 
+**What makes something an extension** — it ships a `winter-ext.toml` manifest, is declared as a `[[standalone_repository]]` in `config.toml`, and is installed and reconciled by `winter ws init`. Its skills and agents appear in the workspace's extension graph. This distinguishes extensions from [related projects](/winter-docs/related-projects/) (editor integrations or user-level tools that read workspace state but are not installed by winter) and from [examples](/winter-docs/examples/) (the maintainer's own opinionated, swappable implementations).
+
 ## The maintained extensions
 
 These are *consumable* extensions — generic capabilities a workspace installs and uses as-is:
@@ -13,9 +15,23 @@ These are *consumable* extensions — generic capabilities a workspace installs 
 |-----------|------|
 | **[winter-product](/winter-docs/extensions/winter-product/)** | A product backlog model with refinement agents and skills. |
 | **[winter-service-tmux](/winter-docs/extensions/winter-service-tmux/)** | tmux-based service orchestration (`up` / `down` / `status` / `restart`). |
-| **[winter-github](/winter-docs/extensions/winter-github/)** | AI-native GitHub issue tooling via the `gh` CLI. |
+| **[winter-service-docker](/winter-docs/extensions/winter-service-docker/)** | Docker Compose-based service orchestration with real container health checks and workspace singletons. |
+| **[winter-github](/winter-docs/extensions/winter-github/)** | AI-native GitHub issue tooling and the ideation-to-delivery loop via the `gh` CLI. |
 
 The maintainer's conventions ([winter-harness](/winter-docs/examples/winter-harness/)) and agentic workflow ([winter-workflow](/winter-docs/examples/winter-workflow/)) install and run just like these, but they are the maintainer's own opinionated, swappable implementations — adopt them as-is or fork your own. They're grouped under [Examples](/winter-docs/examples/).
+
+## Service orchestration providers
+
+`winter-service-tmux` and `winter-service-docker` both implement the `winter service` capability slot. Under the multi-provider contract they can be bound together (`capabilities.service = ["winter-service-tmux", "winter-service-docker"]`): `winter service up`/`down`/`status` fan out across every bound provider, and each individual service is owned by exactly one provider. A single-provider registration looks like:
+
+```toml
+[capabilities]
+service = "winter-service-tmux"   # or "winter-service-docker" or both as a list
+```
+
+Choose **tmux** when your services are native processes, you want interactive terminal panes, or Docker adds friction without benefit. Choose **Docker** when your project already ships a Compose file, you need genuine container health/readiness via `--wait`, or you want workspace-singleton services running once for all environments. See [winter-service-docker](/winter-docs/extensions/winter-service-docker/#when-to-adopt) for the full decision guide.
+
+Or **mix and match** to get the best of both worlds: bind both providers and let each own the slice of the stack it handles best — Docker containers for workspace-level database servers and other daemon tools, and tmux sessions for the local application services you change rapidly. `winter service` fans out across both, so a single `up` brings the whole stack online.
 
 ## How extensions install
 
