@@ -1,12 +1,12 @@
 ---
 title: Conventions & Patterns
-description: Winter's reusable conventions — code, agent-facing markdown, and the agentic development methodology.
+description: Winter's reusable conventions — Canon principles, agent-facing context design, and agentic development patterns.
 ---
 
-Beyond the CLI and extensions, winter carries a body of reusable conventions: how code is written, how agent-facing documentation is written, and how agents actually develop software. These come from two of winter's [reference implementations](/winter-docs/examples/) — [winter-harness](/winter-docs/examples/winter-harness/) (the conventions) and [winter-workflow](/winter-docs/examples/winter-workflow/) (the methodology) — and are rendered here as a navigable reference.
+Beyond the CLI and extensions, winter carries a body of reusable conventions for designing agent-context systems and agentic development workflows. These come from two of winter's [reference implementations](/winter-docs/examples/) — [winter-harness](/winter-docs/examples/winter-harness/) (the conventions) and [winter-workflow](/winter-docs/examples/winter-workflow/) (the methodology) — and are organized into three conceptual areas.
 
-- **[Python Conventions](/winter-docs/conventions/python/)** — domain modeling, error handling, dependency injection, the repository pattern, testing, linting, and typechecking.
-- **[Agent-Facing Markdown](/winter-docs/conventions/markdown-style/)** — path notation, naming, and how to write READMEs, extension `index.md` files, and skills.
-- **[Agentic Development Patterns](/winter-docs/conventions/agentic-patterns/)** — the agent roles and the blizzard / thaw / review loops that coordinate them.
+- **[Canon](/winter-docs/conventions/canon/)** — universal harness principles that remain valid across repositories, languages, workflows, and agent products: progressive disclosure, single source of truth, facts versus methodology, behavioral evaluation, and the four levers.
+- **[Agent-Facing Context](/winter-docs/conventions/markdown-style/)** — how the winter ecosystem organizes the runtime context an agent discovers, including `CLAUDE.md`, agents, skills, indexes, `ai/` references, routing, tool affordances, and review conventions.
+- **[Agentic Development Patterns](/winter-docs/conventions/agentic-patterns/)** — implementation-independent design patterns: dependency inversion, single responsibility, open/closed context design, context derivation, derived delivery policy, and closed feedback loops.
 
-Each page summarises the conventions and links the canonical source files in [`winter-harness`](https://github.com/paul-gross/winter-harness) and [`winter-workflow`](https://github.com/paul-gross/winter-workflow) rather than duplicating them — the source files are the single source of truth, and they are meant to be maintained as you work.
+Each page links canonical source files in [`winter-harness`](https://github.com/paul-gross/winter-harness) and [`winter-workflow`](https://github.com/paul-gross/winter-workflow) rather than duplicating them — the source files are the single source of truth, and they are meant to be maintained as you work.

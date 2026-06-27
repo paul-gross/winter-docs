@@ -1,66 +1,56 @@
 ---
 title: Agentic Development Patterns
-description: How agents develop software in winter — the hybrid harness/engineer mindset, role-pure agents, and the blizzard, thaw, and review loops.
+description: Implementation-independent design patterns for agentic systems — dependency inversion, single responsibility, open/closed context design, context derivation, derived delivery policy, and closed feedback loops.
 ---
 
-Winter is built on the premise that **agents do the heavy lifting**: they write the code, run the app, verify their own changes, and review their own work. The patterns below — from [winter-workflow](/winter-docs/examples/winter-workflow/) — are how that is organised.
+The patterns on this page are not specific to any particular agent team, language, or toolchain. They describe structural properties that make agentic systems coherent, evolvable, and correct. [winter-workflow](/winter-docs/examples/winter-workflow/) is used as a worked example throughout; it is not the definition of the patterns.
 
-## The hybrid harness/engineer mindset
+## Dependency inversion
 
-An agent working in winter is both a software engineer (building the application) and a harness engineer (improving the environment that makes agentic work possible). When a doc is stale, you fix it where you find it; when a tool has a gap, you extend it. The levers it leans on hardest for agent productivity are the Canon's four — **observability**, **testability**, **discoverability**, and **pluggability** — defined in [`canon/four-levers.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/four-levers.md).
+A workflow or reviewer reads project-owned facts and standards instead of embedding copies.
 
-## Role-pure agents
+A code-review workflow does not know which linter a project uses, which test framework it prefers, or what constitutes an acceptable commit message — it discovers those facts by reading the project's harness at runtime. This keeps the generic workflow valid across projects. A workflow that embeds facts it cannot control drifts as soon as those facts change; a workflow that reads them from the project's harness stays current automatically.
 
-Work is done by single-responsibility agents. Each does one job; the *caller* injects coordination, so the same agent can run standalone or as a member of a team.
+See [Facts versus methodology](/winter-docs/conventions/canon/) in Canon for the principle behind this.
 
-| Agent | Responsibility |
-|-------|----------------|
-| `architect` | High-level design, interface definitions, dependency analysis, architectural guardrails. |
-| `backend-verifier` | Testing APIs via curl/CLI and validating database state. |
-| `code-reviewer` | Assessing code changes for correctness and project standards. |
-| `context-reviewer` | Reviewing agent-facing markdown against the documented conventions. |
-| `developer` | Implementing features, unit tests, refactoring, bug fixes. |
-| `documentation-reviewer` | Reviewing external-facing public documentation for accuracy and currency. |
-| `explorer` | Investigating undocumented systems, tracing data flows, producing AI-centric docs. |
-| `frontend-verifier` | Driving the UI in a browser to confirm rendering and interactions. |
-| `harness-reviewer` | Reviewing the seam between the application and the agentic harness. |
-| `runner` | Managing service lifecycle and monitoring logs for errors. |
-| `test-mediator` | Coordinating test strategy and dispatching work to verifiers. |
+## Single responsibility
 
-## The loops
+Each agent, skill, convention document, and reviewer has one coherent role.
 
-### Blizzard — `/wf-blizzard`
+Role-pure agents — like `developer`, `code-reviewer`, `architect`, and `backend-verifier` in winter-workflow — do exactly one job. The *caller* injects coordination: task decomposition, sequencing, and feedback routing. The same agent can run standalone or as part of a team without changing its own behavior.
 
-For net-new features, multi-module refactors, and design-level work. The session becomes a **lead** agent that decomposes the work and delegates to a team of specialists (architect, developer, verifiers, reviewer, runner, …). The lead orchestrates; teammates do the work.
+Single responsibility also applies to documents: a skill should describe how to invoke a workflow, not replicate the project's delivery conventions. A convention file should state one rule, not be a catch-all for the author's working notes.
 
-### Thaw — `/wf-thaw`
+## Open/closed context design
 
-For small, localized changes to existing code — a bug fix, a tweak, a regression. Composes `explorer → developer → verifier` standalone (no team), with a **hard iteration cap**, and bails up to a blizzard when the work turns out bigger than a thaw.
+The review mechanism stays stable while project-specific standards change behind the harness discovery boundary.
 
-### Reviews
+The code-review relationship is the primary example. A `code-reviewer` agent applies a fixed process — read the diff, read the project's standards, produce findings. The standards are owned by the project and updated independently. Adding a new linting rule, changing the test layout convention, or introducing a new architecture constraint does not require changing the reviewer; it requires updating the project's harness, which the reviewer discovers on its next invocation.
 
-Review happens along distinct axes, each a fresh-context, one-shot subagent:
+This is the open/closed principle applied to context rather than to code: the generic mechanism is closed to modification; the context it reads is open to extension.
 
-- **`code-reviewer`** — code correctness and design.
-- **`harness-reviewer`** — whether the harness keeps pace with the code.
-- **`context-reviewer`** — agent-facing markdown against conventions.
-- **`documentation-reviewer`** — external-facing public documentation against the code it describes.
+## Context derivation
 
-`code-reviewer` and `harness-reviewer` are also exposed standalone as `/wf-cold-review` and `/wf-harness-review`. **`/wf-pre-push`** fans out the applicable reviewers over the un-pushed range (`origin/master..HEAD`) and synthesises one advisory summary — which reviewers run depends on what the project has: a project with no docs site gets no documentation review, one with no agentic harness gets no harness review. Run it before pushing; it is deliberately decoupled from the push itself.
+Agents do not receive a monolithic prompt containing every rule. They traverse a discoverable structure: entry point → routing hub → applicable fact.
 
-`/wf-harness-score` complements these by scoring the whole codebase against a 5-stage × 10-dimension maturity matrix.
+In practice: a `CLAUDE.md` routes to an `ai/` index, which routes to a specific convention file, which the agent reads when the task matches. Agents that do not touch the database do not read database conventions. Agents that do not push do not read delivery conventions until delivery begins. The structure is the context architecture; the [four Canon levers](/winter-docs/conventions/canon/) — observability, testability, discoverability, and pluggability — determine how well that architecture performs.
 
-## Delivery
+## Delivery as derived policy
 
-Completed work lands directly on `master` — no PR flow, no long-lived feature branches:
+When delivery begins, an agent does not apply a hardcoded branch strategy or commit format. It discovers the target project's delivery contract from the project's harness: which branch to target, what commit format to use, whether a `Closes #N` footer is required, what tests or reviews must pass, where to push, and whether to open a pull request.
 
-- Each environment uses a Greek-letter branch locally and tracks a remote feature branch.
-- **Rebase onto the latest `origin/master`** before pushing so history stays linear, with one commit per unit of work.
-- Commit messages are **Conventional Commits with a scope**; `/wf-commit` infers the type, scope, and message from the diff.
-- Close issues from commits with a `Closes #N` footer (`owner/repo#N` across repos).
+This makes the delivery workflow reusable across projects with different conventions and prevents the workflow from accumulating project-specific configuration. The project owns its delivery rules; the workflow knows how to find and apply them. The canonical delivery workflow in winter-harness demonstrates this — it reads branch, commit, and push rules from the project before acting, rather than prescribing them.
 
-The canonical delivery procedure is [`workflows/feature-delivery.md`](https://github.com/paul-gross/winter-harness/blob/master/workflows/feature-delivery.md); upstream-tracking for forked framework repos is [`workflows/upstream-tracking.md`](https://github.com/paul-gross/winter-harness/blob/master/workflows/upstream-tracking.md).
+## Closed feedback loops
+
+Agents can run, observe, verify, review, and feed discoveries back into code or context.
+
+A developer agent that writes a failing test, runs it, reads the failure, and fixes the code is operating in a closed loop. A harness-reviewer that reads the diff and the project's harness conventions to produce structured findings closes the review loop without human mediation.
+
+Closing feedback loops requires observability and testability — two of the [four Canon levers](/winter-docs/conventions/canon/). An agent that cannot run the application, cannot observe its state, or cannot read structured error output must defer to a human at each step, breaking the loop.
+
+Winter-workflow's `/wf-pre-push` illustrates a closed review loop: it fans out applicable reviewers over the unpushed range, synthesises one advisory summary, and reports findings before the push — which reviewers run depends on what the project has, derived from the project's own harness.
 
 :::note[Canonical source]
-[`winter-workflow`](https://github.com/paul-gross/winter-workflow) (roles and loops) and [`winter-harness:/workflows/`](https://github.com/paul-gross/winter-harness/tree/master/workflows) (delivery). Adopter guide: [winter-workflow example](/winter-docs/examples/winter-workflow/).
+[`winter-workflow`](https://github.com/paul-gross/winter-workflow) (roles and workflows as worked examples) and [`winter-harness`](https://github.com/paul-gross/winter-harness) (conventions). Adopter guide: [winter-workflow example](/winter-docs/examples/winter-workflow/).
 :::
