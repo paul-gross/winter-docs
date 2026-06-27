@@ -1,15 +1,41 @@
 ---
 title: winter-workflow
-description: The agentic workflow — agent roles and the blizzard, thaw, and review loops.
+description: The agentic workflow — agent roles and the build and review loops.
 ---
 
-**[winter-workflow](https://github.com/paul-gross/winter-workflow)** adds an opinionated agentic workflow to a winter workspace: a set of role-pure agents and the skills that coordinate them into development loops.
+**[winter-workflow](https://github.com/paul-gross/winter-workflow)** adds an opinionated agentic workflow to a winter workspace. Here is one workflow; your workflow is your own.
 
-It is a turnkey extension — add it to any winter workspace and the `/wf-*` skills and `wf-*` agents work immediately. It's grouped under [Examples](/winter-docs/examples/) because it is the maintainer's *personal* workflow: winter keeps the workflow a swappable component (the workspace is the stable integration surface), so adopt it as-is, or fork it as the starting point for your own.
+Winter keeps the workflow a swappable component — the workspace is the stable integration surface — so winter-workflow is a turnkey option to adopt as-is or use as the starting point for a workflow of your own. Add it to any workspace and the `/wf-*` skills and `wf-*` agents work immediately. It's grouped under [Examples](/winter-docs/examples/) because it is the maintainer's *personal* workflow — one carried across many projects, the same `/wf-*` skills reused everywhere rather than reinvented per repo — that you can adopt or replace as the methodology evolves.
 
-## What it contributes
+## Build skills
 
-### Agent roles
+The five build skills map to the shape of the work:
+
+| Skill | When to reach for it |
+|-------|---------------------|
+| **Blizzard** | One large feature, built by a coordinated team — architect, developer, verifier, and reviewer in one session. |
+| **Glacier** | One mid-sized feature, worked as ordered phases — each built and verified before the next. |
+| **Flurry** | A batch of small, independent features, fanned out across environments in parallel — one commit each. |
+| **Delegate** | Ad hoc conversational work across several targets at once, via a standing foreman. See [choosing-a-build-skill](https://github.com/paul-gross/winter-workflow/blob/master/ai/choosing-a-build-skill.md). |
+| **Thaw** | A narrow fix to existing code — bug, tweak, or regression — on a capped explore → develop → verify loop. |
+
+**Matching the skill to the problem.** These skills solve different kinds of problems. When you have many small items to manage, cut the overhead by running them in parallel across many feature environments with a flurry. When you face one large feature, conquer it with a blizzard — a team of agents that breaks the work down, distributes it to developers, and validates the result. And the tried-and-true single-agent workflow, glacier, is still a wonderful choice when one feature simply wants steady, focused attention.
+
+## Review and pre-push loops
+
+The review process is keyed specifically off the **pre-push** verbiage — asking to review before pushing is what triggers it. Because each reviewer fans out fresh-context agents across its axis, the loops carry a high token cost, so they are meant to run on demand rather than on every change. When you do run them they often improve the quality of the work substantially, and are generally worth invoking before you evaluate the output of a build workflow. Some build skills bake a pre-push activation directly into their flow.
+
+The review skills are independently usable components, composable with any build skill or invoked on their own:
+
+| Skill | What it reviews |
+|-------|----------------|
+| **Cold review** | Code correctness and design — a fresh-context `code-reviewer` over the change-set. |
+| **Harness review** | Whether the agentic harness (agent context, verifier tooling) keeps pace with application change. |
+| **Context review** | Agent-facing markdown (agents, skills, `CLAUDE.md`, `ai/` docs) against the documented conventions. |
+| **Documentation review** | External-facing public documentation against the code it documents. |
+| **Pre-push** | Fans out the relevant reviewers over the un-pushed range and synthesizes an advisory summary. Deliberately decoupled from the push itself. |
+
+## Agent roles
 
 Single-responsibility agents, symlinked into the workspace as `wf-<name>`. Each can be spawned standalone or composed into a team. The convention is *role purity*: agents do one job; the caller injects coordination.
 
@@ -27,24 +53,6 @@ Single-responsibility agents, symlinked into the workspace as `wf-<name>`. Each 
 | `context-reviewer` | Reviews agent-facing markdown against the documented conventions. |
 | `documentation-reviewer` | Reviews human-facing public documentation against the code and conventions. |
 
-### Loops & skills
-
-| Skill | What it does | Use when |
-|-------|--------------|----------|
-| `/wf-blizzard` | Turns the session into a lead agent that decomposes the work and delegates to a team of specialists. | Net-new features, multi-module refactors, design-level work. |
-| `/wf-thaw` | A focused explorer → developer → verifier loop with a hard iteration cap; bails to a blizzard when the work is bigger than expected. | Small, localized changes to existing code — bug fixes, tweaks, regressions. |
-| `/wf-cold-review` | Fresh-context `code-reviewer` with zero prior history. | An independent read on code correctness/design. |
-| `/wf-harness-review` | Fresh-context `harness-reviewer`. | Checking whether the agentic harness keeps pace with the code. |
-| `/wf-context-review` | Fresh-context `context-reviewer`. | Checking agent-facing markdown against the documented conventions. |
-| `/wf-documentation-review` | Fresh-context `documentation-reviewer`. | Checking external-facing public documentation against the code it documents. |
-| `/wf-harness-score` | Scores the codebase against a 5-stage × 10-dimension maturity matrix; emits an HTML report. | Tracking harness maturity over time. |
-| `/wf-pre-push` | Fans out the reviewers the project's surfaces call for — code always, plus harness, context, and documentation reviewers when those surfaces exist — over `origin/master..HEAD`. | Before pushing completed work. |
-| `/wf-commit` | Stages everything and writes a conventional-commit message inferred from the diff. | Committing a worktree. |
-
-## What to take from it
-
-Study winter-workflow when you want agents to do the heavy lifting — write code, run the app, verify their own changes, and review their own work — under a repeatable structure. Take the role-purity convention (agents do one job; the caller injects coordination), the blizzard/thaw split that matches ceremony to task size, and the reviewer pattern where each reviewer *reads the harness* for the facts it enforces rather than embedding them (see [`facts-vs-methodology.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/facts-vs-methodology.md)). Then adapt the roles and loops to your team, or replace the whole workflow with your own.
-
 ## How it's wired in
 
 As a real standalone repo, declared in `.winter/config.toml` like any other — examples are installed; only how the docs frame them differs:
@@ -57,12 +65,6 @@ path = ".winter/ext/workflow"
 ```
 
 After `winter ws init`, the `/wf-*` skills and `wf-*` agents are available. When a project documents no principles or test strategy, the blizzard team offers sensible defaults (SOLID + Clean Architecture, the test pyramid, CLI-driven test data). For your own workspace, fork it and point the `url` at your copy.
-
-## Key conventions
-
-- **Match the loop to the task** — blizzard for net-new/large, thaw for narrow/localized.
-- **Review on multiple axes** — code (`/wf-cold-review`), harness (`/wf-harness-review`), agent-facing markdown (`context-reviewer`), and external-facing public documentation (`documentation-reviewer`) are distinct concerns.
-- **Review before pushing** — `/wf-pre-push` is advisory and deliberately decoupled from the push itself.
 
 :::note[Canonical source]
 [`winter-workflow`](https://github.com/paul-gross/winter-workflow) — see its [`index.md`](https://github.com/paul-gross/winter-workflow/blob/master/index.md) and [`agents/README.md`](https://github.com/paul-gross/winter-workflow/blob/master/agents/README.md). The methodology is narrated in [Conventions & Patterns](/winter-docs/conventions/).

@@ -5,7 +5,7 @@ description: The conventions layer — code, markdown, and process conventions p
 
 **[winter-harness](https://github.com/paul-gross/winter-harness)** is the conventions layer. It is the single source of truth for *how* code and agent-facing documentation are written across the winter ecosystem — winter and all its extensions — and for the process by which changes are delivered.
 
-It's grouped under [Examples](/winter-docs/examples/) because winter keeps the harness a swappable component. Today it encodes the conventions for winter and its extensions specifically — it is not a general-purpose convention library — but you reference it directly by path notation, and you can fork it as the starting point for a harness of your own.
+It's grouped under [Examples](/winter-docs/examples/) because winter keeps the harness a swappable component. Today it encodes the conventions for winter and its extensions specifically — it is not a general-purpose convention library — but you reference it directly by path notation, and it stands as a worked model for a harness of your own.
 
 ## What it contributes
 
@@ -18,7 +18,7 @@ winter-harness *is* its conventions — unusually, its content lives at the top 
 
 ## What to take from it
 
-Its conventions target winter and its extensions today, so what transfers to other projects is the *shape*, not the facts. If you fork it, keep the Canon (the universal authoring principles and the facts/methodology split) and the winter-ecosystem markdown structure (READMEs, extension `index.md` rules, convention-per-file), and supply the code and domain facts your own repos need — especially for Python projects and any workspace where agents author the markdown other agents read. It pairs with [winter-workflow](/winter-docs/examples/winter-workflow/) by design — the harness holds the *facts* (what's true), a workflow's reviewers hold the *methodology* (how they review), and the reviewers read the harness rather than carry a copy (see [`canon/facts-vs-methodology.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/facts-vs-methodology.md)).
+Its conventions target winter and its extensions today, so what transfers to other projects is the *shape*, not the facts. What carries over is the Canon (the universal authoring principles and the facts/methodology split) and the winter-ecosystem markdown structure (READMEs, extension `index.md` rules, convention-per-file); the code and domain facts are yours to supply for your own repos — especially for Python projects and any workspace where agents author the markdown other agents read. It pairs with [winter-workflow](/winter-docs/examples/winter-workflow/) by design — the harness holds the *facts* (what's true), a workflow's reviewers hold the *methodology* (how they review), and the reviewers read the harness rather than carry a copy (see [`canon/facts-vs-methodology.md`](https://github.com/paul-gross/winter-harness/blob/master/canon/facts-vs-methodology.md)).
 
 ## How it's wired in
 
@@ -31,7 +31,7 @@ url = "git@github.com:paul-gross/winter-harness.git"
 path = ".winter/ext/harness"
 ```
 
-It contributes no skills or agents of its own — it is a convention library. Reference its files by path notation in agent context, e.g. `winter-harness:/architecture/error-handling.md`. For your own workspace, fork it and point the `url` at your copy.
+It contributes no skills or agents of its own — it is a convention library. Reference its files by path notation in agent context, e.g. `winter-harness:/architecture/error-handling.md`. For your own workspace, point the `url` at a conventions repo of your own, shaped after this one.
 
 ## Key conventions
 
