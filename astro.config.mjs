@@ -34,8 +34,8 @@ export default defineConfig({
 					items: [
 						{ label: 'Overview', slug: 'operations' },
 						{ label: 'Feature Environments & Worktrees', slug: 'operations/feature-environments' },
-						{ label: 'Provisioning Environments', slug: 'operations/provisioning' },
 						{ label: 'Polyrepo Git Operations', slug: 'operations/polyrepo-git' },
+						{ label: 'Provisioning Environments', slug: 'operations/provisioning' },
 						{ label: 'Running Services', slug: 'operations/services' },
 					],
 				},
