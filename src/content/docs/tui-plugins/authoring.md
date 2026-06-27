@@ -61,6 +61,7 @@ Every field of `PluginRegistration` is optional — populate only what you ship:
 |-------|-------------|
 | `worktree_repo_decorators` | badges on a repo's row in the dashboard |
 | `environment_decorators` | badges on a feature-environment header |
+| `detail_panels` | named, read-only info panels (`IDetailPanel`) rendered as tabs on the detail screen, alongside the built-in repo info — each gets a `DetailPanelContext` for the focused worktree (feature-env view) or repo (standalone view) |
 | `tui_screens` | full dashboard screens |
 | `tui_actions` | keybound actions, each scoped to the workspace, an environment, or a worktree. A `TuiAction.key` is the **default** binding — users can remap it from `[keybindings.bindings]` in `config.toml` via the id `plugin.<name>` |
 | `metadata` | free-form data about the plugin |

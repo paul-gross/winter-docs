@@ -36,10 +36,12 @@ name = "winter-service-tmux"
 url = "git@github.com:paul-gross/winter-service-tmux.git"
 path = ".winter/ext/service-tmux"
 
-# .winter/ext/service-tmux/winter-ext.toml  (inside the extension repo)
+# .winter/ext/service-tmux/winter-ext.toml  (recommended form for the extension's manifest)
 [provides]
 service = "workflow/orchestrate"
 ```
+
+The extension's published `winter-ext.toml` still declares the capability through the deprecated `orchestrate_services` alias (below) rather than a `[provides]` table; both resolve identically, so the form above is what a new manifest should use.
 
 See the [config reference → Capability registry](/winter-docs/cli-reference/config/#capability-registry) for the full resolution rules.
 
@@ -47,16 +49,16 @@ See the [config reference → Capability registry](/winter-docs/cli-reference/co
 The legacy `service_orchestrator = "winter-service-tmux"` root key (workspace config) and `orchestrate_services = "workflow/orchestrate"` (extension manifest) are back-compat aliases that continue to work for existing configs. New workspaces should use `[capabilities]`/`[provides]` instead.
 :::
 
-The extension needs a project-specific **`workspace:/context/project/setup-tmux.toml`** manifest and its companion **`workspace:/context/project/layout-hook.sh`**. Follow the extension's [`context/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/context/workflow-setup.md) walkthrough (or run `/ws-setup`) to author them. Until `setup-tmux.toml` exists, `./up` errors out.
+The extension needs a project-specific **`workspace:/.winter/config/winter-service-tmux/config.toml`** manifest and its companion **`workspace:/.winter/config/winter-service-tmux/layout-hook.sh`**. Follow the extension's [`context/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/context/workflow-setup.md) walkthrough (or run `/ws-setup`) to author them. Until `config.toml` exists, `./up` errors out.
 
-`setup-tmux.toml` declares every service by `name`, tmux `target` (`<window>.<pane>`), `command`, and `log` capture mode (`"file"` by default, `"pane"` for interactive panes or TTY-sensitive services). Commit it to source — it's the project's service config. For machine-specific overrides, add a gitignored **`setup-tmux.local.toml`** next to it; the reader merges it on top (scalars replace; `[[service]]` and `[[status.url]]` entries merge keyed by `name`/`label`).
+`config.toml` declares every service by `name`, tmux `target` (`<window>.<pane>`), `command`, and `log` capture mode (`"file"` by default, `"pane"` for interactive panes or TTY-sensitive services). Commit it to source — it's the project's service config. For machine-specific overrides, add a gitignored **`config.local.toml`** next to it; the reader merges it on top (scalars replace; `[[service]]` and `[[status.url]]` entries merge keyed by `name`/`label`).
 
-See [`workflow/setup-tmux.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/setup-tmux.toml.example) and [`workflow/setup-tmux.local.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/setup-tmux.local.toml.example) for the full annotated schema.
+See [`workflow/config.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/config.toml.example) and [`workflow/config.local.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/config.local.toml.example) for the full annotated schema.
 
 ## Troubleshooting
 
-- **`./up` errors immediately** — `setup-tmux.toml` is missing or unreadable. Run the workflow-setup walkthrough.
-- **A service didn't start** — read its logs with `winter service logs alpha <service>`. For `log="pane"` services (interactive panes, TTY-mode), use `tmux capture-pane -pt <prefix>-<env>:<window>.<pane>` (the target is in `setup-tmux.toml`'s `[[service]]` entry).
+- **`./up` errors immediately** — `config.toml` is missing or unreadable. Run the workflow-setup walkthrough.
+- **A service didn't start** — read its logs with `winter service logs alpha <service>`. For `log="pane"` services (interactive panes, TTY-mode), use `tmux capture-pane -pt <prefix>-<env>:<window>.<pane>` (the target is in `config.toml`'s `[[service]]` entry).
 - **One service wedged or crashed** — `winter service restart alpha <service>` (or `./restart <service>`) reaps just that pane and re-runs it, leaving the rest of the session up — no need to `winter service down` the whole stack.
 - **Stale processes after a crash** — use `winter service down` (or `./down`) to reap the session cleanly rather than killing processes by hand.
 

@@ -1,24 +1,24 @@
 ---
 title: Running Services
-description: Configure setup-tmux.toml and use winter service up/down/status/restart/logs to run an environment's services in a per-environment tmux session.
+description: Configure config.toml and use winter service up/down/status/restart/logs to run an environment's services in a per-environment tmux session.
 ---
 
 Service orchestration is provided by the **[winter-service-tmux](/winter-docs/extensions/winter-service-tmux/)** extension. It runs each environment's services (backend, frontend, workers, …) in a dedicated tmux session, so multiple environments can run their own copies of the stack side by side without port conflicts. The extension implements the full `winter service` contract, so all service control goes through `winter service <action> <env>`.
 
-## One-time setup: `setup-tmux.toml`
+## One-time setup: `config.toml`
 
-The extension needs a project-specific **`setup-tmux.toml`** manifest that declares which services to run and how the tmux panes are laid out. Without it, `./up` errors out. Author it (and its companion `layout-hook.sh`) by following the extension's [`context/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/context/workflow-setup.md) walkthrough; the `/ws-setup` flow prompts for this when the extension is installed.
+The extension needs a project-specific **`config.toml`** manifest (at `.winter/config/winter-service-tmux/config.toml`) that declares which services to run and how the tmux panes are laid out. Without it, `./up` errors out. Author it (and its companion `layout-hook.sh`) by following the extension's [`context/workflow-setup.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/context/workflow-setup.md) walkthrough; the `/ws-setup` flow prompts for this when the extension is installed.
 
-`setup-tmux.toml` is a declarative TOML manifest. It defines:
+`config.toml` is a declarative TOML manifest. It defines:
 
 - the **`session_prefix`** (e.g. `mp`), used to name sessions `<prefix>-<env>` — `mp-alpha`, `mp-beta`, …;
 - one **`[[service]]` entry per tmux pane**, each with a unique `name`, a `target` (`<window>.<pane>`), and a `command`;
 - an optional **`log`** field per service (`"file"` by default, or `"pane"`) controlling how output is captured;
 - the **`layout_hook`** path pointing to `layout-hook.sh`, which creates the tmux windows and panes.
 
-For machine-specific overrides, add a gitignored **`setup-tmux.local.toml`** next to the committed manifest. The reader merges it on top using the same overlay semantics: scalars replace, `[[service]]` and `[[status.url]]` entries merge keyed by `name`/`label`.
+For machine-specific overrides, add a gitignored **`config.local.toml`** next to the committed manifest. The reader merges it on top using the same overlay semantics: scalars replace, `[[service]]` and `[[status.url]]` entries merge keyed by `name`/`label`.
 
-See [`workflow/setup-tmux.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/setup-tmux.toml.example) and [`workflow/setup-tmux.local.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/setup-tmux.local.toml.example) for the full annotated schema.
+See [`workflow/config.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/config.toml.example) and [`workflow/config.local.toml.example`](https://github.com/paul-gross/winter-service-tmux/blob/master/workflow/config.local.toml.example) for the full annotated schema.
 
 ## Start, check, restart, stop
 
@@ -106,7 +106,7 @@ Run `winter capabilities` to inspect the current binding — for a single provid
 
 ## Workspace-scoped services
 
-Some services — a shared database, a message broker, a container registry — should run once for the whole workspace rather than once per feature env. Declare them with `scope = "workspace"` in `setup-tmux.toml`:
+Some services — a shared database, a message broker, a container registry — should run once for the whole workspace rather than once per feature env. Declare them with `scope = "workspace"` in `config.toml`:
 
 ```toml
 [[service]]

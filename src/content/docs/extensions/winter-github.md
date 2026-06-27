@@ -21,6 +21,7 @@ The loop can run entirely agent-driven: the user ideates, the agent captures the
 ## What it contributes
 
 - **`/wg-issue`** skill — drafts an issue from the current conversation plus your arguments, picks the target GitHub repository, confirms with you, and files it via `gh issue create`.
+- **`/wg-refine`** skill — updates an existing issue's body, labels, or title in the same AI-native format, either interactively or by processing inline `--comments` requests on the issue.
 - **An AI-native issue format** — a consistent structure that is easy for agents to produce and to act on:
   - YAML metadata (`type`, `complexity`, `related`)
   - **Context** — why the issue exists
@@ -28,6 +29,7 @@ The loop can run entirely agent-driven: the user ideates, the agent captures the
   - **Acceptance Criteria** — a checklist
   - **Out of Scope**
   - **References**
+- **A `winter doctor` probe** (`scripts/doctor.sh`) that checks the `gh` CLI is installed, authenticated for `github.com`, and that `api.github.com` is reachable — so a missing prerequisite surfaces before you try to file.
 
 ## Boundary with winter-product
 
@@ -51,7 +53,7 @@ url = "git@github.com:paul-gross/winter-github.git"
 path = ".winter/ext/github"
 ```
 
-Authenticate the `gh` CLI once (`gh auth login --hostname github.com`); winter-github reuses that auth context. After `winter ws init`, `/wg-issue` is available.
+Authenticate the `gh` CLI once (`gh auth login --hostname github.com`); winter-github reuses that auth context. After `winter ws init`, `/wg-issue` and `/wg-refine` are available.
 
 ## Key conventions
 

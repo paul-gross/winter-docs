@@ -13,4 +13,4 @@ Related projects enrich the Winter ecosystem but sit in a different category fro
 
 ## In this section
 
-- **[winter-nvim](/winter-docs/related-projects/winter-nvim/)** — Neovim integration for Winter workspaces: navigate environments, inspect status, and drive commands from inside Neovim.
+- **[winter-nvim](/winter-docs/related-projects/winter-nvim/)** — Neovim integration for Winter workspaces: a fuzzy-finder over feature-environment worktrees, a workspace status dashboard, and a cross-repo diff viewer. It reads workspace state from inside Neovim but does not change it.
