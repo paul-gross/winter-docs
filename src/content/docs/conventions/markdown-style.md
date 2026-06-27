@@ -32,7 +32,7 @@ A logical prefix is preferred over a plain relative or absolute path because the
 
 ## Naming
 
-Agents, skills, and commands follow consistent naming so a prefix maps predictably to an extension (`wf-blizzard`, `wg-issue`, `wst-…`). These naming conventions are part of the winter-ecosystem markdown layer (`harness/`).
+Agents, skills, and commands follow consistent naming so a prefix maps predictably to an extension (`wf-blizzard`, `wg-issue`, `wst-…`). These naming conventions are part of the winter-ecosystem agent-context domain (`agent-context/`).
 
 ## Writing guides
 

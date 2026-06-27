@@ -9,12 +9,13 @@ It's grouped under [Examples](/winter-docs/examples/) because winter keeps the h
 
 ## What it contributes
 
-winter-harness *is* its conventions — unusually, its content lives at the top of the repo (not under `context/`), because the conventions are its public surface, addressed via the `winter-harness:` path notation. It is organised in four layers:
+winter-harness *is* its conventions — unusually, its content lives at the top of the repo (not under `context/`), because the conventions are its public surface, addressed via the `winter-harness:` path notation. It is organised by **convention domain**, each directory naming the subject it governs:
 
 - **Canon** (`canon/`) — the universal, enforceable substrate true of any harness: cross-cutting authoring principles, the facts/methodology split, the harness-change eval, and the four levers. Self-contained — it depends on nothing else.
-- **Markdown** (`harness/`) — winter-ecosystem conventions for writing the agent-facing markdown of the ecosystem: READMEs, extension `index.md` files, path references, and agent / skill / command naming. Rests on the Canon.
-- **Code** (`python/`, `exemplars/`) — conventions for application code (domain modeling, error handling, dependency injection, the repository pattern, protocol conformance, subprocess use, logging, module layout, linting, typechecking, testing), each with a reference exemplar showing the expected shape.
-- **Process** (`workflows/`) — the day-to-day delivery workflow: the worktree model, branch naming, push target, the rebase rule, and pre-push checks.
+- **Agent context** (`agent-context/`) — winter-ecosystem conventions for the markdown agents load or traverse: agents, skills, extension `index.md` files, path references and naming, and the lints that enforce them. Rests on the Canon.
+- **Documentation** (`documentation/`) — the public, adopter-facing docs: README form, the no-undocumented-feature invariant, and the consumable-vs-example catalog.
+- **Architecture & standards** (`architecture/`, `standards/`, `exemplars/`) — conventions for application code at plan/build time and at review time (domain modeling, error handling, dependency injection, the repository pattern, protocol conformance, subprocess use, logging, module layout, linting, typechecking, testing), each with a reference exemplar showing the expected shape.
+- **Workflows & tooling** (`workflows/`, `tooling/`) — the day-to-day delivery workflow (worktree model, branch naming, push target, the rebase rule, pre-push checks) and cross-cutting rules for external tools such as the `gh` CLI.
 
 ## What to take from it
 
@@ -35,7 +36,7 @@ It contributes no skills or agents of its own — it is a convention library. Re
 
 ## Key conventions
 
-- Read the convention file that matches your change *before* writing code — `python/domain-modeling.md` for a new type, `python/error-handling.md` for anything that can fail, `python/repository-pattern.md` for external I/O, and so on.
+- Read the convention file that matches your change *before* writing code — `architecture/domain-modeling.md` for a new type, `architecture/error-handling.md` for anything that can fail, `architecture/repository-pattern.md` for external I/O, and so on.
 - `CONTRIBUTING.md` governs commit format and voice rules; `workflows/feature-delivery.md` governs how a change lands.
 - When a convention is wrong or stale, fix it where you find it — the harness is meant to be maintained as you work.
 
