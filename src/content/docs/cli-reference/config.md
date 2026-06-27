@@ -151,7 +151,7 @@ Each key in `[capabilities]` is a slot name; the value is the name of an install
 
 The only in-scope slot today is `service`. When exactly one installed extension declares `provides.service`, the binding is implicit — no explicit `[capabilities]` entry is required. When two or more providers are installed, an explicit `capabilities.service` entry resolves the ambiguity; `winter doctor` warns when the binding is ambiguous.
 
-`winter capabilities` introspects the registry (read-only, always exits `0`). See the [CLI reference → `winter capabilities`](/winter-docs/cli-reference/#winter-capabilities) entry for the command surface.
+`winter capabilities` introspects the registry (read-only, always exits `0`). See the [CLI reference → `winter capabilities`](/winter-docs/cli-reference/diagnostics/#winter-capabilities) entry for the command surface.
 
 ### Deprecated: `service_orchestrator`
 

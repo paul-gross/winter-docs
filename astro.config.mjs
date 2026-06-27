@@ -42,7 +42,14 @@ export default defineConfig({
 				{
 					label: 'CLI Reference',
 					items: [
-						{ label: 'Commands', slug: 'cli-reference' },
+						{ label: 'Overview', slug: 'cli-reference' },
+						{ label: 'Workspace Lifecycle', slug: 'cli-reference/workspace-lifecycle' },
+						{ label: 'Polyrepo Synchronization', slug: 'cli-reference/polyrepo-sync' },
+						{ label: 'Repository & Extension Management', slug: 'cli-reference/repo-ext' },
+						{ label: 'Environment Runtime', slug: 'cli-reference/environment-runtime' },
+						{ label: 'Diagnostics & Introspection', slug: 'cli-reference/diagnostics' },
+						{ label: 'Dashboard', slug: 'cli-reference/dashboard' },
+						{ label: 'Global Reference', slug: 'cli-reference/global-reference' },
 						{ label: 'config.toml Reference', slug: 'cli-reference/config' },
 					],
 				},
