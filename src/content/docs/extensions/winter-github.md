@@ -29,6 +29,7 @@ The loop can run entirely agent-driven: the user ideates, the agent captures the
   - **Acceptance Criteria** — a checklist
   - **Out of Scope**
   - **References**
+- **Epics** — file a large effort as a parent issue (`[EPIC]` title, `type:epic` label) that parents its `[<TAG>]`-prefixed children as GitHub sub-issues, so a decomposed effort stays legible in the backlog. Both `/wg-issue` and `/wg-refine` understand the convention.
 - **A `winter doctor` probe** (`scripts/doctor.sh`) that checks the `gh` CLI is installed, authenticated for `github.com`, and that `api.github.com` is reachable — so a missing prerequisite surfaces before you try to file.
 
 ## Boundary with winter-product
