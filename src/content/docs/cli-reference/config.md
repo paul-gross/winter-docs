@@ -46,6 +46,34 @@ Four keys control how ports are assigned to feature environments. All are option
 
 **Index assignment** is persisted in `.winter/state.toml` (machine-local, gitignored — not a config file). `winter ws init` allocates and records the index; `winter ws destroy` removes the entry. The read path loads the recorded value; for pre-registry environments (created before this feature), it falls back to recomputing from the name.
 
+## Env var bands {#env-var-bands}
+
+Your services need more than ports: database URLs, broker endpoints, feature flags. Declare them as **env var bands** and winter computes them per scope and injects them into every provider subprocess, so each environment gets its own values with no static env file to keep in sync. Values support `${NAME}` and `${NAME+N}` substitution, which is how a variable derives from that environment's own port base.
+
+```toml
+[env.workspace.vars]
+SHARED_DB_PORT = "${WINTER_WORKSPACE_PORT_BASE+3}"   # shared workspace service
+
+[env.feature.vars]
+WEB_PORT     = "${WINTER_PORT_BASE+10}"              # 4030 in alpha, 4050 in beta…
+DATABASE_URL = "postgresql://localhost:${SHARED_DB_PORT}/app_${WINTER_ENV}"
+
+[env.alpha.vars]
+WEB_PORT = "8421"   # alpha only — every other env keeps ${WINTER_PORT_BASE+10}
+```
+
+Which band you reach for depends on how far the value should travel:
+
+| Band | Rendered for |
+|------|--------------|
+| `[env.workspace.vars]` | The `workspace` scope **and** every feature env — shared services every env talks to. |
+| `[env.feature.vars]` | Every feature env — the common case, with `${WINTER_PORT_BASE+N}` keeping each env's values distinct. |
+| `[env.<name>.vars]` | Only the one feature env it names — an escape hatch when a single env must diverge, such as pointing at a fixed local endpoint while its siblings keep the derived value. |
+
+For a feature env the bands layer lowest to highest — workspace, feature, then that env's own — with each layer winning collisions against the ones below it. Run `winter env <scope>` to print the computed values for an environment (or for `workspace`) and confirm what a band actually resolved to.
+
+The canonical reference — the full precedence chain including the `.winter/config.local.toml` overlay, the `${NAME}` / `${NAME+N}` token grammar, reserved band names, and the migration from the legacy `[env.vars]` table — is [`context/winter-cli/configuration/ports-and-environments.md#env-var-bands`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/ports-and-environments.md#env-var-bands).
+
 ## `[[project_repository]]`
 
 Repos cloned into `projects/` and worktreed into Greek-letter environment directories. Entries appear in CLI/TUI output in declared order, so list high-priority repos first.
