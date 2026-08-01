@@ -29,7 +29,7 @@ Running agents in ephemeral cloud environments is orthogonal to repository topol
 
 A cloud agent can bootstrap a complete workspace from scratch: clone the workspace config, pull the project repositories and installed extensions, install dependencies, run provisioning steps, start workspace- and feature-scoped services, and load or reset data — all driven by the single declarative `config.toml`. From there the agent runs the full development loop: make cross-repo changes in coordinated worktrees, validate against live services, commit, and push toward a pull request. Every step is repeatable because the workspace setup is idempotent.
 
-Across all three, the workflow that drives development is itself a swappable component. You can package a workflow — whether it runs locally or in a cloud agent — as a harness-like extension and share it across multiple projects, instead of re-implementing the loop in each one.
+Across all three, the workflow that drives development is itself a swappable component. A methodology product can share reusable operations across projects instead of re-implementing the loop in each one; winter-workflow organizes its operations under `methodology/`. Skills adapt those operations to the current session, while agents adapt bounded roles to isolated runtimes.
 
 ## The three layers
 
@@ -43,13 +43,13 @@ The `winter` command manages the workspace. It clones your repositories, creates
 
 ### 2. Extensions
 
-Extensions are opt-in capabilities a workspace installs as standalone repositories. Each one contributes skills, agents, lifecycle hooks, health probes, and convention checks to the workspace. The maintained set covers tmux **service orchestration**, AI-native **issue tooling**, a **product backlog**, reusable **code and markdown conventions**, and the **agentic workflow** itself.
+Extensions are opt-in workspace integrations installed as standalone repositories. Depending on its purpose, an extension can contribute skills, agents, lifecycle hooks, health probes, convention checks, reusable methodology, or an optional capability provider declared in its manifest. The maintained set covers tmux **service orchestration**, AI-native **issue tooling**, a **product backlog**, reusable **code and markdown conventions**, and the **agentic workflow** itself.
 
 → [Extensions](/winter-docs/extensions/)
 
 ### 3. The agentic workflow
 
-The top layer is how agents actually work: defined agent **roles** (ice-carver, cold-reviewer, arctic-explorer, verifiers, and more) and the **loops** that coordinate them — a "glacier" for net-new features, a "snowball" for focused changes, and a pre-push review that fans out independent reviewers. The harness is designed so agents can write code, run the app, verify their own changes, and review their own work.
+The top layer is the reusable methodology for how work proceeds: a "glacier" for net-new features, a "snowball" for focused changes, and a pre-push review that fans out independent reviewers. Skills select and coordinate those operations in the current session; role-pure agents adapt bounded work to isolated runtimes. Together they let agents write code, run the app, verify changes, and review the result without making the adapters the source of the methodology.
 
 → [Conventions & Patterns](/winter-docs/conventions/)
 
@@ -83,9 +83,9 @@ Every repository is materialised in two places: a **source checkout** under `pro
 
 *Harness engineering* is the practice of designing a system so that agents — human or AI — can work on it reliably and at scale. The discipline is described in depth at [paul-gross/harness-engineering](https://github.com/paul-gross/harness-engineering). A harnessed project gives every contributor: declarative setup that reaches a known-good state without manual steps, discoverable context about the project's structure and conventions, executable operations for common tasks, observable services with health signals and structured logs, repeatable provisioning and data loading, validation gates that catch problems before they propagate, and replaceable components so teams can swap tools without restructuring their workflow.
 
-Winter is a concrete example of a harnessed application. Its declarative `config.toml` covers workspace setup idempotently. Extensions expose discoverable context (`context/` directories, `CLAUDE.md`) and executable operations (CLI commands, service scripts, skill entrypoints). The service layer surfaces health and logs. Provisioning handlers and doctor/lint checks act as validation doors. Every layer — CLI, extensions, workflow — is independently replaceable.
+Winter is a concrete example of a harnessed application. Its declarative `config.toml` covers workspace setup idempotently. Targets own the facts and invariants they can keep true, wherever their harness declares them. Methodology products own reusable operations; winter-workflow exposes its operations under `methodology/` through skill and agent adapters. Other extensions expose executable commands and service scripts. The service layer surfaces health and logs. Provisioning handlers and doctor/lint checks act as validation doors. Every layer — CLI, extensions, workflow — is independently replaceable.
 
-The same approach applies to both new and existing projects. On a greenfield project you establish the harness alongside the first production code: commit conventions, `context/` context files, and a `config.toml` that a fresh clone can bring up in minutes. On an existing brownfield system you add the harness incrementally — a `CLAUDE.md` here, a workspace config there — without restructuring the repositories themselves.
+The same approach applies to both new and existing projects. On a greenfield project you establish the harness alongside the first production code: target-owned commit and setup facts, plus a `config.toml` that a fresh clone can bring up in minutes. On an existing brownfield system you add the harness incrementally — an agent-context entry point here, a workspace config there — without restructuring the repositories themselves.
 
 A harness can even be a winter repository in its own right, and the workspace can hold it twice over: once as a standalone repository that supports work across the whole workspace, and again as a project repository that appears as a coordinated worktree inside each feature environment. That dual presence lets a single feature environment improve the harness in isolation — exercising the change against real work — without interfering with the standalone copy that other feature environments, and the agents working in them, rely on. Winter itself is built this way: the workspace develops winter using winter.
 

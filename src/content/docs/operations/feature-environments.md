@@ -24,7 +24,7 @@ The command is idempotent — re-run it any time to reconcile an environment aft
 
 `winter ws init` is **structural** — it makes the worktrees but does not install dependencies, create databases, or load seed data. Run [`winter provision alpha`](/winter-docs/operations/provisioning/) afterward to bring the environment to a working state.
 
-When invoked without a target (`winter ws init`) or with `--all`, winter also fires each extension's `on_workspace_reconcile` hook once — before any per-env loop. This is the hook that regenerates workspace-level artifacts (like the service-to-pane reference map that winter-service-tmux produces) rather than per-environment state.
+When invoked without a target (`winter ws init`) or with `--all`, winter also fires each declared `on_workspace_reconcile` extension hook once — before any per-env loop. This is the hook that regenerates workspace-level artifacts (like the service-to-pane reference map that winter-service-tmux produces) rather than per-environment state.
 
 ## List & inspect
 
@@ -80,7 +80,7 @@ winter ws destroy alpha --force      # bypass the dirty-worktree check
 winter ws destroy alpha --strict     # abort if any on_env_destroy hook fails
 ```
 
-Teardown fires every extension's `on_env_destroy` hook (the mirror of `on_env_init`), removes each per-repo worktree, deletes the environment directory, and strips the environment's entry from the workspace's git-exclude file.
+Teardown fires every declared extension `on_env_destroy` hook (the mirror of `on_env_init`), removes each per-repo worktree, deletes the environment directory, and strips the environment's entry from the workspace's git-exclude file.
 
 :::caution
 Prefer `winter ws destroy` over `rm -rf alpha/`. Manual removal skips the `on_env_destroy` hooks, leaving extension state — tmux sessions, watchers, provisioned databases — orphaned.

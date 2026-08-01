@@ -56,7 +56,7 @@ The operating model is built for rapid iteration. Several feedback loops nest in
 
 ### 8. Tear down
 
-`winter ws destroy alpha` fires every extension's teardown hook — stopping services, cleaning provisioned resources, removing worktrees — and frees the port slot for reuse. Prefer `winter ws destroy` over `rm -rf` so extension state is not orphaned. See [Feature Environments & Worktrees](/winter-docs/operations/feature-environments/).
+`winter ws destroy alpha` fires each declared extension teardown hook — stopping services, cleaning provisioned resources, removing worktrees — and frees the port slot for reuse. Prefer `winter ws destroy` over `rm -rf` so extension state is not orphaned. See [Feature Environments & Worktrees](/winter-docs/operations/feature-environments/).
 
 ## CLI first, raw git when you need it
 

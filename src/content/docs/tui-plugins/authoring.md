@@ -5,7 +5,7 @@ description: Extend the winter dashboard and CLI with a plugin.py — contribute
 
 A **TUI plugin** extends the `winter` dashboard from outside the CLI's own source tree. A plugin can paint status badges onto the dashboard, add full TUI screens, and bind keyboard actions.
 
-This is a different extension point from a [winter extension](/winter-docs/extensions/). An extension integrates with the *workspace* — it ships skills, agents, and `on_env_init` / `on_env_destroy` lifecycle hooks via a `winter-ext.toml` manifest. A TUI plugin integrates with the *running `winter` tool* — its dashboard and command surface. The two are independent, and one repository can ship both: `winter-service-tmux` declares lifecycle hooks in its manifest *and* ships a `plugin.py` that badges each environment with its tmux-session state.
+This is a different extension point from a [winter extension](/winter-docs/extensions/). A winter extension integrates whichever optional surfaces it ships with the *workspace* through a `winter-ext.toml` manifest. A TUI plugin integrates with the *running `winter` tool* — its dashboard and command surface. The two are independent, and one repository can ship both: `winter-service-tmux` declares lifecycle hooks in its manifest *and* ships a `plugin.py` that badges each environment with its tmux-session state.
 
 ## The shape of a plugin
 

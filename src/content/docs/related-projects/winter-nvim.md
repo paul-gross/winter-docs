@@ -33,4 +33,4 @@ For setup options, keybinding configuration, and integration details, see the **
 
 ## Why it is a related project, not an extension
 
-A Winter extension integrates with the **workspace** — it ships skills, agents, and lifecycle hooks that the workspace uses during development. winter-nvim integrates with the **editor** — it is a user-level tool that reads workspace state but does not change it, and is installed per-user, not per-workspace. Classifying it as an extension would misrepresent how it installs and what it does.
+A Winter extension integrates one or more optional shipped surfaces with the **workspace** through a `winter-ext.toml` manifest. winter-nvim integrates with the **editor** — it is a user-level tool that reads workspace state but does not change it, and is installed per-user, not per-workspace. Classifying it as an extension would misrepresent how it installs and what it does.

@@ -9,9 +9,9 @@ The line between the two: a **consumable extension** (see [Extensions](/winter-d
 
 ## winter-workflow
 
-**Concern:** the agentic workflow — how agent teams are composed, how work is decomposed and sized, and how builds and reviews are structured.
+**Concern:** the agentic workflow — how available runtime capabilities shape coordination, how work is decomposed and sized, and how builds and reviews are structured.
 
-**Highlights:** role-pure agents (each does one job; the caller injects coordination), a build-skill selection model that matches ceremony to task size (Glacier for one phased feature, Flurry for a batch of parallel small features, Iceberg for ad hoc conversational work, Snowball for narrow fixes), and review loops that run on independent axes (code, harness, agent-facing markdown, external docs).
+**Highlights:** role-pure projected agents for isolated work, capability-dependent team composition, a build-skill selection model that matches ceremony to task size (Glacier for one phased feature, Flurry for a batch of parallel small features, Iceberg for ad hoc conversational work when resident coordination is available, Snowball for narrow fixes), and review loops that run on independent axes (code, harness, agent-facing markdown, external docs).
 
 **Why opinionated and swappable:** a workflow encodes personal methodology — how to decompose work, which roles exist, when to escalate. Winter keeps the workflow a swappable component so teams can replace the methodology without touching the framework. The philosophy is that each developer brings their own taste in workflow. Forcing a single workflow on everyone squashes innovation and preference; letting workflows stay independent lets each person emphasize the cross-cutting concerns they care about most — a healthy addition to the ecosystem rather than fragmentation to be stamped out.
 
@@ -21,11 +21,11 @@ The line between the two: a **consumable extension** (see [Extensions](/winter-d
 
 **Concern:** the conventions layer — code, agent-facing markdown, and process conventions, each documented in a file and backed by a reference exemplar.
 
-**Highlights:** four layers (Canon: universal authoring principles independent of any domain; Markdown: winter-ecosystem agent-facing doc shape; Code: Python conventions with exemplars; Process: delivery workflow), the facts/methodology split that keeps conventions in one canonical place rather than duplicated across reviewers, and convention-per-file organisation so agents read exactly the file that matches their change.
+**Highlights:** winter-specific packaging rules for agent-facing artifacts, Python code conventions with exemplars, target delivery facts, and convention-per-file organisation so agents read exactly the file that matches their change. Universal principles such as the facts/methodology split live in the separate [`winter-canon`](https://github.com/paul-gross/winter-canon) repository.
 
 **Why opinionated and swappable:** the conventions encode decisions specific to the winter ecosystem and the maintainer's Python projects — not general-purpose rules. Winter keeps the harness swappable so teams can maintain their own conventions without modifying the framework.
 
-**Positioning:** a worked reference rather than a fork target. The Canon (universal authoring principles) and the winter-ecosystem markdown conventions transfer broadly; the code and process conventions are specific to winter's Python repos. It is most useful as a model that informs a harness of your own, not a base to clone wholesale. → [winter-harness](/winter-docs/examples/winter-harness/)
+**Positioning:** a worked reference rather than a fork target. Its agent-facing packaging conventions transfer broadly; the code and delivery conventions are specific to winter's Python repos. Adopt universal principles from winter-canon independently. winter-harness is most useful as a model that informs a harness of your own, not a base to clone wholesale. → [winter-harness](/winter-docs/examples/winter-harness/)
 
 ## winter-workspace
 

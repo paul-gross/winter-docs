@@ -5,7 +5,7 @@ description: Extend the winter dashboard and CLI with plugins — contribute sta
 
 TUI plugins extend the running `winter` tool — its dashboard and command surface — from outside the CLI's own source tree. A plugin can paint status badges, add full TUI screens, and bind keyboard actions.
 
-This is a different extension point from a [winter extension](/winter-docs/extensions/). An extension integrates with the *workspace* — it ships skills, agents, and lifecycle hooks via a `winter-ext.toml` manifest. A TUI plugin integrates with the *running `winter` tool* itself.
+This is a different extension point from a [winter extension](/winter-docs/extensions/). A winter extension integrates optional shipped surfaces with the *workspace* through a `winter-ext.toml` manifest; those surfaces can include skills, agents, reusable methodology, hooks, probes, checks, or capability providers. A TUI plugin integrates with the *running `winter` tool* itself.
 
 ## In this section
 

@@ -7,7 +7,7 @@ Commands for diagnosing workspace health, linting convention compliance, and int
 
 ## `winter doctor`
 
-Run preflight checks across core probes, the optional workspace probe, and each extension's probes. Exit `0` unless something fails (warnings allowed).
+Run preflight checks across core probes, the optional workspace probe, and each extension's declared probes. Exit `0` unless something fails (warnings allowed).
 
 ```bash
 winter doctor [--json]

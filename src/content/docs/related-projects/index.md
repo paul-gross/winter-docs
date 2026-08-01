@@ -7,7 +7,7 @@ Related projects enrich the Winter ecosystem but sit in a different category fro
 
 | Category | What it is | How it integrates |
 |----------|------------|-------------------|
-| **[Extension](/winter-docs/extensions/)** | A standalone repository a workspace installs via `[[standalone_repository]]` in `config.toml`. Contributes skills, agents, lifecycle hooks, `winter doctor` probes, and `winter lint` checks through a `winter-ext.toml` manifest. | Installed and reconciled by `winter ws init`; surface accessible through the `winter` CLI. |
+| **[Extension](/winter-docs/extensions/)** | A standalone repository a workspace installs via `[[standalone_repository]]` in `config.toml`. May contribute skills, agents, reusable methodology, hooks, probes, checks, or a manifest-declared capability provider. | Installed and reconciled by `winter ws init`; its shipped surfaces become available to the workspace. |
 | **[Example](/winter-docs/examples/)** | The maintainer's own opinionated implementation of conventions or a workflow — installable and usable as-is, but swappable. A concrete reference rather than a generic capability. | Installs like an extension but is the maintainer's own take; fork or replace with your own. |
 | **Related project** | A tool or integration that complements Winter workspaces without being installed as a workspace extension. It does not ship a `winter-ext.toml` manifest, is not reconciled by `winter ws init`, and does not appear in the workspace's extension graph. | Used alongside Winter — typically as a user-level tool, editor integration, or external service — and linked to from this section for discoverability. |
 

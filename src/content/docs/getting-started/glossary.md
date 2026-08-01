@@ -33,11 +33,13 @@ A project repository that does **not** participate in feature branching. A pinne
 
 ## Standalone repo
 
-A repository cloned at the workspace root (or a configured path) rather than into `projects/`, and **not** worktreed per feature. Used for winter extensions and any auxiliary repo you want available alongside the project repos but not multiplied across environments.
+A repository cloned at the workspace root (or a configured path) rather than into `projects/`, and **not** worktreed per feature. Commonly used for consumable winter extensions and any auxiliary repo you want available alongside the project repos but not multiplied across environments.
 
 ## Extension
 
-An opt-in capability a workspace installs, shipped as a standalone repository with a `winter-ext.toml` manifest. An extension contributes skills, agents, lifecycle hooks (`on_env_init` / `on_env_destroy` / `on_workspace_reconcile`), `winter doctor` probes, and `winter lint` checks. Examples: service orchestration, issue tooling, the product backlog, conventions, and the agentic workflow.
+An opt-in workspace integration shipped as either a standalone repository or a project repository with `winter-ext.toml` at its root. Each extension contributes only the optional surfaces it needs, such as skills, agents, reusable methodology, lifecycle hooks, `winter doctor` probes, `winter lint` checks, graph metadata, services, provisioning handlers, or a capability provider declared under `[provides]`. Examples: service orchestration, issue tooling, the product backlog, conventions, and the agentic workflow.
+
+A standalone extension has one clone and no feature worktrees. A project-repo extension needs no separate standalone clone: winter processes its extension surfaces in place from the project source checkout while the project keeps its normal per-environment worktrees. Its `AGENTS.winter.md` context entry routes agents to the active environment worktree rather than eagerly importing source-checkout content, falling back to the source checkout when no environment is in scope.
 
 ## Path notation
 
@@ -51,7 +53,7 @@ A `<context>:<path>` prefix winter's docs and agents use to make clear which rep
 
 The idempotent operation `winter ws init` performs: bring the filesystem into alignment with `.winter/config.toml`. It clones missing repos, refreshes git identity and excludes, runs each repo's setup `cmd`, and processes extensions. Safe to run at any time.
 
-When invoked without a target (`winter ws init`) or with `--all`, reconcile also fires each extension's `on_workspace_reconcile` hook once, after repos are cloned/updated and before any per-env loop.
+When invoked without a target (`winter ws init`) or with `--all`, reconcile also fires each declared extension `on_workspace_reconcile` hook once, after repos are cloned/updated and before any per-env loop.
 
 ## See also
 
