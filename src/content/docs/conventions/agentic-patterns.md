@@ -17,7 +17,7 @@ See [Facts versus methodology](/winter-docs/conventions/canon/) in Canon for the
 
 Each agent, skill, convention document, and reviewer has one coherent role.
 
-Role-pure agents — like `developer`, `code-reviewer`, `architect`, and `backend-verifier` in winter-workflow — do exactly one job. The *caller* injects coordination: task decomposition, sequencing, and feedback routing. The same agent can run standalone or as part of a team without changing its own behavior.
+Role-pure agents — like `ice-carver`, `cold-reviewer`, `winter-architect`, and `backend-verifier` in winter-workflow — do exactly one job. The *caller* injects coordination: task decomposition, sequencing, and feedback routing. The same agent can run standalone or as part of a team without changing its own behavior.
 
 Single responsibility also applies to documents: a skill should describe how to invoke a workflow, not replicate the project's delivery conventions. A convention file should state one rule, not be a catch-all for the author's working notes.
 
@@ -25,7 +25,7 @@ Single responsibility also applies to documents: a skill should describe how to 
 
 The review mechanism stays stable while project-specific standards change behind the harness discovery boundary.
 
-The code-review relationship is the primary example. A `code-reviewer` agent applies a fixed process — read the diff, read the project's standards, produce findings. The standards are owned by the project and updated independently. Adding a new linting rule, changing the test layout convention, or introducing a new architecture constraint does not require changing the reviewer; it requires updating the project's harness, which the reviewer discovers on its next invocation.
+The code-review relationship is the primary example. A `cold-reviewer` agent applies a fixed process — read the diff, read the project's standards, produce findings. The standards are owned by the project and updated independently. Adding a new linting rule, changing the test layout convention, or introducing a new architecture constraint does not require changing the reviewer; it requires updating the project's harness, which the reviewer discovers on its next invocation.
 
 This is the open/closed principle applied to context rather than to code: the generic mechanism is closed to modification; the context it reads is open to extension.
 

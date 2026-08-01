@@ -11,7 +11,7 @@ The line between the two: a **consumable extension** (see [Extensions](/winter-d
 
 **Concern:** the agentic workflow — how agent teams are composed, how work is decomposed and sized, and how builds and reviews are structured.
 
-**Highlights:** role-pure agents (each does one job; the caller injects coordination), a build-skill selection model that matches ceremony to task size (Blizzard for large coordinated work, Glacier for one phased feature, Flurry for a batch of parallel small features, Delegate for ad hoc conversational work, Thaw for narrow fixes), and review loops that run on independent axes (code, harness, agent-facing markdown, external docs).
+**Highlights:** role-pure agents (each does one job; the caller injects coordination), a build-skill selection model that matches ceremony to task size (Glacier for one phased feature, Flurry for a batch of parallel small features, Iceberg for ad hoc conversational work, Snowball for narrow fixes), and review loops that run on independent axes (code, harness, agent-facing markdown, external docs).
 
 **Why opinionated and swappable:** a workflow encodes personal methodology — how to decompose work, which roles exist, when to escalate. Winter keeps the workflow a swappable component so teams can replace the methodology without touching the framework. The philosophy is that each developer brings their own taste in workflow. Forcing a single workflow on everyone squashes innovation and preference; letting workflows stay independent lets each person emphasize the cross-cutting concerns they care about most — a healthy addition to the ecosystem rather than fragmentation to be stamped out.
 

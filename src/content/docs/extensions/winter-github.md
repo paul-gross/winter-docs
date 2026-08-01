@@ -12,7 +12,7 @@ winter-github is designed around a complete loop:
 1. **Ideation** — a user describes a feature, bug, or improvement in conversation with an agent.
 2. **Structured issue** — the agent runs `/wg-issue`, which drafts an issue in a consistent format, confirms with the user, and files it via `gh issue create`.
 3. **Context preservation** — the issue records why the work exists, the current behavior, the desired behavior, acceptance criteria, out-of-scope constraints, and references. This context survives context-window resets and is readable by any agent.
-4. **Implementation prompt** — a build skill (`glacier`, `flurry`, `thaw`) reads the issue as its specification. The structured format — especially **Acceptance Criteria** and **Out of Scope** — is what the agent implements against.
+4. **Implementation prompt** — a build skill (`glacier`, `flurry`, `snowball`) reads the issue as its specification. The structured format — especially **Acceptance Criteria** and **Out of Scope** — is what the agent implements against.
 5. **Commit and PR** — commits include a `Closes #N` footer (or `owner/repo#N` across repos) so the commit and the issue link bidirectionally, and GitHub closes the issue automatically on merge.
 6. **New findings** — anything discovered during implementation that is out of scope for the current issue becomes a new issue, keeping the backlog growing from real work rather than speculation.
 

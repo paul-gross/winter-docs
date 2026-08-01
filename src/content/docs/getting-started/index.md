@@ -49,7 +49,7 @@ Extensions are opt-in capabilities a workspace installs as standalone repositori
 
 ### 3. The agentic workflow
 
-The top layer is how agents actually work: defined agent **roles** (developer, reviewer, verifier, explorer, and more) and the **loops** that coordinate them — a "blizzard" for net-new features, a "thaw" for focused changes, and a pre-push review that fans out independent reviewers. The harness is designed so agents can write code, run the app, verify their own changes, and review their own work.
+The top layer is how agents actually work: defined agent **roles** (ice-carver, cold-reviewer, arctic-explorer, verifiers, and more) and the **loops** that coordinate them — a "glacier" for net-new features, a "snowball" for focused changes, and a pre-push review that fans out independent reviewers. The harness is designed so agents can write code, run the app, verify their own changes, and review their own work.
 
 → [Conventions & Patterns](/winter-docs/conventions/)
 
