@@ -32,9 +32,10 @@ The review operations are independently usable components. Their skills expose t
 | **Harness review** | Whether the agentic harness (agent context, verifier tooling) keeps pace with application change. |
 | **Context review** | Agent-facing markdown, including agents, skills, entry points, and `context/` or `methodology/` docs, against the documented conventions. |
 | **Documentation review** | External-facing public documentation against the code it documents. |
+| **Plan review** | An implementation plan before building, against the gates the [plan axis](https://github.com/paul-gross/winter-workflow/blob/master/methodology/review/axes/plan.md) declares. Glacier's planning step runs this gate over every plan before building starts; a workspace planning framework that declares its own gate takes precedence. |
 | **Pre-push** | Fans out the relevant reviewers over the un-pushed range and synthesizes an advisory summary. Deliberately decoupled from the push itself. |
 
-Each single-axis review also accepts a remote PR or MR locator supported by an available, authenticated forge CLI. The skills bind axis defaults: code findings post inline, while context, harness, and documentation findings return as reports. A caller using the review process's normalized semantic inputs directly may explicitly override `scope.feedback` to `report` or `inline`; the skills do not expose that override until their adapter syntax adds it. Retrieval or posting failures are reported and never silently replaced with a local-branch review.
+Each single-axis review except plan review also accepts a remote PR or MR locator supported by an available, authenticated forge CLI. The skills bind per-axis feedback defaults — code findings post inline; the other axes return reports. Each axis declares its own default in the [axes registry](https://github.com/paul-gross/winter-workflow/blob/master/methodology/review/axes/index.md). A caller using the review process's normalized semantic inputs directly may explicitly override `scope.feedback` to `report` or `inline`; the skills do not expose that override until their adapter syntax adds it. Retrieval or posting failures are reported and never silently replaced with a local-branch review.
 
 ## Agent roles
 
@@ -53,6 +54,7 @@ Reviewer agents are not arbitrary standalone prompt endpoints. A direct caller m
 | `harness-reviewer` | Reviews the application↔harness seam against a diff. |
 | `context-reviewer` | Reviews agent-facing markdown against the documented conventions. |
 | `documentation-reviewer` | Reviews human-facing public documentation against the code and conventions. |
+| `plan-reviewer` | Reviews an implementation plan against the plan axis's gates before building. |
 
 ## How it's wired in
 
