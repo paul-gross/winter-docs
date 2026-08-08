@@ -1,9 +1,9 @@
 ---
 title: Workspace Lifecycle
-description: Commands for creating, inspecting, adopting, and destroying feature environments and worktrees.
+description: Commands for creating, inspecting, adopting, restoring, and destroying feature environments and worktrees.
 ---
 
-Commands for creating, inspecting, adopting, pruning, and destroying feature environments and worktrees. For syncing worktrees with remote branches, see [Polyrepo Synchronization](/winter-docs/cli-reference/polyrepo-sync/). For port and environment configuration, see the [config.toml Reference](/winter-docs/cli-reference/config/#port-allocation).
+Commands for creating, inspecting, adopting, restoring, pruning, and destroying feature environments and worktrees. For syncing worktrees with remote branches, see [Polyrepo Synchronization](/winter-docs/cli-reference/polyrepo-sync/). For port and environment configuration, see the [config.toml Reference](/winter-docs/cli-reference/config/#port-allocation).
 
 ## `winter ws` — workspace & environments
 
@@ -77,26 +77,47 @@ winter ws checkout alpha feature/existing-branch
 Move matched worktree branches to a ref, all-or-nothing across the run. Git's own soft/mixed/hard semantics, applied across every matched non-pinned worktree. Upstream tracking is never touched — unlike `checkout`, this is the bare `git reset` half.
 
 ```bash
-winter ws reset alpha/winter origin/main            # one worktree
+winter ws reset PATTERNS... REF [--soft | --mixed | --hard] [--force] [--dry-run] [--json]
+```
+
+```bash
+winter ws reset alpha/winter origin/main            # one worktree, --mixed (default)
 winter ws reset alpha origin/main --hard            # every non-pinned worktree in alpha
 winter ws reset alpha origin/main --hard --dry-run  # preview the plan
 ```
 
-`--hard` refuses on any matched worktree that is dirty or carries commits not reachable from its upstream, unless `--force`; the refusal is all-or-nothing, so one refused repo blocks every repo.
+`--hard` refuses on any matched worktree that is dirty or carries commits it would abandon, unless `--force`; the refusal is all-or-nothing, so one refused repo blocks every repo.
 
 **`--hard` does not remove untracked files.** It resets the three trees git tracks, so a file that was never added survives it — use `ws clean` for those.
+
+:::note[Canonical source]
+Mode semantics, the safety gate, ref tokens, and the confirmation threshold are owned by `context/winter-cli/usage/ws/reset.md` in the `winter` repo.
+:::
 
 ### `ws clean`
 
 Remove untracked files and untracked directories from matched non-pinned worktrees — the `git clean -fd` complement to `ws reset`. Run both to return a worktree to a pristine ref.
 
 ```bash
-winter ws clean alpha/winter --dry-run   # preview; removes nothing
-winter ws clean alpha                    # prompts before removing
-winter ws clean alpha --force            # skip the prompt (scripted use)
+winter ws clean PATTERNS... [--force] [--dry-run] [--json]
 ```
 
-**Ignored files are never removed** in any mode, so `.venv`, `node_modules`, and build output survive and a clean never forces a re-provision. Cleaned files are unrecoverable — there is no reflog behind them — so the command prompts at any worktree count unless `--force`, and `--dry-run` lists every path it would delete.
+```bash
+winter ws clean alpha/winter --dry-run       # preview; removes nothing
+winter ws clean alpha                        # prompts before removing
+winter ws clean alpha --force                # skip the prompt (scripted use)
+winter ws clean alpha --json --dry-run       # NDJSON preview
+```
+
+**Ignored files are never removed** in any mode, so `.venv`, `node_modules`, and build output survive and a clean never forces a re-provision. Removed files are unrecoverable — no reflog stands behind them — so the command prompts before removing anything at any worktree count unless `--force` or `--dry-run`, and `--dry-run` lists every path it would delete.
+
+**`--json` requires `--force` or `--dry-run`** on this command, unlike the rest of the CLI: the confirmation prompt would otherwise write human text onto the NDJSON stream and block a non-interactive consumer.
+
+Unlike `reset` and `checkout`, a clean is **not** all-or-nothing — a deleted file has nothing to roll back to. A run that fails partway still reports what it already removed and names the worktree it stopped on.
+
+:::note[Canonical source]
+Flag semantics, the NDJSON event shape, and partial-failure behavior are owned by `context/winter-cli/usage/ws/clean.md` in the `winter` repo.
+:::
 
 ### `ws destroy`
 
