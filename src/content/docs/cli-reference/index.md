@@ -17,7 +17,7 @@ Choose the area that matches your task:
 
 | Area | Commands | Use when… |
 |------|----------|-----------|
-| [Workspace lifecycle](/winter-docs/cli-reference/workspace-lifecycle/) | `ws init`, `ws list`, `ws status`, `ws diff`, `ws destroy`, `ws prune`, `ws worktrees`, `ws index`, `ws checkout` | Creating, inspecting, adopting, and tearing down feature environments and worktrees. |
+| [Workspace lifecycle](/winter-docs/cli-reference/workspace-lifecycle/) | `ws init`, `ws list`, `ws status`, `ws diff`, `ws destroy`, `ws prune`, `ws worktrees`, `ws index`, `ws checkout`, `ws reset`, `ws clean` | Creating, inspecting, adopting, restoring, and tearing down feature environments and worktrees. |
 | [Polyrepo synchronization](/winter-docs/cli-reference/polyrepo-sync/) | `ws fetch`, `ws pull`, `ws merge`, `ws push`, `ws connect`, `ws disconnect`, `ws update` | Keeping worktrees in sync with upstream branches. |
 | [Repository & extension management](/winter-docs/cli-reference/repo-ext/) | `winter repo`, `winter ext` | Adding project repos, scaffolding or verifying extensions. |
 | [Environment runtime](/winter-docs/cli-reference/environment-runtime/) | `winter service`, `winter provision` | Starting services and provisioning environment dependencies. |

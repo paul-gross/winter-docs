@@ -72,6 +72,32 @@ Adopt an existing remote feature branch into an environment (all-or-nothing rese
 winter ws checkout alpha feature/existing-branch
 ```
 
+### `ws reset`
+
+Move matched worktree branches to a ref, all-or-nothing across the run. Git's own soft/mixed/hard semantics, applied across every matched non-pinned worktree. Upstream tracking is never touched — unlike `checkout`, this is the bare `git reset` half.
+
+```bash
+winter ws reset alpha/winter origin/main            # one worktree
+winter ws reset alpha origin/main --hard            # every non-pinned worktree in alpha
+winter ws reset alpha origin/main --hard --dry-run  # preview the plan
+```
+
+`--hard` refuses on any matched worktree that is dirty or carries commits not reachable from its upstream, unless `--force`; the refusal is all-or-nothing, so one refused repo blocks every repo.
+
+**`--hard` does not remove untracked files.** It resets the three trees git tracks, so a file that was never added survives it — use `ws clean` for those.
+
+### `ws clean`
+
+Remove untracked files and untracked directories from matched non-pinned worktrees — the `git clean -fd` complement to `ws reset`. Run both to return a worktree to a pristine ref.
+
+```bash
+winter ws clean alpha/winter --dry-run   # preview; removes nothing
+winter ws clean alpha                    # prompts before removing
+winter ws clean alpha --force            # skip the prompt (scripted use)
+```
+
+**Ignored files are never removed** in any mode, so `.venv`, `node_modules`, and build output survive and a clean never forces a re-provision. Cleaned files are unrecoverable — there is no reflog behind them — so the command prompts at any worktree count unless `--force`, and `--dry-run` lists every path it would delete.
+
 ### `ws destroy`
 
 Tear down an environment: fire `on_env_destroy` hooks, remove worktrees, delete the directory.
