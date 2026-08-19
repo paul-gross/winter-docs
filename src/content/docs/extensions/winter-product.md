@@ -3,7 +3,9 @@ title: winter-product
 description: A prioritized product backlog, an active work area, and the agents and skills that move items between them.
 ---
 
-**[winter-product](https://github.com/paul-gross/winter-product)** adds product planning to a winter workspace: a prioritized backlog, an active work area, an archive, and the conventions, agents, and skills that move items through them.
+**[winter-product](https://github.com/paul-gross/winter-product)** adds product planning to a winter workspace: a
+prioritized backlog, an active work area, an archive, and the conventions, agents, and skills that move items through
+them.
 
 ## What it contributes
 
@@ -11,11 +13,11 @@ description: A prioritized product backlog, an active work area, and the agents 
 
 Work lives in three areas, addressed via the `winter-product:` path notation:
 
-| Area | Contents |
-|------|----------|
+| Area       | Contents                                                                                   |
+| ---------- | ------------------------------------------------------------------------------------------ |
 | `backlog/` | A prioritized queue, bucketed by horizon: `01-now/`, `02-next/`, `05-near/`, `10-future/`. |
-| `work/` | Active work — items promoted from the backlog, one directory per item. |
-| `archive/` | Completed work and TODOs, date-prefixed. |
+| `work/`    | Active work — items promoted from the backlog, one directory per item.                     |
+| `archive/` | Completed work and TODOs, date-prefixed.                                                   |
 
 ### Item types
 
@@ -30,7 +32,8 @@ Each backlog item is a single file named `<name>.<type>.md`:
 Items flow `backlog/ → work/ → archive/`:
 
 1. **Backlog** — a single file under `backlog/<bucket>/`.
-2. **Work** — promoted to `work/<name>/`. A `.work.md` item is fleshed out with `00-overview.md`, optional `.tech.md` approach docs, and numbered phase documents; a `.todo.md` typically stays a single file.
+2. **Work** — promoted to `work/<name>/`. A `.work.md` item is fleshed out with `00-overview.md`, optional `.tech.md`
+   approach docs, and numbered phase documents; a `.todo.md` typically stays a single file.
 3. **Archive** — moved to `archive/yyyy-MM-dd-<name>/` when the work merges to main.
 
 ### Agents & skills
@@ -40,11 +43,17 @@ Items flow `backlog/ → work/ → archive/`:
 - **`/wp-refine`** — the primary path from backlog to work-ready, including the technical approach.
 - **`/wp-todo`** — the fast path for dropping a new TODO into the backlog.
 
-winter-product ships no reviewer of its own: the planning specs in `context/` declare which spec governs each plan artifact and bind every `ok` capability-matrix row to a runnable eval, so any plan-review methodology that discovers declared conventions can judge a work item — in a workspace running [winter-workflow](/winter-docs/examples/winter-workflow/), its `plan` review axis is that reviewer. The former `product-plan-reviewer` agent and `/wp-plan-review` skill are retired; after upgrading, rerun `winter ws init` to drop their projections.
+winter-product ships no reviewer of its own: the planning specs in `context/` declare which spec governs each plan
+artifact and bind every `ok` capability-matrix row to a runnable eval, so any plan-review methodology that discovers
+declared conventions can judge a work item — in a workspace running
+[winter-workflow](/winter-docs/examples/winter-workflow/), its `plan` review axis is that reviewer. The former
+`product-plan-reviewer` agent and `/wp-plan-review` skill are retired; after upgrading, rerun `winter ws init` to drop
+their projections.
 
 ## When to adopt
 
-Adopt winter-product when you want a lightweight, file-based backlog that lives in git alongside the code and is legible to agents — so the same agents that plan work can pick it up and implement promoted items directly from `work/`.
+Adopt winter-product when you want a lightweight, file-based backlog that lives in git alongside the code and is legible
+to agents — so the same agents that plan work can pick it up and implement promoted items directly from `work/`.
 
 ## How to configure
 
@@ -61,6 +70,6 @@ path = ".winter/ext/product"
 - **Promote before fleshing out** — detailed overviews and phase docs belong in `work/`, not the backlog.
 - **Archive on merge** — completed items move to the date-prefixed archive when their work lands on main.
 
-:::note[Canonical source]
-[`winter-product`](https://github.com/paul-gross/winter-product) — see its [`index.md`](https://github.com/paul-gross/winter-product/blob/master/index.md) and [`context/`](https://github.com/paul-gross/winter-product/tree/master/context) planning conventions.
-:::
+:::note[Canonical source] [`winter-product`](https://github.com/paul-gross/winter-product) — see its
+[`index.md`](https://github.com/paul-gross/winter-product/blob/master/index.md) and
+[`context/`](https://github.com/paul-gross/winter-product/tree/master/context) planning conventions. :::

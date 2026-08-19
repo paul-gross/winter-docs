@@ -3,11 +3,16 @@ title: TUI Plugin Examples
 description: Practical plugin shapes beyond the status badge — worktree repo decorators, keyboard actions, and multi-decorator compositions.
 ---
 
-The [authoring guide](/winter-docs/tui-plugins/authoring/) covers the full `PluginRegistration` surface and walks through a single status badge. This page collects additional plugin shapes drawn from real implementations. All examples import from the `winter_plugin_api` package — see the [authoring guide](/winter-docs/tui-plugins/authoring/#typing-the-contract) for how to declare the dev dependency.
+The [authoring guide](/winter-docs/tui-plugins/authoring/) covers the full `PluginRegistration` surface and walks
+through a single status badge. This page collects additional plugin shapes drawn from real implementations. All examples
+import from the `winter_plugin_api` package — see the
+[authoring guide](/winter-docs/tui-plugins/authoring/#typing-the-contract) for how to declare the dev dependency.
 
 ## Shape 1: worktree repo decorator
 
-A `worktree_repo_decorator` fires once per repo per dashboard refresh and writes into `repo_status.extensions[<key>]`. This is the right hook for badges on individual repository rows — for example, showing whether a repo has uncommitted changes or a stale remote.
+A `worktree_repo_decorator` fires once per repo per dashboard refresh and writes into `repo_status.extensions[<key>]`.
+This is the right hook for badges on individual repository rows — for example, showing whether a repo has uncommitted
+changes or a stale remote.
 
 ```python
 import subprocess
@@ -47,11 +52,13 @@ Key points:
 
 - The `repo_path` argument is the absolute path to the worktree's repo directory — use it to scope git commands.
 - Return gracefully on any subprocess failure; a decorator that raises blanks its cell on every refresh.
-- Set the extension value to an empty string (`""`) for "nothing to show" — omitting the key leaves it unset, which is equivalent.
+- Set the extension value to an empty string (`""`) for "nothing to show" — omitting the key leaves it unset, which is
+  equivalent.
 
 ## Shape 2: environment decorator with config
 
-A plugin's `register(config)` receives parsed config from `config.toml` next to `plugin.py`. Use it for thresholds, labels, or feature flags rather than hardcoding them.
+A plugin's `register(config)` receives parsed config from `config.toml` next to `plugin.py`. Use it for thresholds,
+labels, or feature flags rather than hardcoding them.
 
 ```python
 import dataclasses
@@ -93,7 +100,8 @@ warn_days = 14
 
 ## Shape 3: keyboard action
 
-`tui_actions` bind a callable to a key for workspace-, environment-, or repo-scoped actions. The action fires when the user presses the key while the relevant dashboard item is focused.
+`tui_actions` bind a callable to a key for workspace-, environment-, or repo-scoped actions. The action fires when the
+user presses the key while the relevant dashboard item is focused.
 
 ```python
 import dataclasses
@@ -135,12 +143,14 @@ class FetchAllPlugin:
 
 Notes:
 
-- `key` is the **default** binding — users can remap it in `config.toml` via `[keybindings.bindings]` using the id `plugin.<name>`.
-- Actions that take more than a moment should be non-blocking or should give visible feedback; the dashboard does not freeze for long-running actions.
+- `key` is the **default** binding — users can remap it in `config.toml` via `[keybindings.bindings]` using the id
+  `plugin.<name>`.
+- Actions that take more than a moment should be non-blocking or should give visible feedback; the dashboard does not
+  freeze for long-running actions.
 
-:::caution[`commands` is not wired yet]
-`PluginRegistration.commands` (for `winter` CLI subcommands) is reserved — plugin-supplied subcommands are not yet dispatched by the CLI. Ship behavior through the dashboard surfaces above until that lands.
-:::
+:::caution[`commands` is not wired yet] `PluginRegistration.commands` (for `winter` CLI subcommands) is reserved —
+plugin-supplied subcommands are not yet dispatched by the CLI. Ship behavior through the dashboard surfaces above until
+that lands. :::
 
 ## Shape 4: multi-decorator composition in one plugin
 
@@ -185,13 +195,19 @@ def repo_dirty_badge(repo_status: IWorktreeRepoStatusView, repo_path: Path) -> N
 
 ## Dotfiles-sourced examples
 
-The maintainer's dotfiles contain additional real-world plugin implementations. These will be added here once their source paths are confirmed and the content is accessible; quoting private dotfiles without a confirmed public source would present unverified content as a maintained contract.
+The maintainer's dotfiles contain additional real-world plugin implementations. These will be added here once their
+source paths are confirmed and the content is accessible; quoting private dotfiles without a confirmed public source
+would present unverified content as a maintained contract.
 
-**Placeholder — dotfiles source path pending.** When the source path is provided, this section will include the full plugin implementation as found in the dotfiles, with a direct link to the source rather than an inline copy.
+**Placeholder — dotfiles source path pending.** When the source path is provided, this section will include the full
+plugin implementation as found in the dotfiles, with a direct link to the source rather than an inline copy.
 
 ## Reference links
 
-- **Contract package**: [`winter-plugin-api`](https://github.com/paul-gross/winter-plugin-api) — the versioned source of truth for all types imported above.
-- **Plugin author contract**: [`winter-harness:/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
-- **Worked status badge**: [`winter-service-tmux:/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)
+- **Contract package**: [`winter-plugin-api`](https://github.com/paul-gross/winter-plugin-api) — the versioned source of
+  truth for all types imported above.
+- **Plugin author contract**:
+  [`winter-harness:/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
+- **Worked status badge**:
+  [`winter-service-tmux:/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)
 - **Authoring guide**: [Authoring a TUI Plugin](/winter-docs/tui-plugins/authoring/)
