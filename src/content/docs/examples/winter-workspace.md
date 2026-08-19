@@ -5,7 +5,7 @@ description: The meta-workspace winter is built in — where the framework, its 
 
 **[winter-workspace](https://github.com/paul-gross/winter-workspace)** is the **meta-workspace**: the winter workspace
 in which winter itself is built. The framework's Python CLI, the documentation site, and every extension
-(`winter-workflow`, `winter-harness`, `winter-service-tmux`, and the rest) are developed here — each cloned as a project
+(`winter-workflow`, `winter-context`, `winter-service-tmux`, and the rest) are developed here — each cloned as a project
 under this one workspace and worked on in its feature environments. It is winter building winter: the maintainer's own
 assembled workspace, pre-wired to those repos and published as a worked example of what a real winter workspace looks
 like, not a template to clone and run.

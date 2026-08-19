@@ -46,7 +46,7 @@ that compound agent productivity. See
 ## How to apply Canon
 
 Canon is evaluated at the boundary between target-owned facts, reusable methodology, and the adapters that execute it.
-winter-harness owns winter-ecosystem facts and defaults for feature delivery and artifact packaging; a methodology
+winter-context owns winter-ecosystem facts and defaults for feature delivery and artifact packaging; a methodology
 product such as winter-workflow owns reusable operational procedures. When authoring agent-facing context, ask:
 
 - Can a fresh-context agent find the fact it needs without reading every file? (progressive disclosure)

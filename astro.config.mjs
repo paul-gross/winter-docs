@@ -75,7 +75,7 @@ export default defineConfig({
 					items: [
 						{ label: 'Overview', slug: 'examples' },
 						{ label: 'winter-workflow', slug: 'examples/winter-workflow' },
-						{ label: 'winter-harness', slug: 'examples/winter-harness' },
+						{ label: 'winter-context', slug: 'examples/winter-context' },
 						{ label: 'winter-workspace', slug: 'examples/winter-workspace' },
 					],
 				},

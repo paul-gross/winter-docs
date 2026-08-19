@@ -35,7 +35,7 @@ dprint check          # dprint fmt to apply
 rumdl check .         # rumdl check . --fix for the autofixable subset
 ```
 
-They also run through `winter lint`: the `winter-harness` extension contributes the check, and committing these two
+They also run through `winter lint`: the `winter-context` extension contributes the check, and committing these two
 configs is what opts this repo into it. `.mdx` is deliberately outside the gate — the formatter does not own JSX.
 
 ## Deployment

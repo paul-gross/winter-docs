@@ -148,6 +148,6 @@ of the seam, and the package is a hand-curated copy of it — the two are kept i
 - **Contract package**: [`winter-plugin-api`](https://github.com/paul-gross/winter-plugin-api) — the versioned source of
   truth (the `views` and `seam` modules)
 - **Plugin author contract**:
-  [`winter-harness:/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
+  [`winter-context:/architecture/plugin-author.md`](https://github.com/paul-gross/winter-context/blob/master/architecture/plugin-author.md)
 - **Worked example source**:
   [`winter-service-tmux:/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)

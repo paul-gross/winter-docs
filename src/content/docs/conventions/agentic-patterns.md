@@ -70,7 +70,7 @@ project's delivery contract from the project's harness: which branch to target, 
 This makes the delivery methodology reusable across projects with different conventions and prevents it from
 accumulating project-specific configuration. The target owns its delivery rules;
 [winter-workflow's delivery methodology](https://github.com/paul-gross/winter-workflow/blob/master/methodology/delivery/index.md)
-discovers and applies them. winter-harness supplies winter-ecosystem facts and defaults about feature delivery and
+discovers and applies them. winter-context supplies winter-ecosystem facts and defaults about feature delivery and
 artifact packaging, while winter-workflow owns the reusable procedures that apply those facts.
 
 ## Closed feedback loops
@@ -91,6 +91,6 @@ reports findings before the push. Which reviewers run depends on what the target
 harness.
 
 :::note[Canonical source] [`winter-workflow`](https://github.com/paul-gross/winter-workflow) (reusable procedures and
-adapters as worked examples) and [`winter-harness`](https://github.com/paul-gross/winter-harness) (winter-ecosystem
+adapters as worked examples) and [`winter-context`](https://github.com/paul-gross/winter-context) (winter-ecosystem
 feature-delivery and artifact-packaging facts and defaults). Adopter guide:
 [winter-workflow example](/winter-docs/examples/winter-workflow/). :::

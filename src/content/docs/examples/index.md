@@ -4,7 +4,7 @@ description: The maintainer's own opinionated, swappable implementations — the
 ---
 
 Some winter repositories are the maintainer's own opinionated implementations of the *swappable* parts of a winter setup
-— the workflow, the conventions, the workspace. They are real and usable — `winter-workflow` and `winter-harness`
+— the workflow, the conventions, the workspace. They are real and usable — `winter-workflow` and `winter-context`
 install and run like any extension — but they are personal and interchangeable: winter keeps these as swappable
 components, so you can adopt them as-is, or fork them as the starting point for your own.
 
@@ -34,7 +34,7 @@ stamped out.
 **Positioning:** turnkey — install it and the `/wf-*` skills work immediately. Fork it and point `url` at your copy to
 maintain your own methodology. → [winter-workflow](/winter-docs/examples/winter-workflow/)
 
-## winter-harness
+## winter-context
 
 **Concern:** the conventions layer — code, agent-facing markdown, and process conventions, each documented in a file and
 backed by a reference exemplar.
@@ -45,13 +45,13 @@ Universal principles such as the facts/methodology split live in the separate
 [`winter-canon`](https://github.com/paul-gross/winter-canon) repository.
 
 **Why opinionated and swappable:** the conventions encode decisions specific to the winter ecosystem and the
-maintainer's Python projects — not general-purpose rules. Winter keeps the harness swappable so teams can maintain their
-own conventions without modifying the framework.
+maintainer's Python projects — not general-purpose rules. Winter keeps the context layer swappable so teams can maintain
+their own conventions without modifying the framework.
 
 **Positioning:** a worked reference rather than a fork target. Its agent-facing packaging conventions transfer broadly;
 the code and delivery conventions are specific to winter's Python repos. Adopt universal principles from winter-canon
-independently. winter-harness is most useful as a model that informs a harness of your own, not a base to clone
-wholesale. → [winter-harness](/winter-docs/examples/winter-harness/)
+independently. winter-context is most useful as a model that informs a context layer of your own, not a base to clone
+wholesale. → [winter-context](/winter-docs/examples/winter-context/)
 
 ## winter-workspace
 

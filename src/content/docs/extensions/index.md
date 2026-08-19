@@ -36,7 +36,7 @@ These are *consumable* extensions — generic capabilities a workspace installs 
 | **[winter-service-docker](/winter-docs/extensions/winter-service-docker/)** | Docker Compose-based service orchestration with real container health checks and workspace singletons. |
 | **[winter-github](/winter-docs/extensions/winter-github/)**                 | AI-native GitHub issue tooling and the ideation-to-delivery loop via the `gh` CLI.                     |
 
-The maintainer's conventions ([winter-harness](/winter-docs/examples/winter-harness/)) and agentic workflow
+The maintainer's conventions ([winter-context](/winter-docs/examples/winter-context/)) and agentic workflow
 ([winter-workflow](/winter-docs/examples/winter-workflow/)) install and run just like these, but they are the
 maintainer's own opinionated, swappable implementations — adopt them as-is or fork your own. They're grouped under
 [Examples](/winter-docs/examples/).

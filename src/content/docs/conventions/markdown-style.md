@@ -31,7 +31,7 @@ its harness routes agents to them. A methodology product can give reusable opera
 winter-workflow uses `methodology/` for that purpose. Skills and agents then adapt those operations rather than becoming
 second owners of their steps.
 
-winter-harness owns winter-ecosystem facts and defaults about feature delivery and artifact packaging, including how
+winter-context owns winter-ecosystem facts and defaults about feature delivery and artifact packaging, including how
 artifacts are shaped, projected, named, and wired together. A workflow product such as winter-workflow owns reusable
 operational procedures. This boundary does not exclude methodology-related policy facts from the harness; it keeps
 reusable execution steps with the workflow product. The separate [Canon](/winter-docs/conventions/canon/) defines the
@@ -42,14 +42,14 @@ or runtime semantics could perform the same steps from the same inputs, give the
 adapters; otherwise keep the skill or agent self-contained. The selection rule lives in
 [`winter-canon:/facts-vs-methodology.md`](https://github.com/paul-gross/winter-canon/blob/master/facts-vs-methodology.md);
 the
-[`winter-harness` methodology packaging convention](https://github.com/paul-gross/winter-harness/blob/master/agent-context/methodology-packaging.md)
+[`winter-context` methodology packaging convention](https://github.com/paul-gross/winter-context/blob/master/agent-context/methodology-packaging.md)
 defines winter's realization after that selection.
 
 ## Path notation
 
 Winter uses a `<context>:<path>` prefix so a reference is unambiguous about which repo or branch a file lives in —
 `workspace:/CLAUDE.md`, `alpha:/app-web/...`, `winter-canon:/principles.md`. The conventions for these references live
-in [`winter-harness`](https://github.com/paul-gross/winter-harness). (See also the
+in [`winter-context`](https://github.com/paul-gross/winter-context). (See also the
 [glossary entry](/winter-docs/getting-started/glossary/#path-notation).)
 
 A logical prefix is preferred over a plain relative or absolute path because the on-disk location is not stable.
@@ -67,10 +67,10 @@ part of the winter-ecosystem agent-context domain (`agent-context/`).
 
 | Writing…                                                  | Read                            | Source                                                           |
 | --------------------------------------------------------- | ------------------------------- | ---------------------------------------------------------------- |
-| A README                                                  | the README guide                | [`winter-harness`](https://github.com/paul-gross/winter-harness) |
-| An extension `index.md` (the auto-loaded runtime surface) | the index guide                 | [`winter-harness`](https://github.com/paul-gross/winter-harness) |
-| A skill (`SKILL.md`)                                      | the skill guide                 | [`winter-harness`](https://github.com/paul-gross/winter-harness) |
-| An agent definition                                       | the agent and projection guides | [`winter-harness`](https://github.com/paul-gross/winter-harness) |
+| A README                                                  | the README guide                | [`winter-context`](https://github.com/paul-gross/winter-context) |
+| An extension `index.md` (the auto-loaded runtime surface) | the index guide                 | [`winter-context`](https://github.com/paul-gross/winter-context) |
+| A skill (`SKILL.md`)                                      | the skill guide                 | [`winter-context`](https://github.com/paul-gross/winter-context) |
+| An agent definition                                       | the agent and projection guides | [`winter-context`](https://github.com/paul-gross/winter-context) |
 
 A key distinction these guides draw: an extension's `index.md` is the runtime surface auto-loaded into agent context,
 while its `README.md` is for humans browsing the repo. They serve different readers and should not be the same file.
@@ -83,6 +83,6 @@ agent-facing document under `context/` or `methodology/`, the
 against Canon principles and winter conventions for clarity, single-source-of-truth, and non-duplication.
 
 :::note[Canonical source] [`winter-canon:/index.md`](https://github.com/paul-gross/winter-canon/blob/master/index.md)
-owns the universal Canon; [`winter-harness`](https://github.com/paul-gross/winter-harness) owns winter-ecosystem
+owns the universal Canon; [`winter-context`](https://github.com/paul-gross/winter-context) owns winter-ecosystem
 feature-delivery and artifact-packaging facts and defaults;
 [`winter-workflow`](https://github.com/paul-gross/winter-workflow) owns reusable operational procedures. :::

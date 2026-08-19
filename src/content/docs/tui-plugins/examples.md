@@ -207,7 +207,7 @@ plugin implementation as found in the dotfiles, with a direct link to the source
 - **Contract package**: [`winter-plugin-api`](https://github.com/paul-gross/winter-plugin-api) — the versioned source of
   truth for all types imported above.
 - **Plugin author contract**:
-  [`winter-harness:/architecture/plugin-author.md`](https://github.com/paul-gross/winter-harness/blob/master/architecture/plugin-author.md)
+  [`winter-context:/architecture/plugin-author.md`](https://github.com/paul-gross/winter-context/blob/master/architecture/plugin-author.md)
 - **Worked status badge**:
   [`winter-service-tmux:/plugin.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/plugin.py)
 - **Authoring guide**: [Authoring a TUI Plugin](/winter-docs/tui-plugins/authoring/)

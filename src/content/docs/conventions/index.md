@@ -5,7 +5,7 @@ description: Winter's reusable conventions — Canon principles, agent-facing co
 
 Beyond the CLI and extensions, winter carries a body of reusable conventions for designing agent-context systems and
 agentic development workflows. The separate [`winter-canon`](https://github.com/paul-gross/winter-canon) repository owns
-universal principles; [winter-harness](/winter-docs/examples/winter-harness/) owns winter-ecosystem facts and defaults
+universal principles; [winter-context](/winter-docs/examples/winter-context/) owns winter-ecosystem facts and defaults
 for feature delivery and artifact packaging; and [winter-workflow](/winter-docs/examples/winter-workflow/) owns reusable
 operational procedures. Target repositories and workspaces remain the authority for facts and invariants about
 themselves.
@@ -20,6 +20,6 @@ themselves.
 
 Each page links canonical source files rather than duplicating them:
 [`winter-canon`](https://github.com/paul-gross/winter-canon) for universal principles,
-[`winter-harness`](https://github.com/paul-gross/winter-harness) for winter's feature-delivery and artifact-packaging
+[`winter-context`](https://github.com/paul-gross/winter-context) for winter's feature-delivery and artifact-packaging
 facts and defaults, and [`winter-workflow`](https://github.com/paul-gross/winter-workflow) for reusable procedures. The
 target's own context remains the source of truth for facts about that target.
