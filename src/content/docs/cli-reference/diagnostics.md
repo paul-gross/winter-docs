@@ -22,11 +22,10 @@ winter doctor
 ## `winter lint`
 
 Run winter-ecosystem *convention* checks — path notation, agent frontmatter, module boundaries — as opposed to
-`winter doctor`, which checks workspace health. `winter lint` is a dispatcher: it runs built-in core checks bundled with
-the CLI (currently module extractability, which enforces dependency direction) plus lint scripts contributed by
-installed extensions (and an optional workspace-level one) over the selected scope, and aggregates `pass` / `warn` /
-`fail` findings with `file:line`. The core checks always run; the contributed checks live in the extensions and
-workspace. Exit `0` unless something fails (warnings allowed).
+`winter doctor`, which checks workspace health. `winter lint` is a dispatcher: it runs the built-in core checks bundled
+with the CLI plus lint scripts contributed by installed extensions (and an optional workspace-level one) over the
+selected scope, and aggregates `pass` / `warn` / `fail` findings with `file:line`. The core checks always run; the
+contributed checks live in the extensions and workspace. Exit `0` unless something fails (warnings allowed).
 
 ```bash
 winter lint            # the feature env you're in (every env, if outside one)
