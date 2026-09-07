@@ -11,7 +11,8 @@ services. The pages here describe the user-facing model; each links to the full 
 
 Winter's operations form a closed loop: compose a workspace, create an environment, establish repository state,
 provision it, start services, work inside the isolated space, iterate through nested feedback loops, and finally tear
-down. The sections below follow that loop.
+down. The sections below follow that loop. `winter clean` sits outside this loop entirely — see
+[Provision the environment](#4-provision-the-environment) below.
 
 ### 1. Compose a workspace
 
@@ -46,6 +47,10 @@ multi-repo operations. See [Polyrepo Git Operations](/winter-docs/operations/pol
 bare worktrees to a working state. Each stage is idempotent; re-run any stage after pulling new migrations, adding a
 dependency, or resetting a dataset. When you need a clean slate mid-stream, the reset flags wipe and recreate individual
 stages without touching the whole environment. See [Provisioning Environments](/winter-docs/operations/provisioning/).
+
+`winter clean <env>` is a related but separate command: it sits outside the eight-step lifecycle above, as a handover
+reset between tenants rather than a phase every environment passes through once. See
+[`winter clean`](/winter-docs/cli-reference/environment-runtime/#winter-clean).
 
 ### 5. Start services
 

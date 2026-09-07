@@ -48,9 +48,9 @@ dependency → resource → data
 You can run any single stage on its own:
 
 ```bash
-winter provision alpha dependency    # dependencies only
-winter provision alpha resource      # create resources only
-winter provision alpha data          # load baseline state only
+winter provision alpha --stage dependency    # dependencies only
+winter provision alpha --stage resource      # create resources only
+winter provision alpha --stage data          # load baseline state only
 ```
 
 A handler failure in any sub-target aborts the remaining sub-targets. A sub-target with no declared handlers is simply a
@@ -58,15 +58,16 @@ no-op.
 
 ## Re-running, resetting, and tearing down
 
-Three action flags modify the default `apply` behaviour. Each requires an explicit sub-target — they are not valid on
-the bare full-chain form:
+Three action flags modify the default `apply` behaviour. `--reset` and `--destroy` require an explicit `--stage` or a
+`--name` selector; `--seed` requires an explicit `--stage resource`. None of the three is valid on the bare full-chain
+form:
 
 ```bash
-winter provision alpha resource --reset      # destroy + recreate resources
-winter provision alpha resource --destroy    # destroy resources only
-winter provision alpha resource --seed       # create resources, then load data
-winter provision alpha data --reset          # wipe + reload data
-winter provision alpha data --destroy        # delete data only
+winter provision alpha --stage resource --reset      # destroy + recreate resources
+winter provision alpha --stage resource --destroy    # destroy resources only
+winter provision alpha --stage resource --seed       # create resources, then load data
+winter provision alpha --stage data --reset          # wipe + reload data
+winter provision alpha --stage data --destroy        # delete data only
 ```
 
 | Action         | Behaviour                                                                                                 |
@@ -86,9 +87,12 @@ Provision runs `[[provision.*]]` handlers declared in two places, using the same
 - the **workspace config**, `.winter/config.toml`, and
 - each installed extension's **`winter-ext.toml`**.
 
-Each handler declares `apply` (required) and, optionally, `destroy`/`reset` and a `scope`. `apply`, `destroy`, and
-`reset` each accept an **inline shell command** (string) or a **list of inline shell commands** (array) — there are no
-script paths. A bare string is sugar for a single-command list.
+Each handler declares `apply` (required) and, optionally, `destroy`/`reset`/`clean` and a `scope`. `apply`, `destroy`,
+`reset`, and `clean` each accept an **inline shell command** (string) or a **list of inline shell commands** (array) —
+there are no script paths. A bare string is sugar for a single-command list. `clean` declares the command
+[`winter clean`](/winter-docs/cli-reference/environment-runtime/#winter-clean) runs to remove this handler's build
+output, caches, or other artifacts a `.gitignore` entry would hide; a handler that declares none contributes nothing
+when that output is cleaned.
 
 ```toml
 [[provision.dependency]]
@@ -99,6 +103,7 @@ apply = "uv sync && mise trust"          # single inline command (string)
 scope             = "workspace"
 apply             = ["createdb myapp", "psql myapp -f schema.sql"]   # array — run in order
 destroy           = "dropdb --if-exists myapp"
+clean             = "rm -rf .cache/myapp-dump"
 required_services = ["workspace/postgres"]
 
 [[provision.data]]
@@ -160,9 +165,9 @@ winter provision alpha --json
 With `--dry-run --json`, `plan_handler` events are emitted instead of execution events. Each `plan_handler` event
 includes a `commands` list (the ordered shell commands that would run) rather than a `script` path.
 
-`winter doctor` includes a `[provision]` probe that validates every declared handler (`scope`, `apply` present and
-non-empty string or non-empty list of non-empty strings, same for `destroy`/`reset` when present, `required_services`
-only on `resource`/`data`, no unknown keys) without aborting its other checks.
+`winter doctor` includes a `[provision]` probe that validates every declared handler's fields without aborting its other
+checks. For the full validation rule set, see the
+**[config.toml reference → Provision manifests](/winter-docs/cli-reference/config/#provision-manifests)**.
 
 ## Breaking change: inline commands replace script paths
 

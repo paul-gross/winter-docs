@@ -118,10 +118,11 @@ winter ws clean alpha --force                # skip the prompt (scripted use)
 winter ws clean alpha --json --dry-run       # NDJSON preview
 ```
 
-**Ignored files are never removed** in any mode, so `.venv`, `node_modules`, and build output survive and a clean never
-forces a re-provision. Removed files are unrecoverable — no reflog stands behind them — so the command prompts before
-removing anything at any worktree count unless `--force` or `--dry-run`, and `--dry-run` lists every path it would
-delete.
+**Ignored files are never removed** in any mode, so `.venv`, `node_modules`, and build output survive and a `ws clean`
+never forces a re-provision — resetting declared build artifacts is
+[`winter clean`](/winter-docs/cli-reference/environment-runtime/#winter-clean)'s job, a separate command. Removed files
+are unrecoverable — no reflog stands behind them — so the command prompts before removing anything at any worktree count
+unless `--force` or `--dry-run`, and `--dry-run` lists every path it would delete.
 
 **`--json` requires `--force` or `--dry-run`** on this command, unlike the rest of the CLI: the confirmation prompt
 would otherwise write human text onto the NDJSON stream and block a non-interactive consumer.

@@ -51,7 +51,7 @@ winter graph            # human-readable `module → deps` listing
 winter graph --json     # {module: [requires...]} adjacency map
 ```
 
-## `winter capabilities` {#winter-capabilities}
+## `winter capabilities`
 
 Read-only introspection of the capability registry. Lists every known slot, which extension is bound to it, how the
 binding was determined (explicit, implicit, ambiguous, or invalid), and whether each candidate's entrypoint file

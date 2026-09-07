@@ -30,7 +30,7 @@ Winter reads two files and merges them: the committed workspace config and a git
 | `all`              | Process any standalone repo with a `skills/`, `agents/`, `.claude/skills/`, or `.claude/agents/` directory, manifest or not. Frontmatter validation downgrades from refuse to warn. |
 | `none`             | Skip extension processing entirely. Standalone repos are still cloned; no symlinks are created.                                                                                     |
 
-## Port allocation {#port-allocation}
+## Port allocation
 
 Four keys control how ports are assigned to feature environments. All are optional; the defaults keep workspaces on
 clean 1000-port boundaries (4000–4979 with the defaults).
@@ -55,7 +55,7 @@ With defaults, the total occupied band is `(48 + 1) × 20 = 980` ports (the band
 `winter ws init` allocates and records the index; `winter ws destroy` removes the entry. The read path loads the
 recorded value; for pre-registry environments (created before this feature), it falls back to recomputing from the name.
 
-## Env var bands {#env-var-bands}
+## Env var bands
 
 Your services need more than ports: database URLs, broker endpoints, feature flags. Declare them as **env var bands**
 and winter computes them per scope and injects them into every provider subprocess, so each environment gets its own
@@ -116,7 +116,7 @@ url = "git@github.com:org/shared-tools.git"
 pinned = true
 ```
 
-## `[[standalone_repository]]` {#standalone_repository}
+## `[[standalone_repository]]`
 
 Repos cloned at the workspace root (or a configured `path`), with no worktree and no feature branching. Used for winter
 extensions and auxiliary repos.
@@ -193,7 +193,7 @@ committed to the shared config.
 The `workspace` repo is discovered implicitly — it is not declared in either file. Winter detects it from the filesystem
 as the repo the CLI is invoked from.
 
-## Capability registry {#capability-registry}
+## Capability registry
 
 Winter routes capabilities (service orchestration and future slots) through a uniform registry. The workspace config's
 `[capabilities]` table is the supported mechanism for binding capability slots to provider extensions:
@@ -246,7 +246,7 @@ The full implementer-facing contract (uniform argv rule, `WINTER_*` env vars per
 idempotent backstop filters, and exit codes) lives in the canonical reference — see
 [`context/winter-cli/usage/service.md#orchestrator-contract`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/service.md#orchestrator-contract).
 
-## Provision manifests {#provision-manifests}
+## Provision manifests
 
 `winter provision` reads `[[provision.*]]` handler tables that declare the inline shell commands for provisioning an
 environment. The same shape is accepted in two places: the workspace config (`.winter/config.toml`) and each installed
@@ -265,6 +265,7 @@ apply = "uv sync && mise trust"
 scope             = "workspace"
 apply             = ["createdb myapp", "psql myapp -f schema.sql"]
 destroy           = "dropdb --if-exists myapp"
+clean             = "rm -rf .cache/myapp-dump"
 required_services = ["workspace/postgres"]
 
 [[provision.data]]
@@ -277,18 +278,26 @@ required_services = ["workspace/postgres"]
 Extensions declare the same tables in their own `winter-ext.toml`; within a sub-target, workspace-config handlers run
 before extension handlers at the same scope.
 
-| Field               | Required | Meaning                                                                                                                                                                                                                                                                                                                                                                        |
-| ------------------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `scope`             | yes      | Where the handler runs: `workspace` (workspace root, once), `feature-environment` (env root, once per env), or `feature-worktree` (each repo worktree, once per project worktree).                                                                                                                                                                                             |
-| `apply`             | yes      | Inline shell command (non-empty string) or list of inline shell commands (non-empty array of non-empty strings), run via `sh -c`. Array elements run in order; execution stops at the first non-zero exit. There is no path resolution — to invoke a script, name it as a command located via an env var (e.g. `"$WINTER_WORKSPACE_DIR/.winter/config/provision/install.sh"`). |
-| `destroy`           | no       | Inline shell command (string) or list (array) run by `--destroy`. If absent, `--destroy` warns and no-ops.                                                                                                                                                                                                                                                                     |
-| `reset`             | no       | Inline shell command (string) or list (array) run by `--reset`. If absent, winter composes destroy + apply when both exist, else degrades to re-apply.                                                                                                                                                                                                                         |
-| `required_services` | no       | Services that must be running before the handler executes. Valid only on `resource` and `data` (rejected on `dependency`). Each token is `workspace/<service>` or `<current-env>/<service>`; a foreign-env reference is rejected.                                                                                                                                              |
+| Field               | Required | Purpose                                                                             |
+| ------------------- | -------- | ----------------------------------------------------------------------------------- |
+| `scope`             | yes      | Where the handler runs: `workspace`, `feature-environment`, or `feature-worktree`.  |
+| `apply`             | yes      | The command(s) that bring this handler to its ready state.                          |
+| `destroy`           | no       | The command(s) `--destroy` runs.                                                    |
+| `reset`             | no       | The command(s) `--reset` runs.                                                      |
+| `clean`             | no       | The command(s) `winter clean` runs to remove this handler's build output or caches. |
+| `required_services` | no       | Services that must be running before the handler executes.                          |
 
-Unknown sub-target tables (e.g. `[[provision.custom]]`) and unknown per-entry keys are rejected. All handlers receive
-`WINTER_WORKSPACE_DIR` plus the extension-identity vars (`WINTER_EXT_DIR`, `WINTER_EXT_PREFIX`,
-`WINTER_EXT_CONFIG_DIR`); `feature-environment` and `feature-worktree` handlers additionally receive the `WINTER_ENV` /
-`WINTER_ENV_INDEX` / `WINTER_PORT_BASE` trio.
+This table is not exhaustive — it covers the fields every handler is likely to declare. `[[provision.*]]` also supports
+`project` (pin a `feature-environment` handler to one repo worktree) and `name` (target a single entry individually via
+`--name`, including on `winter clean`). Validation rules for every field — non-empty-string/list shape, which scopes
+`required_services` and `project` are valid on, and the scope/working-directory contract — are owned by the canonical
+field reference, not reproduced here:
+[`context/winter-cli/configuration/provision.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/provision.md).
+
+Unknown sub-target tables (e.g. `[[provision.custom]]`) and unknown per-entry keys (outside the canonical field list
+linked above) are rejected. All handlers receive `WINTER_WORKSPACE_DIR` plus the extension-identity vars
+(`WINTER_EXT_DIR`, `WINTER_EXT_PREFIX`, `WINTER_EXT_CONFIG_DIR`); `feature-environment` and `feature-worktree` handlers
+additionally receive the `WINTER_ENV` / `WINTER_ENV_INDEX` / `WINTER_PORT_BASE` trio.
 
 `winter doctor` validates every declared handler. The exhaustive reference — action vocabulary, NDJSON event schema, and
 the full env-var contract — is
