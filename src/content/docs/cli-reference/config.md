@@ -57,10 +57,16 @@ recorded value; for pre-registry environments (created before this feature), it 
 
 ## Env var bands
 
-Your services need more than ports: database URLs, broker endpoints, feature flags. Declare them as **env var bands**
-and winter computes them per scope and injects them into every provider subprocess, so each environment gets its own
-values with no static env file to keep in sync. Values support `${NAME}` and `${NAME+N}` substitution, which is how a
-variable derives from that environment's own port base.
+Your services need more than ports: database URLs, broker endpoints, feature flags, and sometimes a secret. Declare them
+as **env var bands** and winter computes them per scope for `winter service up`, `winter service down`, and
+`winter service status`, injecting them into the provider subprocess those actions start, so each environment gets its
+own values with no static env file to keep in sync. A band value is either a string, supporting `${NAME}` and
+`${NAME+N}` substitution (how a variable derives from that environment's own port base), or an inline table that sources
+its value by running a command — for a secret held in Vault, AWS SSM, or any other store winter itself knows nothing
+about, merging the keys of that command's output into scope when `format` is `"dotenv"` or `"json"`. `up` is the
+operation that runs those commands; `down` and `status` substitute a placeholder for the key a command entry declares,
+since teardown and health probing need only ports and names. What that placeholder does and does not cover is worth
+reading before you rely on it — see the command-entry reference linked at the end of this section:
 
 ```toml
 [env.workspace.vars]
@@ -69,6 +75,7 @@ SHARED_DB_PORT = "${WINTER_WORKSPACE_PORT_BASE+3}"   # shared workspace service
 [env.feature.vars]
 WEB_PORT     = "${WINTER_PORT_BASE+10}"              # 4030 in alpha, 4050 in beta…
 DATABASE_URL = "postgresql://localhost:${SHARED_DB_PORT}/app_${WINTER_ENV}"
+DB_PASSWORD  = { command = "vals get ref+vault://secret/data/myapp/db#/password" }
 
 [env.alpha.vars]
 WEB_PORT = "8421"   # alpha only — every other env keeps ${WINTER_PORT_BASE+10}
@@ -83,12 +90,20 @@ Which band you reach for depends on how far the value should travel:
 | `[env.<name>.vars]`    | Only the one feature env it names — an escape hatch when a single env must diverge, such as pointing at a fixed local endpoint while its siblings keep the derived value. |
 
 For a feature env the bands layer lowest to highest — workspace, feature, then that env's own — with each layer winning
-collisions against the ones below it. Run `winter env <scope>` to print the computed values for an environment (or for
-`workspace`) and confirm what a band actually resolved to.
+collisions against the ones below it. Run
+[`winter env <scope>`](/winter-docs/cli-reference/environment-runtime/#winter-env) to print the computed values for an
+environment (or for `workspace`) and confirm what a band actually resolved to. Winter just runs a command entry's
+command and captures its output — it depends on, bundles, and knows the name of no particular secrets tool.
+[`winter env <scope>`](/winter-docs/cli-reference/environment-runtime/#winter-env) masks a command entry by default,
+printing a placeholder instead of running it; pass `--resolve` to run it for real and print the resolved value.
 
-The canonical reference — the full precedence chain including the `.winter/config.local.toml` overlay, the `${NAME}` /
-`${NAME+N}` token grammar, reserved band names, and the migration from the legacy `[env.vars]` table — is
-[`context/winter-cli/configuration/ports-and-environments.md#env-var-bands`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/ports-and-environments.md#env-var-bands).
+The canonical reference for the full precedence chain (including the `.winter/config.local.toml` overlay), the `${NAME}`
+/ `${NAME+N}` token grammar, reserved band names, and the migration from the legacy `[env.vars]` table is
+[`context/winter-cli/configuration/ports-and-environments.md#env-var-bands`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/ports-and-environments.md#env-var-bands);
+command entries — fields, execution, and the per-operation gate — have their own reference at
+[`context/winter-cli/configuration/command-env-entries.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/command-env-entries.md),
+with one-line `command` recipes for common secrets-management tools at
+[`context/winter-cli/configuration/command-entry-cookbook.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/command-entry-cookbook.md).
 
 ## `[[project_repository]]`
 

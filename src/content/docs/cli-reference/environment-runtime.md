@@ -1,10 +1,11 @@
 ---
 title: Environment Runtime
-description: Commands for starting services, provisioning, and cleaning feature environments — winter service, winter provision, and winter clean.
+description: Commands for starting services, provisioning, and cleaning feature environments, and printing a scope's computed environment — winter service, winter provision, winter clean, and winter env.
 ---
 
-Commands for bringing a feature environment's services up, provisioning its dependencies and data, and resetting its
-disposable build artifacts between tenants. Service orchestration requires a registered orchestrator extension — see the
+Commands for bringing a feature environment's services up, provisioning its dependencies and data, resetting its
+disposable build artifacts between tenants, and printing the environment those services run with. Service orchestration
+requires a registered orchestrator extension — see the
 [config.toml Reference → Capability registry](/winter-docs/cli-reference/config/#capability-registry). Provision and
 clean handler configuration lives in the
 [config.toml Reference → Provision manifests](/winter-docs/cli-reference/config/#provision-manifests).
@@ -59,6 +60,33 @@ To register an orchestrator, set `capabilities.service` in the `[capabilities]` 
 for the full implementer-facing spec (argv rule, `WINTER_*` env vars, NDJSON wire format). The legacy
 `service_orchestrator` (workspace config) and `orchestrate_services` (extension manifest) keys are deprecated
 back-compat aliases — existing configs continue to work, but new workspaces should use `[capabilities]`/`[provides]`.
+
+## `winter env`
+
+Print the complete runtime environment for a scope as sourceable `export KEY=value` lines — the managed `WINTER_*` vars,
+plus every `.winter/config.toml` env-band entry that applies. *scope* is a feature-env name (`alpha`, `beta`, …) or the
+reserved word `workspace` for the workspace-level singleton scope.
+
+```bash
+source <(winter env alpha)      # load alpha's variables into the current shell
+winter env workspace            # inspect the workspace singleton scope
+winter env alpha --resolve      # also run and print command-sourced values, e.g. secrets
+```
+
+This is the same variable set `winter service` injects into a provider subprocess, so `winter env <scope>` is also the
+way to check what a service actually sees: the same set, masked the same way as `down` and `status`, where `up` alone
+resolves the command-derived keys described below. A band entry can be a
+[command entry](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/command-env-entries.md)
+that sources its value by running a command instead of a plain `${...}` template — reading a secret out of Vault or AWS
+SSM, say. Running an arbitrary configured command isn't something `winter env` does by default: without `--resolve`,
+such a key prints as the placeholder `<unresolved:command>` instead of its real value and the command never runs, which
+keeps the default output pure and offline. `--resolve` runs every command entry for real and prints its resolved value
+in the clear — masking is not redaction, so treat `winter env <scope> --resolve` output the same as any other place a
+secret can appear in the clear.
+
+Exits `0` on success with every line written to stdout, or `1` — with nothing written to stdout — when the scope is
+unknown, an env-band template has an error (undefined reference, resolution cycle, malformed token), or, under
+`--resolve`, a command entry itself fails.
 
 ## `winter provision`
 
