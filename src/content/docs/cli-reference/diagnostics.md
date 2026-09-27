@@ -1,11 +1,11 @@
 ---
 title: Diagnostics & Introspection
-description: Commands for validating workspace health, linting conventions, and inspecting the module dependency graph, capability registry, and generated-artifact directories.
+description: Commands for validating workspace health, linting conventions, and inspecting agent model resolution, the module dependency graph, capability registry, and generated-artifact directories.
 ---
 
-Commands for diagnosing workspace health, linting convention compliance, and introspecting the module graph, capability
-bindings, and where generated artifacts are written. These commands are read-only or report-only — they do not modify
-workspace state.
+Commands for diagnosing workspace health, linting convention compliance, and introspecting agent model/effort
+resolution, the module graph, capability bindings, and where generated artifacts are written. These commands are
+read-only or report-only — they do not modify workspace state.
 
 ## `winter doctor`
 
@@ -39,6 +39,24 @@ winter lint --json     # NDJSON event stream
 
 Lint targets the project repos developed in feature environments — not the workspace root or the standalone extension
 clones.
+
+## `winter agents`
+
+Read-only introspection of agent model/effort resolution — the same resolution `winter ws init` bakes into every
+rendered agent file. Prints, per installed agent x harness (`claude`, `codex`, `opencode`), the resolved model and
+effort and which layer won it, plus colored tables showing the built-in defaults and any `[model_tiers]` remaps. An
+`[agent_model_overrides]` entry that matches no installed agent is reported as a warning. Use it to see why an agent is
+running a model you didn't expect. A cell that fails to resolve is reported in place, so the command exits `0`; only a
+config load error exits `1`. `winter doctor`'s agent probes are what flag drift.
+
+```bash
+winter agents           # human-readable colored tables
+winter agents --json    # the same data as one JSON document
+```
+
+See
+[`context/winter-cli/usage/agents.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/agents.md)
+for the table layout, the layer legend, and the `--json` schema.
 
 ## `winter graph`
 
