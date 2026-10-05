@@ -37,6 +37,20 @@ When invoked without a target (`winter ws init`) or with `--all`, winter also fi
 workspace-level artifacts (like the service-to-pane reference map that winter-service-tmux produces) rather than
 per-environment state.
 
+### Workspace root as a linked git worktree
+
+The workspace root may itself be a linked git worktree (one made with `git worktree add`), including one whose main
+repository is a bare clone. `winter ws init` keeps its generated paths out of `git status` through a managed block in
+the workspace repo's exclude file. For a linked worktree, that file is the worktree's own `info/exclude`, and winter
+points this worktree at it with `core.excludesFile` (set per worktree, via `extensions.worktreeConfig`). Sibling
+worktrees and the main checkout never see or rewrite each other's blocks, and the shared `info/exclude` is left alone.
+
+:::caution `core.excludesFile` **replaces** your global ignore file (`$XDG_CONFIG_HOME/git/ignore`) for that worktree
+only. If you rely on global ignore patterns there, add them to the workspace's `.gitignore`. :::
+
+A workspace root whose git directory is relocated with `GIT_DIR` is not supported. `winter ws destroy` and
+`winter ws prune` only read the exclude file's location; they never change git configuration.
+
 ## List & inspect
 
 ```bash

@@ -55,16 +55,19 @@ repos but not multiplied across environments.
 ## Extension
 
 An opt-in workspace integration shipped as either a standalone repository or a project repository with `winter-ext.toml`
-at its root. Each extension contributes only the optional surfaces it needs, such as skills, agents, reusable
-methodology, lifecycle hooks, `winter doctor` probes, `winter lint` checks, graph metadata, services, provisioning
-handlers, or a capability provider declared under `[provides]`. Examples: service orchestration, issue tooling, the
-product backlog, conventions, and the agentic workflow.
+at its root. The workspace has the final say: `extension = false`, or `nested = true`, removes a repo from every
+extension feature, and `load` or `entry` opts in a repo that has no manifest, for context delivery only (see the
+[extension role keys](/winter-docs/cli-reference/config/#extension-role-keys-extension-load-entry)). Each extension
+contributes only the optional surfaces it needs, such as skills, agents, reusable methodology, lifecycle hooks,
+`winter doctor` probes, `winter lint` checks, graph metadata, services, provisioning handlers, or a capability provider
+declared under `[provides]`. Examples: service orchestration, issue tooling, the product backlog, conventions, and the
+agentic workflow.
 
 A standalone extension has one clone and no feature worktrees. A project-repo extension needs no separate standalone
 clone: winter processes its extension surfaces in place from the project source checkout while the project keeps its
 normal per-environment worktrees. Its `AGENTS.winter.md` context entry routes agents to the active environment worktree
 rather than eagerly importing source-checkout content, falling back to the source checkout when no environment is in
-scope.
+scope; `load = "none"` renders no entry.
 
 ## Path notation
 

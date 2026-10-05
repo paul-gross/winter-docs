@@ -24,11 +24,14 @@ Winter reads two files and merges them: the committed workspace config and a git
 
 ### `adopt_extensions` modes
 
-| Value              | Behavior                                                                                                                                                                            |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `winter` (default) | Process only standalone repos that have a `winter-ext.toml`. SKILL.md frontmatter is strictly validated.                                                                            |
-| `all`              | Process any standalone repo with a `skills/`, `agents/`, `.claude/skills/`, or `.claude/agents/` directory, manifest or not. Frontmatter validation downgrades from refuse to warn. |
-| `none`             | Skip extension processing entirely. Standalone repos are still cloned; no symlinks are created.                                                                                     |
+| Value              | Behavior                                                                                                                                                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `winter` (default) | Process only standalone repos that have a `winter-ext.toml`. SKILL.md frontmatter is strictly validated. A repo with no manifest gets no `AGENTS.winter.md` bullet unless its workspace entry opts it in with `load` or `entry`. |
+| `all`              | Process any standalone repo with a `skills/`, `agents/`, `.claude/skills/`, or `.claude/agents/` directory, manifest or not. Frontmatter validation downgrades from refuse to warn.                                              |
+| `none`             | Skip extension processing entirely. Standalone repos are still cloned; no symlinks are created.                                                                                                                                  |
+
+A repo entry's `extension = false` overrides all three modes: the repo is cloned and pinned but processed by nothing.
+See [Extension role keys](#extension-role-keys-extension-load-entry).
 
 ## Port allocation
 
@@ -110,14 +113,17 @@ with one-line `command` recipes for common secrets-management tools at
 Repos cloned into `projects/` and worktreed into Greek-letter environment directories. Entries appear in CLI/TUI output
 in declared order, so list high-priority repos first.
 
-| Key            | Type     | Default                                         | Meaning                                                                        |
-| -------------- | -------- | ----------------------------------------------- | ------------------------------------------------------------------------------ |
-| `url`          | string   | — (required)                                    | Clone URL.                                                                     |
-| `name`         | string   | trailing path segment of `url`, `.git` stripped | Directory under `projects/` and the user-facing label everywhere.              |
-| `main_branch`  | string   | top-level `main_branch`                         | Per-repo override of the main branch.                                          |
-| `cmd`          | string[] | `[]`                                            | Commands run after clone and in every worktree (e.g. `["pnpm install"]`).      |
-| `pinned`       | bool     | `false`                                         | Track `origin/<main>`, skip feature branching, exclude from `push` by default. |
-| `git_excludes` | string[] | `[]`                                            | Per-repo excludes, merged with the workspace-wide list.                        |
+| Key            | Type     | Default                                         | Meaning                                                                                                                                                                  |
+| -------------- | -------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `url`          | string   | — (required)                                    | Clone URL.                                                                                                                                                               |
+| `name`         | string   | trailing path segment of `url`, `.git` stripped | Directory under `projects/` and the user-facing label everywhere.                                                                                                        |
+| `main_branch`  | string   | top-level `main_branch`                         | Per-repo override of the main branch.                                                                                                                                    |
+| `cmd`          | string[] | `[]`                                            | Commands run after clone and in every worktree (e.g. `["pnpm install"]`).                                                                                                |
+| `pinned`       | bool     | `false`                                         | Track `origin/<main>`, skip feature branching, exclude from `push` by default.                                                                                           |
+| `git_excludes` | string[] | `[]`                                            | Per-repo excludes, merged with the workspace-wide list.                                                                                                                  |
+| `extension`    | bool     | `true`                                          | `false` makes the repo data: cloned and pinned, but no extension feature sees it.                                                                                        |
+| `load`         | string   | manifest `load`, else `"lazy"`                  | How its `AGENTS.winter.md` bullet is delivered: `"lazy"` or `"none"` (`"eager"` is refused for a project repo). Workspace entry > `winter-ext.toml` > repo-kind default. |
+| `entry`        | string[] | `index.md`, `AGENTS.md`, `context/index.md`     | Prioritized entry-point candidates; the first that exists is used. Same precedence as `load`.                                                                            |
 
 ```toml
 [[project_repository]]
@@ -136,20 +142,24 @@ pinned = true
 Repos cloned at the workspace root (or a configured `path`), with no worktree and no feature branching. Used for winter
 extensions and auxiliary repos.
 
-| Key           | Type   | Default                     | Meaning                                                                                                                                                                |
-| ------------- | ------ | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `url`         | string | — (required)                | Clone URL.                                                                                                                                                             |
-| `name`        | string | derived from `url`          | Repo name; default clone directory.                                                                                                                                    |
-| `path`        | string | `name`                      | Clone location, relative to the workspace root.                                                                                                                        |
-| `main_branch` | string | top-level `main_branch`     | Per-repo override of the main branch used for integration tracking.                                                                                                    |
-| `ref`         | string | —                           | Pin the repo to a branch, tag, or commit. Absent → tracks default branch. A branch ref is a moving pin (advances on `ws update`); a tag or commit SHA is a frozen pin. |
-| `prefix`      | string | from `winter-ext.toml`/name | Symlink-prefix override for an extension's skills/agents.                                                                                                              |
+| Key           | Type     | Default                                     | Meaning                                                                                                                                                                                                                                                                                              |
+| ------------- | -------- | ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`         | string   | — (required)                                | Clone URL.                                                                                                                                                                                                                                                                                           |
+| `name`        | string   | derived from `url`                          | Repo name; default clone directory.                                                                                                                                                                                                                                                                  |
+| `path`        | string   | `name`                                      | Clone location, relative to the workspace root.                                                                                                                                                                                                                                                      |
+| `main_branch` | string   | top-level `main_branch`                     | Per-repo override of the main branch used for integration tracking.                                                                                                                                                                                                                                  |
+| `ref`         | string   | —                                           | Pin the repo to a branch, tag, or commit. Absent → tracks default branch. A branch ref is a moving pin (advances on `ws update`); a tag or commit SHA is a frozen pin. `winter ws update --freeze` writes this key for you (see [`ws update`](/winter-docs/cli-reference/polyrepo-sync/#ws-update)). |
+| `prefix`      | string   | from `winter-ext.toml`/name                 | Symlink-prefix override for an extension's skills/agents.                                                                                                                                                                                                                                            |
+| `extension`   | bool     | `true`                                      | `false` makes the repo data: cloned and pinned, but no extension feature sees it.                                                                                                                                                                                                                    |
+| `load`        | string   | manifest `load`, else `"eager"`             | How its `AGENTS.winter.md` bullet is delivered: `"eager"`, `"lazy"`, or `"none"`. Workspace entry > `winter-ext.toml` > repo-kind default.                                                                                                                                                           |
+| `entry`       | string[] | `index.md`, `AGENTS.md`, `context/index.md` | Prioritized entry-point candidates; the first that exists is used. Same precedence as `load`.                                                                                                                                                                                                        |
 
 **Ref pinning and `.winter/config.lock`:** When `ref` is set, `winter ws init` resolves the ref to a commit SHA and
 records the result in `.winter/config.lock`, which is committed to the workspace repo so the pin is reproducible across
 machines. `winter ws pull` also advances branch (moving) pins and rewrites the lock; `winter ws update [repo]` is the
 command for tag and commit (frozen) pins — the only way to re-resolve a frozen pin on demand. Commit the updated lock
-file to make the resolved SHA visible as a reviewable diff.
+file to make the resolved SHA visible as a reviewable diff. To pin every unpinned standalone to its current checkout in
+one step, run [`winter ws update --freeze`](/winter-docs/cli-reference/polyrepo-sync/#freezing-the-workspace).
 
 ```toml
 [[standalone_repository]]
@@ -161,6 +171,36 @@ path = ".winter/ext/service-tmux"
 name = "my-lib"
 url = "git@github.com:org/my-lib.git"
 ref = "v2.1.0"          # frozen at this tag's commit; update with `winter ws update my-lib`
+```
+
+### Extension role keys (`extension`, `load`, `entry`)
+
+The workspace, not the repo, decides whether a repo acts as an extension and what it injects into the agent context.
+These three optional keys work on both `[[project_repository]]` and `[[standalone_repository]]` entries and take
+precedence over the repo's own `winter-ext.toml`: workspace entry > `winter-ext.toml` > repo-kind default (a standalone
+is `eager`, a project repo is `lazy`).
+
+- `extension = false` removes the repo from every extension feature at once — skills, agents, hooks, provision handlers,
+  services, capabilities, `winter doctor`, `winter lint`, and `winter graph`. The clone is kept and still fetches,
+  pulls, and pins. Anything an earlier `ws init` projected for it is retracted on the next run.
+- `load` and `entry` govern context delivery only. Setting either on a repo with no `winter-ext.toml` opts it in to an
+  `AGENTS.winter.md` bullet and nothing else, even under the default `adopt_extensions = "winter"`. `load = "none"`
+  renders no bullet but leaves the other extension features in place.
+- `entry` takes repo-relative paths. A path that is empty, absolute, or contains `..` fails config load.
+- A repo declared as both a project and a standalone takes the standalone entry's `load` and `entry`; the project
+  entry's fill whatever the standalone leaves unset.
+
+```toml
+[[standalone_repository]]
+name = "team-handbook"
+url = "git@github.com:org/team-handbook.git"
+load = "lazy"                       # a manifest-less repo, opted in to a routing bullet
+entry = ["docs/agents.md", "index.md"]
+
+[[standalone_repository]]
+name = "fixtures"
+url = "git@github.com:org/fixtures.git"
+extension = false                   # cloned and pinned, never treated as an extension
 ```
 
 ## `[keybindings]`

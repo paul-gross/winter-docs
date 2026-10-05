@@ -182,3 +182,43 @@ winter ws worktrees [--status] [--json]
 ```bash
 winter ws worktrees --json
 ```
+
+### `ws fingerprint`
+
+Print one digest that identifies this workspace's *definition*, so two copies of a workspace can be compared with a
+single value. Two copies print the same digest exactly when their definitions match — useful to prove two setups
+identical or to detect one that changed underneath a trial. No network calls; it never changes refs, the index, or the
+working tree.
+
+```bash
+winter ws fingerprint [--json]
+```
+
+**Covered:** the workspace repo's tracked content, and the name and tracked content of each `[[standalone_repository]]`.
+Staged and uncommitted changes to tracked files count, because the digest follows the repo's tracked content, not its
+commit: two copies with different uncommitted edits never share a digest. Two copies whose commit histories differ but
+whose files are identical match, and so do a dirty repo and a clean one whose tracked content is identical, such as a
+change staged and then reverted.
+
+**Not covered:** untracked files (generated projections, local scratch), feature environments, and project repositories
+— their commits vary per environment.
+
+Without `--json`, the output is the digest alone: a 64-character lowercase hex string on one line. With `--json`, one
+object:
+
+```json
+{
+  "digest": "9f2c0e…",
+  "workspace": { "name": "my-workspace", "commit": "…", "tree": "…", "dirty": false },
+  "standalones": [{ "name": "winter-context", "commit": "…", "tree": "…", "dirty": true }]
+}
+```
+
+`commit` is informational; `tree` is the tracked content the digest is computed from; `dirty` is `true` when a tracked
+file has a staged or unstaged change. `dirty` is reported but not hashed. `standalones` is sorted by name.
+
+**Exit codes:** `0` digest printed; `1` a git probe failed, or the workspace or a declared standalone is not cloned (run
+`winter ws init` first) — nothing is printed to stdout.
+
+:::note[Canonical source] The digest's exact definition and serialization are owned by
+`context/winter-cli/usage/ws/fingerprint.md` in the `winter` repo. :::

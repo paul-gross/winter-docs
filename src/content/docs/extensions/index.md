@@ -9,13 +9,16 @@ the core CLI. An extension contributes only the surfaces it ships: these can inc
 probes**, **`winter lint` checks**, services, provisioning handlers, or capability providers. None of those artifact
 kinds is universal; optional capability providers are declared per manifest under `[provides]`.
 
-**What makes something an installed extension** — it is a repository with a root `winter-ext.toml` manifest, declared in
-workspace configuration as either a standalone or project repository and reconciled by `winter ws init`. The workspace
-graph shows one module node per manifest and `requires` dependency edges between those nodes; it does not enumerate
-shipped artifacts or imply that every extension provides a registered capability. This distinguishes extensions from
-[related projects](/winter-docs/related-projects/) (editor integrations or user-level tools that read workspace state
-but are not installed by winter) and from [examples](/winter-docs/examples/) (the maintainer's own opinionated,
-swappable implementations).
+**What makes something an installed extension** — by default, a repository with a root `winter-ext.toml` manifest,
+declared in workspace configuration as either a standalone or project repository and reconciled by `winter ws init`. The
+workspace decides the final role, through the
+[extension role keys](/winter-docs/cli-reference/config/#extension-role-keys-extension-load-entry): `extension = false`,
+or `nested = true`, removes a repo from every extension feature, and `load` or `entry` opts in a repo that has no
+manifest, for context delivery only. The workspace graph shows one module node per manifest and `requires` dependency
+edges between those nodes; it does not enumerate shipped artifacts or imply that every extension provides a registered
+capability. This distinguishes extensions from [related projects](/winter-docs/related-projects/) (editor integrations
+or user-level tools that read workspace state but are not installed by winter) and from
+[examples](/winter-docs/examples/) (the maintainer's own opinionated, swappable implementations).
 
 The repository kind determines lifecycle and context routing, not which extension features are available. A standalone
 extension has one clone at its configured workspace path and no per-environment worktrees. A project-repo extension uses
@@ -23,7 +26,8 @@ the project's existing source checkout and feature worktrees, with no separate s
 skills, agents, hooks, lint and doctor checks, graph metadata, capabilities, services, and provisioning handlers in
 place from the source checkout. For agent context, however, `AGENTS.winter.md` routes to the active environment's
 project worktree instead of eagerly importing source-checkout content; when no environment is in scope, that route falls
-back to the source checkout.
+back to the source checkout. A project-repo extension gets that lazy entry unless the workspace sets `load = "none"`,
+which renders no entry and leaves every other extension feature in place.
 
 ## The maintained extensions
 
