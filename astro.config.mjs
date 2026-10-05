@@ -37,6 +37,7 @@ export default defineConfig({
 						{ label: 'Polyrepo Git Operations', slug: 'operations/polyrepo-git' },
 						{ label: 'Provisioning Environments', slug: 'operations/provisioning' },
 						{ label: 'Running Services', slug: 'operations/services' },
+						{ label: 'Nested Workspaces', slug: 'operations/nested-workspaces' },
 					],
 				},
 				{

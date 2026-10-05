@@ -113,17 +113,20 @@ with one-line `command` recipes for common secrets-management tools at
 Repos cloned into `projects/` and worktreed into Greek-letter environment directories. Entries appear in CLI/TUI output
 in declared order, so list high-priority repos first.
 
-| Key            | Type     | Default                                         | Meaning                                                                                                                                                                  |
-| -------------- | -------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `url`          | string   | — (required)                                    | Clone URL.                                                                                                                                                               |
-| `name`         | string   | trailing path segment of `url`, `.git` stripped | Directory under `projects/` and the user-facing label everywhere.                                                                                                        |
-| `main_branch`  | string   | top-level `main_branch`                         | Per-repo override of the main branch.                                                                                                                                    |
-| `cmd`          | string[] | `[]`                                            | Commands run after clone and in every worktree (e.g. `["pnpm install"]`).                                                                                                |
-| `pinned`       | bool     | `false`                                         | Track `origin/<main>`, skip feature branching, exclude from `push` by default.                                                                                           |
-| `git_excludes` | string[] | `[]`                                            | Per-repo excludes, merged with the workspace-wide list.                                                                                                                  |
-| `extension`    | bool     | `true`                                          | `false` makes the repo data: cloned and pinned, but no extension feature sees it.                                                                                        |
-| `load`         | string   | manifest `load`, else `"lazy"`                  | How its `AGENTS.winter.md` bullet is delivered: `"lazy"` or `"none"` (`"eager"` is refused for a project repo). Workspace entry > `winter-ext.toml` > repo-kind default. |
-| `entry`        | string[] | `index.md`, `AGENTS.md`, `context/index.md`     | Prioritized entry-point candidates; the first that exists is used. Same precedence as `load`.                                                                            |
+| Key             | Type     | Default                                         | Meaning                                                                                                                                                                                                  |
+| --------------- | -------- | ----------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `url`           | string   | — (required)                                    | Clone URL.                                                                                                                                                                                               |
+| `name`          | string   | trailing path segment of `url`, `.git` stripped | Directory under `projects/` and the user-facing label everywhere.                                                                                                                                        |
+| `main_branch`   | string   | top-level `main_branch`                         | Per-repo override of the main branch.                                                                                                                                                                    |
+| `cmd`           | string[] | `[]`                                            | Commands run after clone and in every worktree (e.g. `["pnpm install"]`).                                                                                                                                |
+| `pinned`        | bool     | `false`                                         | Track `origin/<main>`, skip feature branching, exclude from `push` by default.                                                                                                                           |
+| `git_excludes`  | string[] | `[]`                                            | Per-repo excludes, merged with the workspace-wide list.                                                                                                                                                  |
+| `extension`     | bool     | `true`                                          | `false` makes the repo data: cloned and pinned, but no extension feature sees it.                                                                                                                        |
+| `load`          | string   | manifest `load`, else `"lazy"`                  | How its `AGENTS.winter.md` bullet is delivered: `"lazy"` or `"none"` (`"eager"` is refused for a project repo). Workspace entry > `winter-ext.toml` > repo-kind default.                                 |
+| `entry`         | string[] | `index.md`, `AGENTS.md`, `context/index.md`     | Prioritized entry-point candidates; the first that exists is used. Same precedence as `load`.                                                                                                            |
+| `nested`        | bool     | `false`                                         | `true` declares that the repo is itself a winter workspace, driven inside each environment's worktree of it. Project repos only — see [Nested workspaces](#nested-workspaces-nested-envs-inherit_local). |
+| `envs`          | integer  | unset (nested keeps its own env settings)       | Usable feature environments the nested workspace holds, `>= 1`. Valid only with `nested = true`.                                                                                                         |
+| `inherit_local` | string[] | `["git"]`                                       | Top-level keys or tables of the outer `config.local.toml` copied into the nested workspace's overlay. Valid only with `nested = true`; `[]` copies nothing.                                              |
 
 ```toml
 [[project_repository]]
@@ -136,6 +139,34 @@ name = "shared-tools"
 url = "git@github.com:org/shared-tools.git"
 pinned = true
 ```
+
+### Nested workspaces (`nested`, `envs`, `inherit_local`)
+
+A project repo that is itself a winter workspace sets `nested = true`. Winter worktrees it into each environment like
+any other project repo, then initializes, reports on, and destroys the workspace inside that worktree.
+
+```toml
+[[project_repository]]
+name = "lab"
+url = "git@github.com:org/lab-workspace.git"
+nested = true
+envs = 3                                     # three usable nested environments
+inherit_local = ["git", "tui"]               # outer overlay keys copied down; default ["git"]
+cmd = ["<bootstrap the nested workspace's CLI>"]
+```
+
+- **`nested`** is valid only on a `[[project_repository]]`. `nested = true` on a `[[standalone_repository]]` is a config
+  error, because a standalone is one checkout shared by the whole workspace rather than one per environment. A nested
+  repo is never an extension, so `nested = true` together with `extension = true`, `load`, or `entry` is also an error.
+- **`envs`** must be an integer `>= 1` and needs `nested = true`. Winter writes `env_aliases = []` and
+  `envs_per_workspace = envs + 1` into the nested workspace's overlay. With it unset, winter writes neither key and the
+  nested workspace keeps its own environment settings; removing it later leaves the last-written values in the nested
+  `config.local.toml` until you delete them by hand.
+- **`inherit_local`** is a list of non-empty top-level key names without a `.`, and needs `nested = true`.
+  `[[project_repository]]` and `[[standalone_repository]]` are never copied, even when named.
+
+An invalid `nested`, `envs`, or `inherit_local` fails config load. For how the delegation works and what to gitignore in
+the nested repo, see [Nested Workspaces](/winter-docs/operations/nested-workspaces/).
 
 ## `[[standalone_repository]]`
 

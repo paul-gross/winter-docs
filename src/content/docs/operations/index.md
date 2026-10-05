@@ -95,6 +95,12 @@ The operating model is built for rapid iteration. Several feedback loops nest in
 resources, removing worktrees — and frees the port slot for reuse. Prefer `winter ws destroy` over `rm -rf` so extension
 state is not orphaned. See [Feature Environments & Worktrees](/winter-docs/operations/feature-environments/).
 
+## Hosting a workspace inside another
+
+A project repository can itself be a winter workspace. Winter initializes, reports on, and destroys it inside each
+environment, and delegates the environment's ports and service names to it. See
+[Nested Workspaces](/winter-docs/operations/nested-workspaces/).
+
 ## CLI first, raw git when you need it
 
 Use the `winter` CLI for anything that spans repositories — it reads the workspace config, handles pinned repos, runs in

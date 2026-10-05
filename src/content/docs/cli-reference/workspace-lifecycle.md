@@ -50,8 +50,15 @@ winter ws status [PATTERNS...] [--json] [--fetch]
 `--fetch` refreshes remote-tracking refs first (network). `--json` emits a stable, versioned snapshot
 (`schema_version: 1`) covering environments, source checkouts, and workspace-level drift — suitable for scripting.
 
+Each project source checkout and standalone also reports the work no remote holds: `local_only_commits` counts commits
+on any local branch that no remote-tracking branch reaches, and `stashes` counts stash entries. The SYNC cell shows them
+as `N local-only, N stash`, and `--json` carries both fields. They are informational and do not affect the exit code.
+
 **Exit codes:** `0` clean; `1` dirty or drifted; `2` command error (e.g. a pattern that matches nothing). When PATTERNS
 are given, exit code reflects only the matched worktrees; global drift is shown as context but does not affect it.
+
+A worktree of a [nested workspace](/winter-docs/operations/nested-workspaces/#ws-status) also reports that workspace's
+environment count, dirty state, and unpushed work.
 
 ```bash
 winter ws status
@@ -144,6 +151,17 @@ winter ws destroy alpha [--force | --strict | --dry-run]
 ```bash
 winter ws destroy alpha --dry-run
 ```
+
+When an environment hosts a [nested workspace](/winter-docs/operations/nested-workspaces/#ws-destroy), its environments
+are destroyed first, and the teardown is refused unless `--force` when:
+
+- a nested environment is dirty;
+- the nested workspace holds work that exists nowhere else (unpushed commits, local-only branches, stashes);
+- the nested workspace cannot be read.
+
+After the nested environments are gone, the outer destroy also stops the nested workspace's workspace-scope services,
+running `winter service down workspace` there, before the worktree is removed. It does this only when the nested
+workspace binds a `service` capability. A failure aborts the teardown unless `--force`, and `--dry-run` lists the step.
 
 ### `ws index`
 
