@@ -84,8 +84,24 @@ Not all services write to a log file. The `log` field in each `[[service]]` entr
 For `log="pane"` services, read the pane buffer directly:
 
 ```bash
-tmux capture-pane -pt <prefix>-<env>:<window>.<pane>
+tmux -L winter capture-pane -pt <prefix>-<env>:<window>.<pane>
 ```
+
+## The `winter` tmux server
+
+Sessions run on a dedicated tmux server named `winter`, never your default one — address it with `tmux -L winter`
+(`tmux -L winter ls`, `tmux -L winter attach -t <prefix>-<env>`, or `./up -a` to attach after starting). Every winter
+workspace on the machine shares this server, and it always starts from a sanitized environment: a short allow-list of
+per-user variables (identity, shell, terminal, locale, temp directories, and login-session sockets such as the ssh agent
+and display) and a fixed system baseline `PATH` — the exact list lives in
+[`tmux_server.py`](https://github.com/paul-gross/winter-service-tmux/blob/master/src/service_orchestrator/modules/orchestrate/tmux_server.py).
+Pane shells are login shells, so your profile rebuilds your `PATH` on top — make sure your login profile puts `winter`
+on the `PATH`. If a pane can't find it, that service doesn't start (the pane shows `winter: command not found`) rather
+than starting without its environment. No environment's or workspace's variables leak into another's panes.
+
+Don't start the `winter` server by hand (`tmux -L winter new-session` while it isn't running): tmux takes the server's
+environment from whichever client starts it, so your shell's variables would reach every session. Let `./up` start it;
+`winter doctor` warns when the running server's environment isn't the sanitized one.
 
 ## Rules
 
@@ -94,11 +110,12 @@ These conventions keep environments clean and reapable:
 - **Never start services as background processes** — no `nohup`, no `&`. Always go through `winter service up` (or
   `./up`) so they land in the tmux session.
 - **Never kill services directly** — no `kill`, `pkill`, or `tmux kill-session`. Always use `winter service down` (or
-  `./down`) so child processes are reaped.
+  `./down`) so child processes are reaped. The one exception is a session stranded on your default tmux server by an
+  upgrade, which `./down` can no longer reach — `winter doctor`'s "default-server sessions" check gives its cleanup.
 - **Recover one wedged service with `winter service restart alpha/<service>`** — not `kill`/`pkill`, and not a full
   down+up. It reaps just that pane and re-runs the service, leaving the rest of the session up.
-- **Read output with `winter service logs`** for file-mode services. For `log="pane"` services, use `tmux capture-pane`
-  directly.
+- **Read output with `winter service logs`** for file-mode services. For `log="pane"` services, use
+  `tmux -L winter capture-pane` directly.
 
 ## `winter service` interface
 

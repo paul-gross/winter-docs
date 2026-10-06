@@ -17,11 +17,14 @@ the full `winter service` contract — all service control goes through `winter 
   crashed service's pane and re-runs its declared command, leaving the rest of the session running.
 - **Persistent log capture** — file-mode services write to `<env>/.winter/logs/<service>.log`; read with
   `winter service logs alpha`.
-- **A per-environment tmux session** named `<session_prefix>-<env>` (e.g. `mp-alpha`).
+- **A per-environment tmux session** named `<session_prefix>-<env>` (e.g. `mp-alpha`), on a dedicated `winter` tmux
+  server (`tmux -L winter`) that starts from a sanitized environment, so neither your personal tmux sessions nor another
+  workspace's variables leak into service panes.
 - An **`on_env_init`** hook that wires the tmux session up when an environment is created.
 - An **`on_env_destroy`** hook that tears the session down when an environment is destroyed.
 - A **`winter doctor` probe** (`[wst]`) that checks tmux is installed, `session_prefix` is declared, no foreign sessions
-  collide with the prefix, and the manifest validates cleanly.
+  collide with the prefix, no own sessions are stranded on the default tmux server, the `winter` server started from a
+  clean environment, and the manifest validates cleanly.
 
 For the full operating model — starting and stopping services, reading logs, and the conventions — see the
 [Running Services](/winter-docs/operations/services/) operations guide.
@@ -82,20 +85,26 @@ for the full annotated schema.
 
 - **`./up` errors immediately** — `config.toml` is missing or unreadable. Run the workflow-setup walkthrough.
 - **A service didn't start** — read its logs with `winter service logs alpha <service>`. For `log="pane"` services
-  (interactive panes, TTY-mode), use `tmux capture-pane -pt <prefix>-<env>:<window>.<pane>` (the target is in
+  (interactive panes, TTY-mode), use `tmux -L winter capture-pane -pt <prefix>-<env>:<window>.<pane>` (the target is in
   `config.toml`'s `[[service]]` entry).
 - **One service wedged or crashed** — `winter service restart alpha <service>` (or `./restart <service>`) reaps just
   that pane and re-runs it, leaving the rest of the session up — no need to `winter service down` the whole stack.
 - **Stale processes after a crash** — use `winter service down` (or `./down`) to reap the session cleanly rather than
   killing processes by hand.
+- **Services running twice, or `./down` can't stop them, after upgrading** — sessions started before the extension moved
+  to the dedicated `winter` tmux server still run on your default tmux server, where `./down` and `./status` no longer
+  look, so a fresh `./up` starts a second copy beside them. `winter doctor` lists them under "default-server sessions".
+  Stop each with `tmux -L default kill-session -t <session>`, then `./up` again. Running `./down` in every environment
+  before upgrading avoids this.
 
 ## Key conventions
 
 - **Never start services as background processes** (`nohup`, `&`) — always go through `winter service up` (or `./up`).
 - **Never kill services directly** (`kill`, `pkill`, `tmux kill-session`) — always use `winter service down` (or
-  `./down`), or `winter service restart alpha <service>` to bounce a single service.
-- **Read output with `winter service logs`** for file-mode services. For `log="pane"` services, use `tmux capture-pane`
-  directly.
+  `./down`), or `winter service restart alpha <service>` to bounce a single service. The one exception is a session
+  stranded on the default tmux server after upgrading (see Troubleshooting), which `./down` can no longer reach.
+- **Read output with `winter service logs`** for file-mode services. For `log="pane"` services, use
+  `tmux -L winter capture-pane` directly.
 
 :::note[Canonical source] [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its
 [`index.md`](https://github.com/paul-gross/winter-service-tmux/blob/master/index.md). :::

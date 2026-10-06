@@ -120,7 +120,8 @@ def tmux_session_badge(env_status: IEnvironmentStatusView, env_path: Path) -> No
     session = f"{env_status.environment.workspace.session_prefix}-{env_status.environment.name}"
     try:
         result = subprocess.run(
-            ["tmux", "has-session", "-t", session],
+            # Winter sessions live on the dedicated `winter` tmux server.
+            ["tmux", "-L", "winter", "has-session", "-t", session],
             capture_output=True,
             timeout=2,
         )
