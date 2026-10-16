@@ -44,10 +44,12 @@ clones.
 
 Read-only introspection of agent model/effort resolution — the same resolution `winter ws init` bakes into every
 rendered agent file. Prints, per installed agent x harness (`claude`, `codex`, `opencode`), the resolved model and
-effort and which layer won it, plus colored tables showing the built-in defaults and any `[model_tiers]` remaps. An
-`[agent_model_overrides]` entry that matches no installed agent is reported as a warning. Use it to see why an agent is
-running a model you didn't expect. A cell that fails to resolve is reported in place, so the command exits `0`; only a
-config load error exits `1`. `winter doctor`'s agent probes are what flag drift.
+effort and which layer won it, plus colored tables showing the built-in defaults and any
+[`[model_tiers]`](/winter-docs/cli-reference/config/#model_tiers) remaps. An
+[`[agent_model_overrides]`](/winter-docs/cli-reference/config/#agent_model_overrides) entry that matches no installed
+agent is reported as a warning. Use it to see why an agent is running a model you didn't expect. A cell that fails to
+resolve is reported in place, so the command exits `0`; only a config load error exits `1`. `winter doctor`'s agent
+probes are what flag drift.
 
 ```bash
 winter agents           # human-readable colored tables
