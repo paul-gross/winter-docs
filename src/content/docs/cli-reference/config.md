@@ -274,6 +274,102 @@ user.email = "jane@example.com"
 You can also declare additional `[[project_repository]]` / `[[standalone_repository]]` entries here that you don't want
 committed to the shared config.
 
+The agent model tables merge differently from other keys: see [Local overlay behavior](#local-overlay-behavior).
+
+## Agent models: tiers, `[model_tiers]`, and `[agent_model_overrides]`
+
+Every agent winter installs is rendered per harness (`claude`, `codex`, `opencode`) during `winter ws init`, and that
+render bakes in the agent's model and reasoning effort. Two tables in `.winter/config.toml` change those choices for the
+whole workspace without editing an extension's source. Changes take effect on the next `winter ws init`. Run
+[`winter agents`](/winter-docs/cli-reference/diagnostics/#winter-agents) (or open the dashboard's Agent matrix screen)
+to see the resolved model and effort for every agent and harness, and which layer won each cell.
+
+### Tiers and code defaults
+
+An agent declares a *tier* — `fable`, `opus`, `sonnet`, or `haiku`, most to least capable. Each tier has a built-in
+model per harness, called the *code default*:
+
+| Tier     | `claude` | `codex`         | `opencode`                    |
+| -------- | -------- | --------------- | ----------------------------- |
+| `fable`  | `fable`  | `gpt-6-astra`   | `anthropic/claude-fable-5-1`  |
+| `opus`   | `opus`   | `gpt-6-sol`     | `anthropic/claude-opus-5-5`   |
+| `sonnet` | `sonnet` | `gpt-5.6-terra` | `anthropic/claude-sonnet-5-5` |
+| `haiku`  | `haiku`  | `gpt-6-luna`    | `anthropic/claude-haiku-4-5`  |
+
+An agent's own source can also pin a model or effort for one harness in its `claude:`, `codex:`, or `opencode:` block.
+
+### `[model_tiers]`
+
+Remaps a tier's model for one or more harnesses across the whole workspace, and can define custom tier labels. A harness
+you leave unmapped keeps its code default, so one tier can land on different providers per harness.
+
+```toml
+# .winter/config.toml
+
+# Define a custom tier; agents and overrides can then say `big-thinker`.
+[model_tiers.big-thinker]
+claude = "claude-opus-5-5"
+codex = "gpt-6-sol"
+opencode = "anthropic/claude-opus-5-5"
+
+# Remap one harness of a built-in tier; claude and codex keep their code defaults.
+[model_tiers.haiku]
+opencode = "anthropic/claude-haiku-4-5"
+```
+
+Harness keys must be `claude`, `codex`, or `opencode`, each mapped to a non-empty model id string, and a label needs at
+least one. A custom tier with no mapping for a harness gets its agents skipped for that harness, with a warning from
+`winter ws init` and `winter doctor`.
+
+### `[agent_model_overrides]`
+
+Retargets one agent's model and/or effort, keyed by canonical agent name (the `name:` in its definition, or the file
+stem when absent). A value takes one of three forms:
+
+| Form                    | Example                            | Applies to                          |
+| ----------------------- | ---------------------------------- | ----------------------------------- |
+| Tier string             | `"haiku"`                          | All harnesses                       |
+| Per-vendor inline table | `{ claude = "haiku" }`             | Only the listed harnesses           |
+| Per-vendor profile      | `{ claude = { effort = "high" } }` | Model, effort, or both, per harness |
+
+```toml
+# .winter/config.toml
+
+[agent_model_overrides]
+# Tier string: a built-in tier or a [model_tiers] label, applied to every harness.
+reviewer = "haiku"
+
+# Per-vendor inline table: a tier label or a concrete model id for just that harness.
+developer = { claude = "opus" }
+coder = { codex = "gpt-6-sol", opencode = "anthropic/claude-opus-5-5" }
+
+# Per-vendor profile: set model, effort, or both. Effort-only keeps normal model resolution.
+ice-carver = { claude = { model = "sonnet", effort = "high" }, codex = { effort = "max" } }
+```
+
+A bare tier string must be a known tier label, or config load fails. Values inside the per-vendor forms are not
+validated as tiers: a string that is not a tier label is passed through as a concrete model id. A profile needs `model`
+or `effort`, and `effort` is an opaque string handed to the harness. An override naming no installed agent is a warning,
+not an error.
+
+### Precedence
+
+Later wins:
+
+- **Model:** code default < `[model_tiers]` < agent definition < `[agent_model_overrides]`.
+- **Effort:** agent definition < `[agent_model_overrides]`. Effort has no code default. When neither layer sets it,
+  winter omits the field and the harness uses its own default, shown as "Inherited" in `winter agents`.
+
+### Local overlay behavior
+
+In `.winter/config.local.toml` these tables are replaced whole, never merged field by field:
+
+- A `[model_tiers]` label in the local file replaces that whole label from the shared file, including its harness keys.
+- An `[agent_model_overrides]` entry in the local file replaces that agent's whole shared entry, including nested vendor
+  and profile fields.
+
+Labels and agents the local file does not mention keep their shared values.
+
 ## Implicit workspace repo
 
 The `workspace` repo is discovered implicitly — it is not declared in either file. Winter detects it from the filesystem

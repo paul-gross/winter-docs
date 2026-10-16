@@ -11,10 +11,11 @@ tracking. Key bindings are configurable — see the
 
 Interactive TUI showing workspace status, environments, and per-repo tracking. Press `L` for the captured-error log; `c`
 to clear it. Press `M` to open the Agent matrix screen, which shows the same resolved agent model/effort data
-[`winter agents`](/winter-docs/cli-reference/diagnostics/#winter-agents) prints; there `r` refreshes it and `i` runs the
-full workspace-level `winter ws init` (cloning missing repos, running their setup commands and hooks, and re-rendering
-stale agent files). Every key is remappable — see the [`[keybindings]`](/winter-docs/cli-reference/config/#keybindings)
-config section.
+[`winter agents`](/winter-docs/cli-reference/diagnostics/#winter-agents) prints (see
+[agent models](/winter-docs/cli-reference/config/#agent-models-tiers-model_tiers-and-agent_model_overrides)); there `r`
+refreshes it and `i` runs the full workspace-level `winter ws init` (cloning missing repos, running their setup commands
+and hooks, and re-rendering stale agent files). Every key is remappable — see the
+[`[keybindings]`](/winter-docs/cli-reference/config/#keybindings) config section.
 
 ```bash
 winter dashboard
