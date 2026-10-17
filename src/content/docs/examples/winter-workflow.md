@@ -72,18 +72,18 @@ execution mode and supply the shared
 [review scaffold](https://github.com/paul-gross/winter-workflow/blob/master/methodology/review/process.md#execution-scaffold),
 including resolved targets and review material. The review skills perform that preparation for normal interactive use.
 
-| Agent                    | Role                                                                          |
-| ------------------------ | ----------------------------------------------------------------------------- |
-| `winter-architect`       | High-level design, interface definitions, dependency analysis.                |
-| `ice-carver`             | Implements features and writes unit tests.                                    |
-| `arctic-explorer`        | Investigates the codebase, traces data flows, gathers context.                |
-| `backend-verifier`       | Tests APIs via curl/CLI and validates database state.                         |
-| `frontend-verifier`      | Drives the UI via Chrome DevTools to verify behavior.                         |
-| `cold-reviewer`          | Reviews code changes for correctness and design.                              |
-| `harness-reviewer`       | Reviews the application↔harness seam against a diff.                          |
-| `context-reviewer`       | Reviews agent-facing markdown against the documented conventions.             |
-| `documentation-reviewer` | Reviews human-facing public documentation against the code and conventions.   |
-| `plan-reviewer`          | Reviews an implementation plan against the plan axis's gates before building. |
+| Agent                    | Role                                                                                                                                   |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `winter-architect`       | High-level design, interface definitions, dependency analysis.                                                                         |
+| `ice-carver`             | Implements features and writes unit tests.                                                                                             |
+| `arctic-explorer`        | Investigates the codebase, traces data flows, gathers context.                                                                         |
+| `backend-verifier`       | Tests APIs via curl/CLI and validates database state.                                                                                  |
+| `frontend-verifier`      | Drives the UI via Chrome DevTools to verify behavior. Needs chrome-devtools-mcp as a plugin, or an MCP server named `chrome-devtools`. |
+| `cold-reviewer`          | Reviews code changes for correctness and design.                                                                                       |
+| `harness-reviewer`       | Reviews the application↔harness seam against a diff.                                                                                   |
+| `context-reviewer`       | Reviews agent-facing markdown against the documented conventions.                                                                      |
+| `documentation-reviewer` | Reviews human-facing public documentation against the code and conventions.                                                            |
+| `plan-reviewer`          | Reviews an implementation plan against the plan axis's gates before building.                                                          |
 
 ## How it's wired in
 
