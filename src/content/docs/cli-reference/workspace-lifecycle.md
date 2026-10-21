@@ -107,7 +107,7 @@ refusal is all-or-nothing, so one refused repo blocks every repo.
 survives it — use `ws clean` for those.
 
 :::note[Canonical source] Mode semantics, the safety gate, ref tokens, and the confirmation threshold are owned by
-`context/winter-cli/usage/ws/reset.md` in the `winter` repo. :::
+`context/winter/cli/usage/ws/reset.md` in the `winter` repo. :::
 
 ### `ws clean`
 
@@ -138,7 +138,7 @@ Unlike `reset` and `checkout`, a clean is **not** all-or-nothing — a deleted f
 that fails partway still reports what it already removed and names the worktree it stopped on.
 
 :::note[Canonical source] Flag semantics, the NDJSON event shape, and partial-failure behavior are owned by
-`context/winter-cli/usage/ws/clean.md` in the `winter` repo. :::
+`context/winter/cli/usage/ws/clean.md` in the `winter` repo. :::
 
 ### `ws destroy`
 
@@ -239,4 +239,4 @@ file has a staged or unstaged change. `dirty` is reported but not hashed. `stand
 `winter ws init` first) — nothing is printed to stdout.
 
 :::note[Canonical source] The digest's exact definition and serialization are owned by
-`context/winter-cli/usage/ws/fingerprint.md` in the `winter` repo. :::
+`context/winter/cli/usage/ws/fingerprint.md` in the `winter` repo. :::

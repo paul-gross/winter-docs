@@ -30,9 +30,9 @@ Choose the area that matches your task:
 | [config.toml reference](/winter-docs/cli-reference/config/)               | All config keys                                                                                                                                             | Config file schema, port allocation, provision manifests, extension manifests.                                                                               |
 
 :::note[Canonical source] Agent-facing references:
-[`context/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/index.md) (command
+[`context/winter/cli/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/index.md) (command
 hub, routing to per-topic `usage/` files),
-[`context/winter-cli/setup.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/setup.md) (install)
+[`context/winter/cli/setup.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/setup.md) (install)
 and
-[`context/winter-cli/configuration/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/index.md)
+[`context/winter/cli/configuration/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/configuration/index.md)
 (configuration hub). :::

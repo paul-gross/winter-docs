@@ -57,7 +57,7 @@ winter agents --json    # the same data as one JSON document
 ```
 
 See
-[`context/winter-cli/usage/agents.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/agents.md)
+[`context/winter/cli/usage/agents.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/agents.md)
 for the table layout, the layer legend, and the `--json` schema.
 
 ## `winter graph`
@@ -99,10 +99,10 @@ winter space scores      # -> <workspace>/.winter/scores (default, unless overri
 
 *kind* is an extension-defined bucket name — a single name starting with a letter or digit, then letters, digits, `.`,
 `_`, or `-`, never a path (see
-[`context/winter-cli/usage/space.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/space.md))
+[`context/winter/cli/usage/space.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/space.md))
 — so a consuming skill can read the resolved directory instead of hardcoding an artifact path. With no `[space]`
 configuration the root defaults to the workspace-relative `.winter`, and both the root and any individual kind are
 overridable — see
-[`context/winter-cli/configuration/space.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/space.md)
+[`context/winter/cli/configuration/space.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/configuration/space.md)
 for the table and override rules. Exits `0` with the directory on stdout, or `1` — with nothing written to stdout — when
 *kind* is malformed or the config cannot be resolved.

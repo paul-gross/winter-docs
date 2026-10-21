@@ -191,5 +191,5 @@ that requirement. There is no longer any path resolution relative to the workspa
 
 :::note[Canonical source] The exhaustive, agent-facing reference — the full action vocabulary, the NDJSON event schema,
 per-scope environment variables, and the doctor probe contract — lives in
-[`context/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/provision.md).
+[`context/winter/cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/provision.md).
 :::

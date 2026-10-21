@@ -119,5 +119,6 @@ worktree, deletes the environment directory, and strips the environment's entry 
 extension state — tmux sessions, watchers, provisioned databases — orphaned. :::
 
 :::note[Canonical source] The exact git sequences behind each step are documented for agents in
-[`context/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/worktree-ops.md) and
-[`context/workspace-layout.md`](https://github.com/paul-gross/winter/blob/master/context/workspace-layout.md). :::
+[`context/winter/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/winter/worktree-ops.md) and
+[`context/winter/workspace-layout.md`](https://github.com/paul-gross/winter/blob/master/context/winter/workspace-layout.md).
+:::

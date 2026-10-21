@@ -130,5 +130,5 @@ Each repo reports one outcome: pinned, already pinned, or refused with the reaso
 A refusal does not stop the other repos from being pinned, but the command exits non-zero, with `--json` too. Two
 combinations are rejected outright: `--force` without `--freeze`, and `--freeze` with `--autostash`.
 
-:::note[Canonical source] Full flag semantics and error messages are owned by `context/winter-cli/usage/ws/update.md` in
+:::note[Canonical source] Full flag semantics and error messages are owned by `context/winter/cli/usage/ws/update.md` in
 the `winter` repo. :::

@@ -109,5 +109,5 @@ interactive rebase.
 
 The pages here describe the user-facing model. The exhaustive, agent-facing procedures live in winter's own `context/`
 references, linked from each page — most notably
-[`context/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/worktree-ops.md) and
-[`context/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/index.md).
+[`context/winter/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/winter/worktree-ops.md) and
+[`context/winter/cli/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/index.md).

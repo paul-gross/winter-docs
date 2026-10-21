@@ -22,5 +22,5 @@ winter dashboard
 ```
 
 See
-[`context/winter-cli/usage/dashboard.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/dashboard.md)
+[`context/winter/cli/usage/dashboard.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/dashboard.md)
 for the default keys, the Agent matrix screen, layouts, and the action-id table.

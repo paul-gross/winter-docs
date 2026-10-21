@@ -49,14 +49,14 @@ omitted.
 `PATTERN... [-f/--follow] [-n/--tail N] [--since DURATION|TIMESTAMP] [--until DURATION|TIMESTAMP] [-t/--timestamps]` (at
 least one PATTERN required). Each output line is prefixed with `<env>/<svc> |` whenever more than one service may be in
 scope — see the
-[orchestrator contract](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/service.md#orchestrator-contract)
+[orchestrator contract](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/service.md#orchestrator-contract)
 for the precise rule. Lines are written as portable plain text so `winter service logs alpha | grep ERROR` works
 regardless of orchestrator.
 
 To register an orchestrator, set `capabilities.service` in the `[capabilities]` table in `.winter/config.toml` and
 `provides.service` in the extension's `winter-ext.toml` — see the
 [config reference](/winter-docs/cli-reference/config/#capability-registry) for the schema and the
-[orchestrator contract](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/service.md#orchestrator-contract)
+[orchestrator contract](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/service.md#orchestrator-contract)
 for the full implementer-facing spec (argv rule, `WINTER_*` env vars, NDJSON wire format). The legacy
 `service_orchestrator` (workspace config) and `orchestrate_services` (extension manifest) keys are deprecated
 back-compat aliases — existing configs continue to work, but new workspaces should use `[capabilities]`/`[provides]`.
@@ -76,7 +76,7 @@ winter env alpha --resolve      # also run and print command-sourced values, e.g
 This is the same variable set `winter service` injects into a provider subprocess, so `winter env <scope>` is also the
 way to check what a service actually sees: the same set, masked the same way as `down` and `status`, where `up` alone
 resolves the command-derived keys described below. A band entry can be a
-[command entry](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/command-env-entries.md)
+[command entry](https://github.com/paul-gross/winter/blob/master/context/winter/cli/configuration/command-env-entries.md)
 that sources its value by running a command instead of a plain `${...}` template — reading a secret out of Vault or AWS
 SSM, say. Running an arbitrary configured command isn't something `winter env` does by default: without `--resolve`,
 such a key prints as the placeholder `<unresolved:command>` instead of its real value and the command never runs, which
@@ -111,7 +111,7 @@ rest. `--reset` and `--destroy` require an explicit `--stage` or a `--name` sele
 `--stage resource`, and `--reset`/`--destroy` cannot be combined. When a `resource`/`data` handler declares
 `required_services`, winter starts any that are not running before executing it (unless `--no-service-check`). See
 [Provisioning Environments](/winter-docs/operations/provisioning/) for the model and
-[`context/winter-cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/provision.md)
+[`context/winter/cli/usage/provision.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/provision.md)
 for the full contract.
 
 ## `winter clean`
@@ -123,7 +123,7 @@ destroying the dependency trees a full reinstall would have to rebuild. Unlike `
 does not abort the chain: every remaining handler still runs, and the command exits non-zero if any handler's `clean`
 failed. It runs immediately against every matched env; `--dry-run` is the preview to run first. `PATTERNS` is a bare
 env-name glob, the same grammar `winter provision` uses, with at least one required — see the
-[patterns reference](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/ws/patterns.md#winter-provision--winter-clean--winter-ws-destroy--env-level-patterns)
+[patterns reference](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/ws/patterns.md#winter-provision--winter-clean--winter-ws-destroy--env-level-patterns)
 for the full grammar.
 
 ```bash
@@ -140,5 +140,5 @@ handler's `clean` command, the same contract `winter provision` uses above — u
 
 **This is not `winter ws clean`** — that command is a git-level `git clean -fd` over a worktree's untracked files;
 `winter clean` runs project-declared removal commands instead and knows nothing about git state. See
-[`context/winter-cli/usage/clean.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/clean.md)
+[`context/winter/cli/usage/clean.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/clean.md)
 for the full contract, including the sub-target and named-entry selectors and the failure-handling behavior.

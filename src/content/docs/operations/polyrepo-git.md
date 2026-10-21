@@ -90,7 +90,7 @@ Winter does not wrap per-repo git. Stage and commit with plain `git` inside each
 ship the environment. Follow each repo's own commit conventions.
 
 :::note[Canonical source] Full command reference:
-[`context/winter-cli/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/index.md). Raw git
+[`context/winter/cli/index.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/index.md). Raw git
 equivalents for every operation:
-[`context/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/worktree-ops.md). See also the
-[CLI Reference](/winter-docs/cli-reference/). :::
+[`context/winter/worktree-ops.md`](https://github.com/paul-gross/winter/blob/master/context/winter/worktree-ops.md). See
+also the [CLI Reference](/winter-docs/cli-reference/). :::

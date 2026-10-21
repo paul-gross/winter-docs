@@ -200,7 +200,7 @@ For the `winter service` command surface and flag reference, see the
 [CLI Reference](/winter-docs/cli-reference/environment-runtime/#winter-service). For the registration config keys and
 capability registry, see the [config reference](/winter-docs/cli-reference/config/#capability-registry). For the full
 implementer-facing orchestrator contract (argv rule, `WINTER_*` env vars, NDJSON wire format), see
-[`context/winter-cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/usage/service.md#orchestrator-contract).
+[`context/winter/cli/usage/service.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/service.md#orchestrator-contract).
 
 :::note[Canonical source] Conventions and setup live in the extension:
 [`winter-service-tmux`](https://github.com/paul-gross/winter-service-tmux) — see its

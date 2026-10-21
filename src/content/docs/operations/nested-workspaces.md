@@ -164,7 +164,7 @@ same root. A `winter` that resolves any other workspace, such as the outer one, 
 misconfigured `PATH` cannot point a destroy or an init at the wrong workspace.
 
 :::note[Canonical source] The exact behavior is documented for agents in
-[`context/winter-cli/configuration/repositories.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/repositories.md)
+[`context/winter/cli/configuration/repositories.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/configuration/repositories.md)
 and
-[`context/winter-cli/configuration/ports-and-environments.md`](https://github.com/paul-gross/winter/blob/master/context/winter-cli/configuration/ports-and-environments.md)
+[`context/winter/cli/configuration/ports-and-environments.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/configuration/ports-and-environments.md)
 in the `winter` repo. :::
