@@ -22,8 +22,8 @@ cmd = ["<bootstrap the nested workspace's CLI>"]
 ```
 
 The keys are in the [config reference](/winter-docs/cli-reference/config/#nested-workspaces-nested-envs-inherit_local).
-The source checkout at `projects/lab/` is cloned and its `cmd` runs there as for any project repo, but it is never
-initialized as a workspace — only the per-environment copies are.
+The repo's source checkout is cloned and its `cmd` runs there as for any project repo, but it is never initialized as a
+workspace — only the per-environment copies are.
 
 ## `ws init`
 
