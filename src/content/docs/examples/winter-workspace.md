@@ -13,9 +13,10 @@ like, not a template to clone and run.
 ## What it is
 
 A workspace root: the `.winter/config.toml` that declares the project repos and standalone extensions, the committed
-`CLAUDE.md` that orients an agent to the layout and the env model, the `context/` docs that capture this workspace's
-conventions, and the Greek-letter feature environments where work actually happens. Everything that makes winter a
-*workspace* — rather than a CLI or an extension — is shown here in its assembled form.
+`CLAUDE.md` that orients an agent to the layout and the env model, the workspace-owned `context/project/` docs that
+capture this workspace's conventions (beside the `context/winter/` docs inherited from upstream), and the Greek-letter
+feature environments where work actually happens. Everything that makes winter a *workspace* — rather than a CLI or an
+extension — is shown here in its assembled form.
 
 ## Why it's an example
 

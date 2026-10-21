@@ -7,6 +7,10 @@ This walkthrough takes you from nothing to a running service in a feature enviro
 repo (a directory with a `.winter/config.toml` and the winter CLI under `tools/winter-cli/`) — for example a fork of
 [`paul-gross/winter`](https://github.com/paul-gross/winter).
 
+In a fork, `context/winter/` is inherited from upstream and arrives with each framework update — don't edit it there.
+Everything else under `context/` is yours; `context/project/` is the slot extensions read from. See
+[Inherited docs at the workspace root](https://github.com/paul-gross/winter/blob/master/context/winter/workspace-layout.md#inherited-docs-at-the-workspace-root).
+
 ## Prerequisites
 
 - **git**
