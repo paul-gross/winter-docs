@@ -61,6 +61,7 @@ export default defineConfig({
 						{ label: 'winter-product', slug: 'extensions/winter-product' },
 						{ label: 'winter-service-tmux', slug: 'extensions/winter-service-tmux' },
 						{ label: 'winter-service-docker', slug: 'extensions/winter-service-docker' },
+						{ label: 'winter-service-process-compose', slug: 'extensions/winter-service-process-compose' },
 						{ label: 'winter-github', slug: 'extensions/winter-github' },
 					],
 				},

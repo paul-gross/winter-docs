@@ -33,12 +33,13 @@ which renders no entry and leaves every other extension feature in place.
 
 These are *consumable* extensions — generic capabilities a workspace installs and uses as-is:
 
-| Extension                                                                   | Adds                                                                                                   |
-| --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| **[winter-product](/winter-docs/extensions/winter-product/)**               | A product backlog model with refinement agents and skills.                                             |
-| **[winter-service-tmux](/winter-docs/extensions/winter-service-tmux/)**     | tmux-based service orchestration (`up` / `down` / `status` / `restart`).                               |
-| **[winter-service-docker](/winter-docs/extensions/winter-service-docker/)** | Docker Compose-based service orchestration with real container health checks and workspace singletons. |
-| **[winter-github](/winter-docs/extensions/winter-github/)**                 | AI-native GitHub issue tooling and the ideation-to-delivery loop via the `gh` CLI.                     |
+| Extension                                                                                     | Adds                                                                                                   |
+| --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **[winter-product](/winter-docs/extensions/winter-product/)**                                 | A product backlog model with refinement agents and skills.                                             |
+| **[winter-service-tmux](/winter-docs/extensions/winter-service-tmux/)**                       | tmux-based service orchestration (`up` / `down` / `status` / `restart`).                               |
+| **[winter-service-docker](/winter-docs/extensions/winter-service-docker/)**                   | Docker Compose-based service orchestration with real container health checks and workspace singletons. |
+| **[winter-service-process-compose](/winter-docs/extensions/winter-service-process-compose/)** | process-compose service orchestration: one headless daemon per scope, with real readiness probes.      |
+| **[winter-github](/winter-docs/extensions/winter-github/)**                                   | AI-native GitHub issue tooling and the ideation-to-delivery loop via the `gh` CLI.                     |
 
 The maintainer's conventions ([winter-context](/winter-docs/examples/winter-context/)) and agentic workflow
 ([winter-workflow](/winter-docs/examples/winter-workflow/)) install and run just like these, but they are the
@@ -47,8 +48,8 @@ maintainer's own opinionated, swappable implementations — adopt them as-is or 
 
 ## Service orchestration providers
 
-`winter-service-tmux` and `winter-service-docker` both implement the `winter service` capability slot. Under the
-multi-provider contract they can be bound together
+`winter-service-tmux`, `winter-service-docker`, and `winter-service-process-compose` all implement the `winter service`
+capability slot. Under the multi-provider contract they can be bound together
 (`capabilities.service = ["winter-service-tmux", "winter-service-docker"]`): `winter service up`/`down`/`status` fan out
 across every bound provider, and each individual service is owned by exactly one provider. A single-provider
 registration looks like:
@@ -62,6 +63,9 @@ Choose **tmux** when your services are native processes, you want interactive te
 without benefit. Choose **Docker** when your project already ships a Compose file, you need genuine container
 health/readiness via `--wait`, or you want workspace-singleton services running once for all environments. See
 [winter-service-docker](/winter-docs/extensions/winter-service-docker/#when-to-adopt) for the full decision guide.
+
+**winter-service-process-compose** suits native processes when you want tmux's manifest without panes and real readiness
+probes; see [its page](/winter-docs/extensions/winter-service-process-compose/#when-to-adopt).
 
 Or **mix and match** to get the best of both worlds: bind both providers and let each own the slice of the stack it
 handles best — Docker containers for workspace-level database servers and other daemon tools, and tmux sessions for the
