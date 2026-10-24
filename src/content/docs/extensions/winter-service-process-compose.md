@@ -4,7 +4,7 @@ description: process-compose service orchestration — one headless daemon per s
 ---
 
 **[winter-service-process-compose](https://github.com/paul-gross/winter-service-process-compose)** provides service
-orchestration through [process-compose](https://github.com/F1bonacci/process-compose). Each feature environment, and the
+orchestration through [process-compose](https://github.com/F1bonacc1/process-compose). Each feature environment, and the
 workspace scope, runs its own headless process-compose daemon, so several environments run the full stack side by side
 without sharing sockets, ports, or process state. The extension implements the full `winter service` contract.
 
