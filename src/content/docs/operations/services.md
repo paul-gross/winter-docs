@@ -153,8 +153,11 @@ configs continue to work without modification, but new workspaces should use `[c
 When two or more extensions both declare `provides.service`, winter runs them in a **multi-provider** mode:
 `winter service up <env>` fans out to every provider and aborts on the first failure; `winter service down <env>` fans
 out best-effort (continues past failures so all providers get a chance to clean up). `status` merges each provider's
-output into a single document; `restart` and `logs` route each matched service to its owning provider (`logs` in follow
-mode requires all matched services to belong to a single provider).
+output into a single document; `restart` and `logs` route each matched service to its owning provider. Follow mode
+streams multiple matched owning providers concurrently, merging complete lines in observed order. Providers can exit
+independently, and failures are reported. Ctrl-C stops the followers, not the services. See the
+[canonical service reference](https://github.com/paul-gross/winter/blob/master/context/winter/cli/usage/service.md) for
+details.
 
 A single provider is dispatched directly — no fan-out overhead. With multiple providers installed and **no explicit
 binding**, winter implicitly binds all of them (sorted by name) and fans out — no configuration change is needed. An
