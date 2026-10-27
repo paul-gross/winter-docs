@@ -20,7 +20,7 @@ Winter reads two files and merges them: the committed workspace config and a git
 | `lint`                 | string (path) | —          | Optional workspace-level `winter lint` check script, relative to the workspace root, must be executable.                                                                                                                                      |
 | `[capabilities]`       | table         | `{}`       | Maps capability slot names to provider extension names (e.g. `service = "winter-service-tmux"`). The supported mechanism for registering service orchestrators and future capability slots — see [Capability registry](#capability-registry). |
 | `service_orchestrator` | string        | —          | **Deprecated.** Back-compat alias for `capabilities.service`. Folded into `capabilities["service"]` at config load when `capabilities.service` is not already set. Use `[capabilities]` for new workspaces.                                   |
-| `git_excludes`         | string[]      | `[]`       | Entries appended to every repo's `.git/info/exclude` on `winter ws init`.                                                                                                                                                                     |
+| `git_excludes`         | string[]      | `[]`       | Entries appended to every repo's `.git/info/exclude` on `winter ws init`. Not the workspace's own generated files — extensions declare those with [`[excludes]`](#extension-excludes).                                                        |
 
 ### `adopt_extensions` modes
 
@@ -502,6 +502,32 @@ Key fields in `winter-ext.toml`:
 | `[provides]`                | Maps capability slot names to entrypoint paths (e.g. `service = "workflow/orchestrate"`). An extension declares here what it provides; the workspace binds it via `[capabilities]` (see [Capability registry](#capability-registry)). |
 | `orchestrate_services`      | **Deprecated.** Back-compat alias for `provides.service`.                                                                                                                                                                             |
 | `requires`                  | Other module names this one depends on; consumed by `winter graph`.                                                                                                                                                                   |
+| `[excludes]`                | Workspace-root files and winter space kinds the extension generates, excluded locally on `winter ws init` (see [Extension excludes](#extension-excludes)).                                                                            |
+
+### Extension excludes
+
+An extension that writes machine-local files or generated artifacts at the workspace root declares them in an
+`[excludes]` table in its `winter-ext.toml`, so adopters have nothing to ignore by hand:
+
+```toml
+[excludes]
+paths       = ["/.winter/process-compose/"]
+space_kinds = ["scores", "manifests"]
+```
+
+Both fields are optional lists of non-empty strings: `paths` holds workspace-root-relative Git ignore patterns, and
+`space_kinds` holds names accepted by [`winter space`](/winter-docs/cli-reference/diagnostics/#winter-space), each
+followed through the effective `[space]` configuration.
+
+`winter ws init` writes these rules into the extension's own managed block of the workspace repository's exclude file
+(`.git/info/exclude`) — never the tracked `.gitignore`, which winter does not touch. This is distinct from the
+workspace-level `git_excludes` key above, which an operator sets in `config.toml` and which winter appends to every
+*repo's* exclude file.
+
+A malformed `[excludes]` table, field type, or entry fails `winter ws init` with an error naming the extension and the
+offending value; nothing from that declaration is partially applied. For the accepted pattern forms, how space kinds
+resolve, and when the block is updated or removed, see
+[`context/winter/cli/configuration/extensions.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/configuration/extensions.md#declaring-excludes).
 
 ### Extension hooks
 

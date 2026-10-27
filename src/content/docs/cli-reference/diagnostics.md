@@ -106,3 +106,7 @@ overridable — see
 [`context/winter/cli/configuration/space.md`](https://github.com/paul-gross/winter/blob/master/context/winter/cli/configuration/space.md)
 for the table and override rules. Exits `0` with the directory on stdout, or `1` — with nothing written to stdout — when
 *kind* is malformed or the config cannot be resolved.
+
+The command itself never ignores the directory. When a kind resolves inside the workspace, it is excluded automatically
+on `winter ws init` if the owning extension declares it under `[excludes] space_kinds` in its `winter-ext.toml` (see
+[Extension excludes](/winter-docs/cli-reference/config/#extension-excludes)); otherwise add the ignore entry yourself.

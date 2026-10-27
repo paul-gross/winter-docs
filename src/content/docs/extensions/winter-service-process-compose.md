@@ -20,6 +20,9 @@ without sharing sockets, ports, or process state. The extension implements the f
 - **Logs without a daemon** — `winter service logs` reads per-service log files with timestamps, so it works after a
   stop.
 - A **`winter doctor` probe** that fails with install guidance when `process-compose` is missing or older than 1.122.0.
+- **Missing-env safety** — an action on an environment whose directory does not exist creates nothing: `status` and
+  `logs` report nothing, `up` fails naming the missing directory, and `down` reports no running instance — unless a
+  daemon is still answering on the scope's fallback socket, in which case it stops it.
 
 ## When to adopt
 
@@ -27,6 +30,14 @@ Use **winter-service-process-compose** when your services are native processes, 
 policy without tmux, or your environment cannot run tmux. Use **winter-service-tmux** when you want interactive panes
 you can attach to, and **winter-service-docker** for containerized shared infrastructure. All three implement the same
 capability slot and can be bound together; each service is owned by exactly one provider.
+
+## Runtime state
+
+Each scope keeps its daemon socket, lock, and per-service logs in a state directory under the scope root. A feature
+environment's state sits inside the environment directory, which winter already excludes. The workspace scope's state
+lives in `.winter/process-compose/` at the workspace root; the extension declares it under `[excludes]`, so
+`winter ws init` excludes it from the workspace repository automatically and there is nothing to add to `.gitignore`.
+See [Extension excludes](/winter-docs/cli-reference/config/#extension-excludes).
 
 ## How to configure
 
