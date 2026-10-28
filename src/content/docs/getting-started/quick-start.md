@@ -14,9 +14,8 @@ Everything else under `context/` is yours; `context/project/` is the slot extens
 ## Prerequisites
 
 - **git**
-- **Python 3.13+**
-- **[mise](https://mise.jdx.dev/)** and **[uv](https://docs.astral.sh/uv/)** — the `winter` wrapper runs the CLI through
-  them, so no manual virtualenv setup is needed.
+- **[uv](https://docs.astral.sh/uv/) 0.13** — the `winter` wrapper runs the CLI through it, so no manual virtualenv
+  setup is needed.
 - **tmux** — only if you use the service-orchestration extension.
 
 See the [canonical CLI setup reference](https://github.com/paul-gross/winter/blob/master/context/winter/cli/setup.md)

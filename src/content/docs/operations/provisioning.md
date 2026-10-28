@@ -19,8 +19,8 @@ reconcile that state after pulling new migrations, adding a dependency, or reset
 Keeping readiness out of `ws init` means the two concerns can evolve and re-run independently:
 
 - **`winter ws init`** is structural and fast — worktrees, branches, git identity, `.winter.env`, and `on_env_init`
-  hooks. Each repo's `cmd` list runs here too, but as a lightweight trust/bootstrap step (e.g. `mise trust`,
-  `direnv allow`), not full dependency installation.
+  hooks. Each repo's `cmd` list runs here too, but as a lightweight trust/bootstrap step (e.g. `direnv allow`), not full
+  dependency installation.
 - **`winter provision`** is the readiness lifecycle — dependencies, resources, and data. It is idempotent by design, so
   re-running it is always safe.
 
@@ -97,7 +97,7 @@ when that output is cleaned.
 ```toml
 [[provision.dependency]]
 scope = "feature-worktree"
-apply = "uv sync && mise trust"          # single inline command (string)
+apply = "uv sync"                       # single inline command (string)
 
 [[provision.resource]]
 scope             = "workspace"

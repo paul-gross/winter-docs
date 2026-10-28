@@ -441,7 +441,7 @@ There are three sub-target tables — `dependency`, `resource`, and `data`. Each
 # .winter/config.toml
 [[provision.dependency]]
 scope = "feature-worktree"
-apply = "uv sync && mise trust"
+apply = "uv sync"
 
 [[provision.resource]]
 scope             = "workspace"
